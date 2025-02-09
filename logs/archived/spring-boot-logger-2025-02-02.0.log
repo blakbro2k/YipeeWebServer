@@ -1,0 +1,211 @@
+2025-02-02 02:02:07,626 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 15792 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-02-02 02:02:07,629 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-02-02 02:02:07,629 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-02-02 02:02:07,683 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-02 02:02:07,684 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-02 02:02:08,902 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-02 02:02:08,902 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-02 02:02:09,071 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 158 ms. Found 5 JPA repository interfaces.
+2025-02-02 02:02:10,458 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-02-02 02:02:10,471 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-02-02 02:02:10,473 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-02-02 02:02:10,473 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-02-02 02:02:10,593 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-02-02 02:02:10,594 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2908 ms
+2025-02-02 02:02:10,778 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-02-02 02:02:11,022 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-02-02 02:02:11,024 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-02-02 02:02:11,033 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-02-02 02:02:11,711 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-02 02:02:11,970 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-02-02 02:02:13,268 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
+2025-02-02 02:02:13,355 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
+2025-02-02 02:02:13,355 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Eiffel Tower
+2025-02-02 02:02:13,355 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,516 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,557 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter saveObject()
+2025-02-02 02:02:13,557 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] saveOrUpdateObject object=YipeeRoom[null,Eiffel Tower], full
+2025-02-02 02:02:13,557 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Eiffel Tower
+2025-02-02 02:02:13,558 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,560 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,560 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter internalSave(YipeeRoom[null,Eiffel Tower])
+2025-02-02 02:02:13,560 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit internalSave()
+2025-02-02 02:02:13,615 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveOrUpdateObject()
+2025-02-02 02:02:13,615 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]
+2025-02-02 02:02:13,616 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveObject()
+2025-02-02 02:02:13,616 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Leaning Tower of Pisa
+2025-02-02 02:02:13,616 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,618 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,619 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter saveObject()
+2025-02-02 02:02:13,619 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] saveOrUpdateObject object=YipeeRoom[null,Leaning Tower of Pisa], full
+2025-02-02 02:02:13,619 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Leaning Tower of Pisa
+2025-02-02 02:02:13,619 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,621 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,621 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter internalSave(YipeeRoom[null,Leaning Tower of Pisa])
+2025-02-02 02:02:13,621 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit internalSave()
+2025-02-02 02:02:13,623 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveOrUpdateObject()
+2025-02-02 02:02:13,623 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]
+2025-02-02 02:02:13,623 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveObject()
+2025-02-02 02:02:13,623 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Sunshine 60 Tower
+2025-02-02 02:02:13,623 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,625 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,626 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter saveObject()
+2025-02-02 02:02:13,626 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] saveOrUpdateObject object=YipeeRoom[null,Sunshine 60 Tower], full
+2025-02-02 02:02:13,626 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Sunshine 60 Tower
+2025-02-02 02:02:13,626 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,628 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,628 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter internalSave(YipeeRoom[null,Sunshine 60 Tower])
+2025-02-02 02:02:13,628 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit internalSave()
+2025-02-02 02:02:13,630 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveOrUpdateObject()
+2025-02-02 02:02:13,630 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]
+2025-02-02 02:02:13,630 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveObject()
+2025-02-02 02:02:13,630 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Chang Tower
+2025-02-02 02:02:13,631 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,633 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,634 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter saveObject()
+2025-02-02 02:02:13,634 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] saveOrUpdateObject object=YipeeRoom[null,Chang Tower], full
+2025-02-02 02:02:13,635 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Chang Tower
+2025-02-02 02:02:13,635 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,636 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,637 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter internalSave(YipeeRoom[null,Chang Tower])
+2025-02-02 02:02:13,637 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit internalSave()
+2025-02-02 02:02:13,638 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveOrUpdateObject()
+2025-02-02 02:02:13,639 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]
+2025-02-02 02:02:13,639 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveObject()
+2025-02-02 02:02:13,639 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Empire State Building
+2025-02-02 02:02:13,639 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,641 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,642 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter saveObject()
+2025-02-02 02:02:13,642 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] saveOrUpdateObject object=YipeeRoom[null,Empire State Building], full
+2025-02-02 02:02:13,642 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Empire State Building
+2025-02-02 02:02:13,642 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:02:13,644 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional.empty
+2025-02-02 02:02:13,644 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] enter internalSave(YipeeRoom[null,Empire State Building])
+2025-02-02 02:02:13,644 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit internalSave()
+2025-02-02 02:02:13,646 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveOrUpdateObject()
+2025-02-02 02:02:13,646 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]
+2025-02-02 02:02:13,646 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit saveObject()
+2025-02-02 02:02:13,646 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
+2025-02-02 02:02:13,647 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
+2025-02-02 02:02:13,728 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-02 02:02:13,771 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-02-02 02:02:14,908 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-02-02 02:02:14,918 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-02-02 02:02:14,967 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-02-02 02:02:14,986 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-02-02 02:02:15,001 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.148 seconds (process running for 9.14)
+2025-02-02 02:02:15,175 INFO a.g.y.t.LogUtil [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-02-02 02:02:15,175 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-02-02 02:02:15,175 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
+2025-02-02 02:02:15,214 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-02-02 02:10:02,893 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-02-02 02:10:02,896 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-02-02 02:10:07,550 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 24996 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-02-02 02:10:07,552 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-02-02 02:10:07,553 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-02-02 02:10:07,610 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-02 02:10:07,611 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-02 02:10:08,455 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-02 02:10:08,455 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-02 02:10:08,579 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 117 ms. Found 5 JPA repository interfaces.
+2025-02-02 02:10:09,878 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-02-02 02:10:09,889 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-02-02 02:10:09,892 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-02-02 02:10:09,892 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-02-02 02:10:09,978 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-02-02 02:10:09,980 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2368 ms
+2025-02-02 02:10:10,141 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-02-02 02:10:10,375 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-02-02 02:10:10,376 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-02-02 02:10:10,388 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-02-02 02:10:10,978 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-02 02:10:11,199 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-02-02 02:10:12,608 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
+2025-02-02 02:10:12,707 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
+2025-02-02 02:10:12,707 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Eiffel Tower
+2025-02-02 02:10:12,707 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:10:12,901 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]]
+2025-02-02 02:10:12,902 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Leaning Tower of Pisa
+2025-02-02 02:10:12,902 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:10:12,904 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]]
+2025-02-02 02:10:12,904 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Sunshine 60 Tower
+2025-02-02 02:10:12,904 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:10:12,906 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]]
+2025-02-02 02:10:12,906 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Chang Tower
+2025-02-02 02:10:12,906 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:10:12,908 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]]
+2025-02-02 02:10:12,908 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Empire State Building
+2025-02-02 02:10:12,908 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 02:10:12,910 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]]
+2025-02-02 02:10:12,910 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
+2025-02-02 02:10:12,910 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
+2025-02-02 02:10:13,000 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-02 02:10:13,051 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-02-02 02:10:14,349 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-02-02 02:10:14,367 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-02-02 02:10:14,429 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-02-02 02:10:14,449 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-02-02 02:10:14,465 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.413 seconds (process running for 7.96)
+2025-02-02 02:10:14,553 INFO a.g.y.t.LogUtil [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-02-02 02:10:14,553 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-02-02 02:10:14,553 DEBUG a.g.y.t.LogUtil [restartedMain] tick rate interval = 0.033333335.
+2025-02-02 02:10:14,554 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
+2025-02-02 02:10:14,573 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-02-02 02:15:55,951 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-02-02 02:15:55,954 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-02-02 10:55:35,824 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 25484 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-02-02 10:55:35,825 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-02-02 10:55:35,829 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-02-02 10:55:35,884 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-02-02 10:55:35,884 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-02-02 10:55:36,809 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-02-02 10:55:36,810 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-02-02 10:55:36,936 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 118 ms. Found 5 JPA repository interfaces.
+2025-02-02 10:55:38,295 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-02-02 10:55:38,308 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-02-02 10:55:38,310 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-02-02 10:55:38,311 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-02-02 10:55:38,381 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-02-02 10:55:38,383 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2497 ms
+2025-02-02 10:55:38,538 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-02-02 10:55:38,772 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-02-02 10:55:38,774 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-02-02 10:55:38,784 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-02-02 10:55:39,352 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-02-02 10:55:39,583 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-02-02 10:55:40,807 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
+2025-02-02 10:55:40,888 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
+2025-02-02 10:55:40,888 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Eiffel Tower
+2025-02-02 10:55:40,889 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 10:55:41,075 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]]
+2025-02-02 10:55:41,075 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Leaning Tower of Pisa
+2025-02-02 10:55:41,076 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 10:55:41,078 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]]
+2025-02-02 10:55:41,078 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Sunshine 60 Tower
+2025-02-02 10:55:41,078 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 10:55:41,080 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]]
+2025-02-02 10:55:41,081 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Chang Tower
+2025-02-02 10:55:41,081 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 10:55:41,084 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]]
+2025-02-02 10:55:41,085 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Empire State Building
+2025-02-02 10:55:41,085 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
+2025-02-02 10:55:41,088 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]]
+2025-02-02 10:55:41,088 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
+2025-02-02 10:55:41,088 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
+2025-02-02 10:55:41,167 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-02-02 10:55:41,202 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-02-02 10:55:44,056 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-02-02 10:55:44,069 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-02-02 10:55:44,134 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-02-02 10:55:44,159 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-02-02 10:55:44,176 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.832 seconds (process running for 9.599)
+2025-02-02 10:55:44,304 INFO a.g.y.t.LogUtil [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-02-02 10:55:44,305 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-02-02 10:55:44,305 DEBUG a.g.y.t.LogUtil [restartedMain] tick rate interval = 0.033333335.
+2025-02-02 10:55:44,305 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
+2025-02-02 10:55:44,353 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-02-02 11:09:12,546 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-2] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-02-02 11:09:12,547 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-2] Initializing Servlet 'dispatcherServlet'
+2025-02-02 11:09:12,549 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-2] Completed initialization in 2 ms
+2025-02-02 11:12:17,438 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-02-02 11:12:17,441 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

@@ -1,0 +1,679 @@
+2024-12-22 03:10:32,617 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 129788 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 03:10:32,624 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 03:10:32,711 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 03:10:32,712 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 03:10:34,135 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 03:10:34,136 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 03:10:34,343 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 194 ms. Found 4 JPA repository interfaces.
+2024-12-22 03:10:36,501 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 03:10:36,530 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:10:36,533 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 03:10:36,534 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 03:10:36,740 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 03:10:36,741 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 4028 ms
+2024-12-22 03:10:37,056 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 03:10:37,394 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 03:10:37,395 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 03:10:37,406 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 03:10:38,348 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 03:10:38,654 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 03:10:41,287 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 03:10:41,361 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 03:10:43,640 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 03:10:43,657 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 03:10:43,742 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:10:43,763 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 03:10:43,780 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 12.346 seconds (process running for 13.935)
+2024-12-22 03:27:23,856 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 03:27:23,859 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 03:27:31,252 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 33612 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 03:27:31,254 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 03:27:31,304 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 03:27:31,305 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 03:27:32,452 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 03:27:32,452 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 03:27:32,576 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 116 ms. Found 4 JPA repository interfaces.
+2024-12-22 03:27:34,080 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 03:27:34,095 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:27:34,098 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 03:27:34,098 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 03:27:34,169 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 03:27:34,171 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2864 ms
+2024-12-22 03:27:34,409 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 03:27:34,814 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 03:27:34,817 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 03:27:34,841 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 03:27:35,908 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 03:27:36,203 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 03:27:38,627 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 03:27:38,702 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 03:27:40,314 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 03:27:40,329 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 03:27:40,387 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:27:40,413 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 03:27:40,429 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 10.002 seconds (process running for 10.831)
+2024-12-22 03:34:27,762 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 03:34:27,766 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 03:34:33,583 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 87916 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 03:34:33,585 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 03:34:33,638 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 03:34:33,639 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 03:34:34,850 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 03:34:34,851 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 03:34:35,007 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 149 ms. Found 4 JPA repository interfaces.
+2024-12-22 03:34:36,590 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 03:34:36,601 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:34:36,603 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 03:34:36,604 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 03:34:36,685 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 03:34:36,687 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3045 ms
+2024-12-22 03:34:36,886 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 03:34:37,138 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 03:34:37,143 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 03:34:37,155 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 03:34:37,743 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 03:34:37,971 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 03:34:40,175 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 03:34:40,238 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 03:34:42,012 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 03:34:42,062 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 03:34:42,198 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:34:42,261 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 03:34:42,298 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 9.291 seconds (process running for 10.021)
+2024-12-22 03:45:26,288 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 03:45:26,293 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 03:45:32,232 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 9396 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 03:45:32,235 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 03:45:32,651 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 03:45:32,653 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 03:45:33,876 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 03:45:33,877 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 03:45:34,073 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 186 ms. Found 4 JPA repository interfaces.
+2024-12-22 03:45:35,694 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 03:45:35,708 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:45:35,710 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 03:45:35,711 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 03:45:35,788 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 03:45:35,789 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3134 ms
+2024-12-22 03:45:36,000 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 03:45:36,234 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 03:45:36,235 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 03:45:36,245 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 03:45:37,009 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 03:45:37,249 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 03:45:39,614 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 03:45:39,688 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 03:45:41,151 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 03:45:41,191 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 03:45:41,274 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 03:45:41,300 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 03:45:41,319 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 9.854 seconds (process running for 10.478)
+2024-12-22 04:13:27,285 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:13:27,288 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 04:13:33,449 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 125688 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:13:33,454 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:13:33,517 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:13:33,518 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:13:34,422 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:13:34,422 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:13:34,596 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 166 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:13:36,259 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:13:36,272 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:13:36,274 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:13:36,275 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:13:36,375 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:13:36,376 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2857 ms
+2024-12-22 04:13:36,675 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:13:36,936 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:13:36,938 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:13:36,952 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:13:37,642 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:13:37,899 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:13:40,913 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:13:41,010 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:13:43,377 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:13:43,395 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:13:43,464 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:13:43,499 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:13:43,518 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 10.931 seconds (process running for 11.655)
+2024-12-22 04:20:26,553 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:20:26,556 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 04:20:31,510 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 121296 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:20:31,513 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:20:31,570 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:20:31,570 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:20:32,463 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:20:32,464 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:20:32,613 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 140 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:20:33,976 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:20:33,990 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:20:33,992 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:20:33,992 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:20:34,063 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:20:34,066 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2493 ms
+2024-12-22 04:20:34,323 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:20:34,553 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:20:34,555 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:20:34,565 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:20:35,115 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:20:35,324 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:20:37,455 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:20:37,517 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:20:39,114 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:20:39,128 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:20:39,178 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:20:39,197 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:20:39,211 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.31 seconds (process running for 8.874)
+2024-12-22 04:20:39,345 WARN o.h.e.j.s.SqlExceptionHelper [restartedMain] SQL Error: 23505, SQLState: 23505
+2024-12-22 04:20:39,346 ERROR o.h.e.j.s.SqlExceptionHelper [restartedMain] Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]
+2024-12-22 04:20:39,358 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-12-22 04:20:39,378 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+java.lang.RuntimeException: Issue visiting save for YipeeTable: 
+	at asg.games.yipee.objects.YipeeTable.visitSave(YipeeTable.java:306)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveObject(YipeeGameServiceImpl.java:168)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.lambda$commandLineRunner$0(YipeeWebserverApplication.java:47)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:774)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:33)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.dao.DataIntegrityViolationException: could not execute statement [Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]] [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]; SQL [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]; constraint ["PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:566)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:795)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:758)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:663)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:413)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy4/jdk.proxy4.$Proxy158.save(Unknown Source)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.internalSave(YipeeGameServiceImpl.java:138)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.putAllSeats(YipeeGameServiceImpl.java:250)
+	at asg.games.yipee.objects.YipeeTable.visitSave(YipeeTable.java:303)
+	... 27 common frames omitted
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]] [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:60)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:56)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:278)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:40)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:52)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:171)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:112)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2785)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:102)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:635)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:502)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:364)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:39)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1412)
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:485)
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2301)
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1966)
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
+	... 44 common frames omitted
+Caused by: org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:520)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.index.Index.getDuplicateKeyException(Index.java:527)
+	at org.h2.mvstore.db.MVSecondaryIndex.checkUnique(MVSecondaryIndex.java:223)
+	at org.h2.mvstore.db.MVSecondaryIndex.add(MVSecondaryIndex.java:184)
+	at org.h2.mvstore.db.MVTable.addRow(MVTable.java:519)
+	at org.h2.command.dml.Insert.insertRows(Insert.java:174)
+	at org.h2.command.dml.Insert.update(Insert.java:135)
+	at org.h2.command.dml.DataChangeStatement.update(DataChangeStatement.java:74)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdateInternal(JdbcPreparedStatement.java:216)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdate(JdbcPreparedStatement.java:174)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:275)
+	... 65 common frames omitted
+2024-12-22 04:20:39,540 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:20:39,890 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2024-12-22 04:27:00,141 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 132580 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:27:00,143 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:27:00,195 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:27:00,196 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:27:01,294 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:27:01,295 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:27:01,422 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 119 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:27:03,369 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:27:03,382 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:27:03,384 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:27:03,384 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:27:03,464 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:27:03,466 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3268 ms
+2024-12-22 04:27:03,726 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:27:03,954 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:27:03,955 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:27:03,964 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:27:04,575 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:27:04,790 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:27:07,220 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:27:07,293 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:27:08,877 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:27:08,890 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:27:08,957 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:27:08,980 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:27:08,998 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 9.422 seconds (process running for 10.093)
+2024-12-22 04:27:48,304 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:27:48,307 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 04:27:53,817 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 127116 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:27:53,819 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:27:53,905 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:27:53,905 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:27:54,869 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:27:54,869 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:27:55,011 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 133 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:27:56,638 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:27:56,649 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:27:56,657 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:27:56,657 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:27:56,731 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:27:56,733 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2825 ms
+2024-12-22 04:27:56,933 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:27:57,160 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:27:57,161 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:27:57,171 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:27:57,737 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:27:57,966 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:28:00,268 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:28:00,355 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:28:02,070 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:28:02,084 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:28:02,144 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:28:02,165 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:28:02,184 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.993 seconds (process running for 9.662)
+2024-12-22 04:28:02,395 WARN o.h.e.j.s.SqlExceptionHelper [restartedMain] SQL Error: 23505, SQLState: 23505
+2024-12-22 04:28:02,396 ERROR o.h.e.j.s.SqlExceptionHelper [restartedMain] Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]
+2024-12-22 04:28:02,407 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-12-22 04:28:02,425 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+java.lang.RuntimeException: Issue visiting save for YipeeTable: 
+	at asg.games.yipee.objects.YipeeTable.visitSave(YipeeTable.java:307)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveObject(YipeeGameJPAServiceImpl.java:167)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.lambda$commandLineRunner$0(YipeeWebserverApplication.java:44)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:774)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.dao.DataIntegrityViolationException: could not execute statement [Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]] [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]; SQL [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]; constraint ["PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:566)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:795)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:758)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:663)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:413)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy4/jdk.proxy4.$Proxy158.save(Unknown Source)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.internalSave(YipeeGameJPAServiceImpl.java:137)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveOrUpdateObject(YipeeGameJPAServiceImpl.java:157)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveObject(YipeeGameJPAServiceImpl.java:165)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.putAllSeats(YipeeGameJPAServiceImpl.java:249)
+	at asg.games.yipee.objects.YipeeTable.visitSave(YipeeTable.java:303)
+	... 27 common frames omitted
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]] [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:60)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:56)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:278)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:40)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:52)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:171)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:112)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2785)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:102)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:635)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:502)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:364)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:39)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1412)
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:485)
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2301)
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1966)
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
+	... 46 common frames omitted
+Caused by: org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:520)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.index.Index.getDuplicateKeyException(Index.java:527)
+	at org.h2.mvstore.db.MVSecondaryIndex.checkUnique(MVSecondaryIndex.java:223)
+	at org.h2.mvstore.db.MVSecondaryIndex.add(MVSecondaryIndex.java:184)
+	at org.h2.mvstore.db.MVTable.addRow(MVTable.java:519)
+	at org.h2.command.dml.Insert.insertRows(Insert.java:174)
+	at org.h2.command.dml.Insert.update(Insert.java:135)
+	at org.h2.command.dml.DataChangeStatement.update(DataChangeStatement.java:74)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdateInternal(JdbcPreparedStatement.java:216)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdate(JdbcPreparedStatement.java:174)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:275)
+	... 67 common frames omitted
+2024-12-22 04:28:02,589 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:28:02,855 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2024-12-22 04:33:25,843 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 132624 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:33:25,846 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:33:25,946 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:33:25,946 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:33:27,002 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:33:27,003 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:33:27,154 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 142 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:33:28,675 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:33:28,687 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:33:28,689 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:33:28,690 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:33:28,778 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:33:28,780 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2832 ms
+2024-12-22 04:33:28,979 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:33:29,236 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:33:29,238 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:33:29,251 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:33:29,869 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:33:30,137 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:33:32,439 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:33:32,511 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:33:34,399 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:33:34,424 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:33:34,540 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:33:34,640 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:33:34,706 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 9.656 seconds (process running for 10.36)
+2024-12-22 04:34:10,037 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-7] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 04:34:10,038 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-7] Initializing Servlet 'dispatcherServlet'
+2024-12-22 04:34:10,039 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-7] Completed initialization in 1 ms
+2024-12-22 04:34:10,087 WARN o.s.w.s.r.ResourceHttpRequestHandler [http-nio-8080-exec-7] "Path represents URL or has "url:" prefix: [http:/localhost/favicon.ico]"
+2024-12-22 04:34:10,205 WARN o.s.w.s.r.ResourceHttpRequestHandler [http-nio-8080-exec-5] "Path represents URL or has "url:" prefix: [http:/localhost/favicon.ico]"
+2024-12-22 04:37:07,526 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:37:07,530 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 04:37:12,598 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 131960 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:37:12,600 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:37:12,685 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:37:12,685 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:37:13,724 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:37:13,724 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:37:13,881 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 147 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:37:15,678 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:37:15,689 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:37:15,692 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:37:15,692 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:37:15,755 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:37:15,756 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3069 ms
+2024-12-22 04:37:15,959 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:37:16,185 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:37:16,187 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:37:16,197 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:37:16,936 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:37:17,170 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:37:19,353 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:37:19,417 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:37:20,818 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:37:20,831 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:37:20,891 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:37:20,913 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:37:20,929 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.964 seconds (process running for 9.67)
+2024-12-22 04:37:21,091 WARN o.h.e.j.s.SqlExceptionHelper [restartedMain] SQL Error: 23505, SQLState: 23505
+2024-12-22 04:37:21,092 ERROR o.h.e.j.s.SqlExceptionHelper [restartedMain] Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]
+2024-12-22 04:37:21,108 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-12-22 04:37:21,133 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+java.lang.RuntimeException: Issue visiting save for YipeeTable: 
+	at asg.games.yipee.objects.YipeeTable.visitSave(YipeeTable.java:307)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveObject(YipeeGameJPAServiceImpl.java:167)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.lambda$commandLineRunner$0(YipeeWebserverApplication.java:44)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:774)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.springframework.dao.DataIntegrityViolationException: could not execute statement [Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]] [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]; SQL [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]; constraint ["PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]]
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:290)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:241)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:566)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.processCommit(AbstractPlatformTransactionManager.java:795)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.commit(AbstractPlatformTransactionManager.java:758)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.commitTransactionAfterReturning(TransactionAspectSupport.java:663)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:413)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.interceptor.ExposeInvocationInterceptor.invoke(ExposeInvocationInterceptor.java:97)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy4/jdk.proxy4.$Proxy158.save(Unknown Source)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.internalSave(YipeeGameJPAServiceImpl.java:137)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveOrUpdateObject(YipeeGameJPAServiceImpl.java:157)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.saveObject(YipeeGameJPAServiceImpl.java:165)
+	at asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl.putAllSeats(YipeeGameJPAServiceImpl.java:249)
+	at asg.games.yipee.objects.YipeeTable.visitSave(YipeeTable.java:303)
+	... 27 common frames omitted
+Caused by: org.hibernate.exception.ConstraintViolationException: could not execute statement [Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]] [insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?)]
+	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:60)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:56)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:278)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.performNonBatchedMutation(AbstractMutationExecutor.java:107)
+	at org.hibernate.engine.jdbc.mutation.internal.MutationExecutorSingleNonBatched.performNonBatchedOperations(MutationExecutorSingleNonBatched.java:40)
+	at org.hibernate.engine.jdbc.mutation.internal.AbstractMutationExecutor.execute(AbstractMutationExecutor.java:52)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.doStaticInserts(InsertCoordinator.java:171)
+	at org.hibernate.persister.entity.mutation.InsertCoordinator.coordinateInsert(InsertCoordinator.java:112)
+	at org.hibernate.persister.entity.AbstractEntityPersister.insert(AbstractEntityPersister.java:2785)
+	at org.hibernate.action.internal.EntityInsertAction.execute(EntityInsertAction.java:102)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:635)
+	at org.hibernate.engine.spi.ActionQueue.executeActions(ActionQueue.java:502)
+	at org.hibernate.event.internal.AbstractFlushingEventListener.performExecutions(AbstractFlushingEventListener.java:364)
+	at org.hibernate.event.internal.DefaultFlushEventListener.onFlush(DefaultFlushEventListener.java:39)
+	at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127)
+	at org.hibernate.internal.SessionImpl.doFlush(SessionImpl.java:1412)
+	at org.hibernate.internal.SessionImpl.managedFlush(SessionImpl.java:485)
+	at org.hibernate.internal.SessionImpl.flushBeforeTransactionCompletion(SessionImpl.java:2301)
+	at org.hibernate.internal.SessionImpl.beforeTransactionCompletion(SessionImpl.java:1966)
+	at org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl.beforeTransactionCompletion(JdbcCoordinatorImpl.java:439)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl.beforeCompletionCallback(JdbcResourceLocalTransactionCoordinatorImpl.java:169)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.commit(JdbcResourceLocalTransactionCoordinatorImpl.java:267)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101)
+	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:562)
+	... 46 common frames omitted
+Caused by: org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException: Unique index or primary key violation: "PUBLIC.UK_CQ1IEVSN0IUSL9YJXS3AWQ29L_INDEX_1 ON PUBLIC.YT_SEATS(PARENT_TABLE_ID NULLS FIRST) VALUES ( /* 1 */ 'e4c0e48693c4a1810193c4a193460000' )"; SQL statement:
+insert into yt_seats (created,is_seat_ready,modified,name,parent_table_id,seated_player_id,id) values (?,?,?,?,?,?,?) [23505-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:520)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.index.Index.getDuplicateKeyException(Index.java:527)
+	at org.h2.mvstore.db.MVSecondaryIndex.checkUnique(MVSecondaryIndex.java:223)
+	at org.h2.mvstore.db.MVSecondaryIndex.add(MVSecondaryIndex.java:184)
+	at org.h2.mvstore.db.MVTable.addRow(MVTable.java:519)
+	at org.h2.command.dml.Insert.insertRows(Insert.java:174)
+	at org.h2.command.dml.Insert.update(Insert.java:135)
+	at org.h2.command.dml.DataChangeStatement.update(DataChangeStatement.java:74)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:169)
+	at org.h2.command.Command.executeUpdate(Command.java:256)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdateInternal(JdbcPreparedStatement.java:216)
+	at org.h2.jdbc.JdbcPreparedStatement.executeUpdate(JdbcPreparedStatement.java:174)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.executeUpdate(ProxyPreparedStatement.java:61)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.executeUpdate(HikariProxyPreparedStatement.java)
+	at org.hibernate.engine.jdbc.internal.ResultSetReturnImpl.executeUpdate(ResultSetReturnImpl.java:275)
+	... 67 common frames omitted
+2024-12-22 04:37:21,332 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:37:21,623 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2024-12-22 04:41:48,547 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 107752 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:41:48,550 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:41:48,651 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:41:48,676 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:41:49,575 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:41:49,575 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:41:49,710 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 127 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:41:51,439 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:41:51,460 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:41:51,466 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:41:51,468 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:41:51,563 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:41:51,566 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2886 ms
+2024-12-22 04:41:51,950 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:41:52,323 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:41:52,327 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:41:52,341 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:41:53,141 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:41:53,386 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:41:56,284 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:41:56,392 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:41:58,084 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:41:58,098 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:41:58,159 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:41:58,178 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:41:58,194 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 10.389 seconds (process running for 11.101)
+2024-12-22 04:50:16,582 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-6] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 04:50:16,582 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-6] Initializing Servlet 'dispatcherServlet'
+2024-12-22 04:50:16,584 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-6] Completed initialization in 1 ms
+2024-12-22 04:50:16,625 WARN o.s.w.s.r.ResourceHttpRequestHandler [http-nio-8080-exec-6] "Path represents URL or has "url:" prefix: [http:/localhost/favicon.ico]"
+2024-12-22 04:50:16,759 WARN o.s.w.s.r.ResourceHttpRequestHandler [http-nio-8080-exec-4] "Path represents URL or has "url:" prefix: [http:/localhost/favicon.ico]"
+2024-12-22 04:55:18,438 WARN o.s.w.s.r.ResourceHttpRequestHandler [http-nio-8080-exec-3] "Path represents URL or has "url:" prefix: [http:/localhost/favicon.ico]"
+2024-12-22 04:56:55,038 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2024-12-22 04:56:55,044 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2024-12-22 04:57:11,023 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 127176 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2024-12-22 04:57:11,026 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2024-12-22 04:57:11,078 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-12-22 04:57:11,078 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-12-22 04:57:12,144 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2024-12-22 04:57:12,144 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-12-22 04:57:12,292 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 140 ms. Found 4 JPA repository interfaces.
+2024-12-22 04:57:13,723 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2024-12-22 04:57:13,737 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:57:13,744 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2024-12-22 04:57:13,745 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2024-12-22 04:57:13,814 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2024-12-22 04:57:13,816 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2736 ms
+2024-12-22 04:57:14,025 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2024-12-22 04:57:14,287 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2024-12-22 04:57:14,290 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2024-12-22 04:57:14,301 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2024-12-22 04:57:15,099 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-12-22 04:57:15,404 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2024-12-22 04:57:17,778 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-12-22 04:57:17,843 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2024-12-22 04:57:19,421 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2024-12-22 04:57:19,437 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2024-12-22 04:57:19,509 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2024-12-22 04:57:19,564 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2024-12-22 04:57:19,581 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 9.253 seconds (process running for 10.616)
+2024-12-22 06:35:08,402 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-9] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-12-22 06:35:08,408 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-9] Initializing Servlet 'dispatcherServlet'
+2024-12-22 06:35:08,429 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-9] Completed initialization in 20 ms

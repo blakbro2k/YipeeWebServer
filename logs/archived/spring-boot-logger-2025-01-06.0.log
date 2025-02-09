@@ -1,0 +1,508 @@
+2025-01-06 22:44:31,559 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 18164 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 22:44:31,582 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 22:44:31,584 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 22:44:31,657 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 22:44:31,657 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 22:44:33,365 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 22:44:33,365 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 22:44:33,533 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 158 ms. Found 4 JPA repository interfaces.
+2025-01-06 22:44:35,212 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 22:44:35,235 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 22:44:35,243 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 22:44:35,244 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 22:44:35,322 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 22:44:35,323 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3665 ms
+2025-01-06 22:44:35,531 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 22:44:35,847 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 22:44:35,849 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 22:44:35,860 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 22:44:36,697 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 22:44:36,974 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `java.util.Map<java.lang.Integer, asg.games.yipee.objects.YipeeTable>`
+2025-01-06 22:44:36,975 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `java.util.Map<java.lang.Integer, asg.games.yipee.objects.YipeeTable>`
+2025-01-06 22:44:36,977 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 22:44:37,045 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 22:44:37,050 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 22:44:37,071 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 22:44:37,099 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `java.util.Map<java.lang.Integer, asg.games.yipee.objects.YipeeTable>`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:34)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `java.util.Map<java.lang.Integer, asg.games.yipee.objects.YipeeTable>`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
+2025-01-06 22:49:44,901 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 40944 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 22:49:44,903 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 22:49:44,904 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 22:49:44,968 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 22:49:44,969 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 22:49:47,456 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 22:49:47,457 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 22:49:48,774 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 1202 ms. Found 4 JPA repository interfaces.
+2025-01-06 22:49:51,341 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 22:49:51,361 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 22:49:51,365 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 22:49:51,365 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 22:49:51,459 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 22:49:51,462 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 6490 ms
+2025-01-06 22:49:51,736 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 22:49:52,032 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 22:49:52,033 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 22:49:52,046 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 22:49:52,756 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 22:49:52,972 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 22:49:52,973 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 22:49:52,974 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 22:49:53,535 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 22:49:53,538 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 22:49:53,553 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 22:49:53,573 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:34)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.type.descriptor.java.spi.BasicCollectionJavaType.getRecommendedJdbcType(BasicCollectionJavaType.java:74)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
+2025-01-06 22:51:38,154 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 41032 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 22:51:38,156 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 22:51:38,157 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 22:51:38,214 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 22:51:38,215 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 22:51:39,243 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 22:51:39,243 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 22:51:39,377 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 124 ms. Found 4 JPA repository interfaces.
+2025-01-06 22:51:40,700 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 22:51:40,711 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 22:51:40,713 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 22:51:40,714 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 22:51:40,782 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 22:51:40,784 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2568 ms
+2025-01-06 22:51:40,973 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 22:51:41,206 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 22:51:41,208 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 22:51:41,220 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 22:51:41,935 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 22:51:42,151 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 22:51:42,151 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 22:51:42,152 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 22:51:42,722 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 22:51:42,724 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 22:51:42,740 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 22:51:42,760 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:34)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.type.descriptor.java.spi.BasicCollectionJavaType.getRecommendedJdbcType(BasicCollectionJavaType.java:74)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
+2025-01-06 22:52:15,454 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 38092 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 22:52:15,455 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 22:52:15,456 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 22:52:15,509 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 22:52:15,510 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 22:52:16,717 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 22:52:16,717 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 22:52:16,869 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 142 ms. Found 4 JPA repository interfaces.
+2025-01-06 22:52:18,432 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 22:52:18,446 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 22:52:18,450 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 22:52:18,451 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 22:52:18,525 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 22:52:18,526 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3013 ms
+2025-01-06 22:52:18,691 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 22:52:18,966 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 22:52:18,969 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 22:52:18,981 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 22:52:19,623 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 22:52:19,862 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 22:52:19,862 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 22:52:19,864 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 22:52:20,345 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 22:52:20,347 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 22:52:20,364 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 22:52:20,382 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:34)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.type.descriptor.java.spi.BasicCollectionJavaType.getRecommendedJdbcType(BasicCollectionJavaType.java:74)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
+2025-01-06 23:19:42,075 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 35576 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 23:19:42,076 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 23:19:42,077 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 23:19:42,130 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 23:19:42,131 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 23:19:43,132 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 23:19:43,133 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 23:19:43,272 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 131 ms. Found 4 JPA repository interfaces.
+2025-01-06 23:19:44,634 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 23:19:44,645 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 23:19:44,647 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 23:19:44,648 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 23:19:44,725 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 23:19:44,726 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2593 ms
+2025-01-06 23:19:44,918 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 23:19:45,186 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 23:19:45,187 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 23:19:45,199 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 23:19:45,769 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 23:19:46,006 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `org.slf4j.Logger`
+2025-01-06 23:19:46,006 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `org.slf4j.Logger`
+2025-01-06 23:19:46,008 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 23:19:46,623 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 23:19:46,626 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 23:19:46,641 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 23:19:46,659 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `org.slf4j.Logger`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:34)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `org.slf4j.Logger`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
+2025-01-06 23:30:49,426 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 3056 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 23:30:49,428 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 23:30:49,429 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 23:30:49,481 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 23:30:49,481 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 23:30:50,437 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 23:30:50,437 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 23:30:50,592 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 140 ms. Found 4 JPA repository interfaces.
+2025-01-06 23:30:52,442 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 23:30:52,463 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 23:30:52,467 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 23:30:52,468 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 23:30:52,617 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 23:30:52,622 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3137 ms
+2025-01-06 23:30:53,132 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 23:30:53,430 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 23:30:53,432 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 23:30:53,446 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 23:30:54,097 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 23:30:54,352 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `org.slf4j.Logger`
+2025-01-06 23:30:54,354 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `org.slf4j.Logger`
+2025-01-06 23:30:54,355 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 23:30:54,963 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 23:30:54,966 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 23:30:54,982 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 23:30:55,000 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `org.slf4j.Logger`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `org.slf4j.Logger`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
+2025-01-06 23:34:00,861 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 12916 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-06 23:34:00,868 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-06 23:34:00,874 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-06 23:34:01,014 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-06 23:34:01,014 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-06 23:34:02,137 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-06 23:34:02,138 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-06 23:34:02,311 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 161 ms. Found 4 JPA repository interfaces.
+2025-01-06 23:34:03,972 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-06 23:34:03,991 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-06 23:34:03,995 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-06 23:34:03,995 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-06 23:34:04,087 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-06 23:34:04,089 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3072 ms
+2025-01-06 23:34:04,408 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-06 23:34:04,690 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-06 23:34:04,692 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-06 23:34:04,704 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-06 23:34:05,949 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-06 23:34:06,210 ERROR o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Failed to initialize JPA EntityManagerFactory: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 23:34:06,211 WARN o.s.c.s.AbstractApplicationContext [restartedMain] Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+2025-01-06 23:34:06,213 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-06 23:34:06,683 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-06 23:34:06,687 INFO o.a.j.l.DirectJDKLog [restartedMain] Stopping service [Tomcat]
+2025-01-06 23:34:06,733 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-06 23:34:06,772 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'entityManagerFactory' defined in class path resource [org/springframework/boot/autoconfigure/orm/jpa/HibernateJpaConfiguration.class]: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1806)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:954)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:625)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:36)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.hibernate.type.descriptor.java.spi.JdbcTypeRecommendationException: Could not determine recommended JdbcType for `asg.games.yipee.objects.YipeePlayer`
+	at org.hibernate.type.descriptor.java.spi.UnknownBasicJavaType.getRecommendedJdbcType(UnknownBasicJavaType.java:37)
+	at org.hibernate.type.descriptor.java.spi.BasicCollectionJavaType.getRecommendedJdbcType(BasicCollectionJavaType.java:74)
+	at org.hibernate.boot.model.process.internal.InferredBasicValueResolver.from(InferredBasicValueResolver.java:222)
+	at org.hibernate.mapping.BasicValue.buildResolution(BasicValue.java:480)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:310)
+	at org.hibernate.mapping.BasicValue.resolve(BasicValue.java:300)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.lambda$processValueResolvers$4(InFlightMetadataCollectorImpl.java:1855)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1682)
+	at java.base/java.util.ArrayList.removeIf(ArrayList.java:1660)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processValueResolvers(InFlightMetadataCollectorImpl.java:1854)
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.processSecondPasses(InFlightMetadataCollectorImpl.java:1840)
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:331)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1383)
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1454)
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:75)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:409)
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:396)
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1853)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1802)
+	... 20 common frames omitted
