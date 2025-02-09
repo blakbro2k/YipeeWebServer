@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{game.title} + ' ' + #{game.titleHomeMsg}">_title.</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap4-toggle/bootstrap4-toggle.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-2" align="center">
+
+    <h2 th:text="#{game.title}" />
+    <table style="width:80%" border="1" class = "table table-striped table-responsive-md">
+        <thead align="left"><tr><th th:text="#{social.lounge}"></th></tr></thead>
+        <tbody>
+            <tr th:each="socialRoom:${allSocialRooms}">
+                <td>
+                    <a th:text="${socialRoom.name}" th:href="@{/room/{id}(id=${socialRoom.id})}" class="btn btn-primary" style="width: 100%">_room_name_not_loaded_</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="width:80%" border="1" class = "table table-striped table-responsive-md">
+        <thead align="left"><tr><th th:text="#{beginner.lounge}"></th></tr></thead>
+        <tbody>
+            <tr th:each="beginnerRoom:${allBeginnerRooms}">
+                <td>
+                    <a th:text="${beginnerRoom.name}" th:href="@{/room/{id}(id=${beginnerRoom.id})}" class="btn btn-primary fullBtn" style="width: 100%">_room_name_not_loaded_</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="width:80%" border="1" class = "table table-striped table-responsive-md">
+        <thead align="left"><tr><th th:text="#{intermediate.lounge}"></th></tr></thead>
+        <tbody>
+            <tr th:each="intermediateRoom:${allIntermediateRooms}">
+                <td>
+                    <a th:text="${intermediateRoom.name}" th:href="@{/room/{id}(id=${intermediateRoom.id})}" class="btn btn-primary" style="width: 100%">_room_name_not_loaded_</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="width:80%" border="1" class = "table table-striped table-responsive-md">
+        <thead align="left"><tr><th th:text="#{advanced.lounge}"></th></tr></thead>
+        <tbody>
+            <tr th:each="advancedRoom:${allAdvancedRooms}">
+                <td>
+                    <a  th:text="${advancedRoom.name}" th:href="@{/room/{id}(id=${advancedRoom.id})}" class="btn btn-primary" style="width: 100%">_room_name_not_loaded_</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>

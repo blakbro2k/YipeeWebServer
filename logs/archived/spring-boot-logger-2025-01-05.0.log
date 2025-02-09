@@ -1,0 +1,12 @@
+2025-01-05 03:54:10,976 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-5] Entering index(BindingAwareModelMap={})
+2025-01-05 03:54:11,005 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-5] Exiting index()= redirect:/home
+2025-01-05 03:54:15,943 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-6] Entering home(BindingAwareModelMap={})
+2025-01-05 03:54:15,943 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-6] Exiting home()= home
+2025-01-05 09:44:07,851 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-2] Entering index(BindingAwareModelMap={})
+2025-01-05 09:44:07,852 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-2] Exiting index()= redirect:/home
+2025-01-05 09:44:12,853 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-9] Entering home(BindingAwareModelMap={})
+2025-01-05 09:44:12,854 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-9] Exiting home()= home
+2025-01-05 15:54:40,125 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-1] Entering index(BindingAwareModelMap={})
+2025-01-05 15:54:40,247 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-1] Exiting index()= redirect:/home
+2025-01-05 15:54:44,902 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-5] Entering home(BindingAwareModelMap={})
+2025-01-05 15:54:44,903 DEBUG a.g.s.y.a.LoggingAspect [http-nio-8080-exec-5] Exiting home()= home

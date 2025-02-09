@@ -1,0 +1,933 @@
+2025-01-24 02:25:49,718 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 154576 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 02:25:49,721 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 02:25:49,721 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 02:25:49,780 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 02:25:49,780 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 02:25:51,029 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 02:25:51,030 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 02:25:51,155 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 119 ms. Found 4 JPA repository interfaces.
+2025-01-24 02:25:52,764 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 02:25:52,775 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 02:25:52,777 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 02:25:52,777 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 02:25:52,846 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 02:25:52,847 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3065 ms
+2025-01-24 02:25:52,995 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 02:25:53,188 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 02:25:53,190 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 02:25:53,203 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 02:25:53,767 DEBUG o.h.e.j.e.i.JdbcEnvironmentInitiator$1 [restartedMain] Database ->
+       name : H2
+    version : 2.2.224 (2023-09-17)
+      major : 2
+      minor : 2
+2025-01-24 02:25:53,767 DEBUG o.h.e.j.e.i.JdbcEnvironmentInitiator$1 [restartedMain] Driver ->
+       name : H2 JDBC Driver
+    version : 2.2.224 (2023-09-17)
+      major : 2
+      minor : 2
+2025-01-24 02:25:53,768 DEBUG o.j.l.DelegatingBasicLogger [restartedMain] JDBC version : 4.2
+2025-01-24 02:25:53,783 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 02:25:53,790 DEBUG o.h.e.j.e.s.IdentifierHelperBuilder [restartedMain] JDBC driver metadata reported database stores quoted identifiers in neither upper, lower nor mixed case
+2025-01-24 02:25:53,797 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [TESTDB]
+2025-01-24 02:25:53,797 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [PUBLIC]
+2025-01-24 02:25:53,873 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_PLAYERS]
+2025-01-24 02:25:53,873 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_PLAYERS]
+2025-01-24 02:25:53,882 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [DTYPE]
+2025-01-24 02:25:53,896 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,898 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,909 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,913 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,914 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,915 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,915 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,915 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,915 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,915 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,916 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,916 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,916 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,916 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,916 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,917 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,917 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [icon]
+2025-01-24 02:25:53,917 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [icon]
+2025-01-24 02:25:53,917 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [icon]
+2025-01-24 02:25:53,918 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [rating]
+2025-01-24 02:25:53,918 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [rating]
+2025-01-24 02:25:53,918 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [rating]
+2025-01-24 02:25:53,918 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [serialized_key_config]
+2025-01-24 02:25:53,918 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [serialized_key_config]
+2025-01-24 02:25:53,919 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [serialized_key_config]
+2025-01-24 02:25:53,923 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS]
+2025-01-24 02:25:53,923 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS]
+2025-01-24 02:25:53,923 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [DTYPE]
+2025-01-24 02:25:53,929 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,929 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,929 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,930 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,930 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,930 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,930 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,930 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,931 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,931 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,931 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,931 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,931 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,931 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,932 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,932 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,933 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [loungeName]
+2025-01-24 02:25:53,933 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [loungeName]
+2025-01-24 02:25:53,933 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [loungeName]
+2025-01-24 02:25:53,933 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [loungeName]
+2025-01-24 02:25:53,933 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [loungeName]
+2025-01-24 02:25:53,935 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [players]
+2025-01-24 02:25:53,935 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [players]
+2025-01-24 02:25:53,949 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [players_ORDER]
+2025-01-24 02:25:53,951 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,951 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,951 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [players_KEY]
+2025-01-24 02:25:53,952 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [players_KEY]
+2025-01-24 02:25:53,954 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [room_id]
+2025-01-24 02:25:53,954 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:53,958 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableIndexMap]
+2025-01-24 02:25:53,958 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableIndexMap]
+2025-01-24 02:25:53,959 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableIndexMap_ORDER]
+2025-01-24 02:25:53,959 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,959 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,960 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableIndexMap_KEY]
+2025-01-24 02:25:53,960 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableIndexMap_KEY]
+2025-01-24 02:25:53,962 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_SEATS]
+2025-01-24 02:25:53,962 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_SEATS]
+2025-01-24 02:25:53,963 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [DTYPE]
+2025-01-24 02:25:53,964 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,965 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,965 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,965 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,965 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,966 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,967 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,967 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,967 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,967 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,967 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSeatReady]
+2025-01-24 02:25:53,967 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSeatReady]
+2025-01-24 02:25:53,968 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSeatReady]
+2025-01-24 02:25:53,968 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSeatReady]
+2025-01-24 02:25:53,968 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSeatReady]
+2025-01-24 02:25:53,968 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [parentTableId]
+2025-01-24 02:25:53,968 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [parentTableId]
+2025-01-24 02:25:53,969 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [parentTableId]
+2025-01-24 02:25:53,969 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [parentTableId]
+2025-01-24 02:25:53,969 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [parentTableId]
+2025-01-24 02:25:53,969 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatNumber]
+2025-01-24 02:25:53,969 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatNumber]
+2025-01-24 02:25:53,970 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatNumber]
+2025-01-24 02:25:53,970 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatNumber]
+2025-01-24 02:25:53,970 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatNumber]
+2025-01-24 02:25:53,970 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seated_player_id]
+2025-01-24 02:25:53,971 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatedPlayer]
+2025-01-24 02:25:53,971 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seatedPlayer]
+2025-01-24 02:25:53,974 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES]
+2025-01-24 02:25:53,974 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES]
+2025-01-24 02:25:53,974 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [DTYPE]
+2025-01-24 02:25:53,976 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,976 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,976 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:53,977 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,977 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,978 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,978 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,978 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [created]
+2025-01-24 02:25:53,978 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,978 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,979 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,979 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,979 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [modified]
+2025-01-24 02:25:53,979 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,979 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,979 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [name]
+2025-01-24 02:25:53,980 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [accessType]
+2025-01-24 02:25:53,980 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [accessType]
+2025-01-24 02:25:53,980 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [accessType]
+2025-01-24 02:25:53,980 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [accessType]
+2025-01-24 02:25:53,980 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [accessType]
+2025-01-24 02:25:53,981 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isRated]
+2025-01-24 02:25:53,981 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isRated]
+2025-01-24 02:25:53,981 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isRated]
+2025-01-24 02:25:53,981 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isRated]
+2025-01-24 02:25:53,982 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isRated]
+2025-01-24 02:25:53,982 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSoundOn]
+2025-01-24 02:25:53,982 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSoundOn]
+2025-01-24 02:25:53,984 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSoundOn]
+2025-01-24 02:25:53,984 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSoundOn]
+2025-01-24 02:25:53,985 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [isSoundOn]
+2025-01-24 02:25:53,985 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats]
+2025-01-24 02:25:53,985 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats]
+2025-01-24 02:25:53,986 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_ORDER]
+2025-01-24 02:25:53,986 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,986 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,986 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_KEY]
+2025-01-24 02:25:53,987 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_KEY]
+2025-01-24 02:25:53,987 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableNumber]
+2025-01-24 02:25:53,987 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableNumber]
+2025-01-24 02:25:53,988 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableNumber]
+2025-01-24 02:25:53,988 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableNumber]
+2025-01-24 02:25:53,989 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableNumber]
+2025-01-24 02:25:53,989 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [watchers]
+2025-01-24 02:25:53,989 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [watchers]
+2025-01-24 02:25:53,989 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [watchers_ORDER]
+2025-01-24 02:25:53,990 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,990 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [element]
+2025-01-24 02:25:53,990 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [watchers_KEY]
+2025-01-24 02:25:53,990 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [watchers_KEY]
+2025-01-24 02:25:53,990 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_id]
+2025-01-24 02:25:53,991 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:53,998 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seated_player_id]
+2025-01-24 02:25:53,999 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seated_player_id]
+2025-01-24 02:25:53,999 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seated_player_id]
+2025-01-24 02:25:54,002 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [null]
+2025-01-24 02:25:54,003 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLE_PLAYERS]
+2025-01-24 02:25:54,003 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLE_PLAYERS]
+2025-01-24 02:25:54,004 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_id]
+2025-01-24 02:25:54,004 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_id]
+2025-01-24 02:25:54,004 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_id]
+2025-01-24 02:25:54,005 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,005 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,005 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,008 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES]
+2025-01-24 02:25:54,009 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES_seats]
+2025-01-24 02:25:54,009 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES_seats]
+2025-01-24 02:25:54,009 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES_seats]
+2025-01-24 02:25:54,010 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,010 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES]
+2025-01-24 02:25:54,011 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,011 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YipeeTable_id]
+2025-01-24 02:25:54,011 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_table_id]
+2025-01-24 02:25:54,012 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_table_id]
+2025-01-24 02:25:54,014 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,014 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_table_id]
+2025-01-24 02:25:54,014 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_table_id]
+2025-01-24 02:25:54,014 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,016 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_SEATS]
+2025-01-24 02:25:54,016 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,016 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,016 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS_tableIndexMap]
+2025-01-24 02:25:54,017 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS_tableIndexMap]
+2025-01-24 02:25:54,018 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS_tableIndexMap]
+2025-01-24 02:25:54,018 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,018 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOMS]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YipeeRoom_id]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_room_id]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_room_id]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_room_id]
+2025-01-24 02:25:54,019 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_room_id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_TABLES]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [tableIndexMap_id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_index_map_id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_index_map_id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_index_map_id]
+2025-01-24 02:25:54,020 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_index_map_id]
+2025-01-24 02:25:54,022 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [null]
+2025-01-24 02:25:54,022 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOM_PLAYERS]
+2025-01-24 02:25:54,022 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [YT_ROOM_PLAYERS]
+2025-01-24 02:25:54,023 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [room_id]
+2025-01-24 02:25:54,023 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [room_id]
+2025-01-24 02:25:54,023 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [room_id]
+2025-01-24 02:25:54,023 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,023 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,023 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,024 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,026 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FK5oo7fndoefmuheiejbd0lpaep]
+2025-01-24 02:25:54,026 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [room_id]
+2025-01-24 02:25:54,026 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FKqcsknbk08jkw08o8o0n7kor2]
+2025-01-24 02:25:54,026 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_index_map_id]
+2025-01-24 02:25:54,026 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FK9agpkysld9l7bml1ymlnti5h2]
+2025-01-24 02:25:54,027 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_room_id]
+2025-01-24 02:25:54,027 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FKlbuox1wh3uuvrt9h7ic2hyf6h]
+2025-01-24 02:25:54,027 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seated_player_id]
+2025-01-24 02:25:54,027 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FK2nm60envy512i0bx5iwkyq0v4]
+2025-01-24 02:25:54,027 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,027 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FK5bgraisys971aeqx95vyqy8xg]
+2025-01-24 02:25:54,028 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_id]
+2025-01-24 02:25:54,028 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FK3emngcxhbr66936dccy8yex81]
+2025-01-24 02:25:54,028 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,028 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FKjcvlhr59stgrpxiv7h2lqcv2y]
+2025-01-24 02:25:54,028 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_table_id]
+2025-01-24 02:25:54,028 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [FKtfmcst18e4qkil0exafm4tpvu]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [room_id]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_index_map_id]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_room_id]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seated_player_id]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [player_id]
+2025-01-24 02:25:54,044 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [table_id]
+2025-01-24 02:25:54,045 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [seats_id]
+2025-01-24 02:25:54,045 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [yipee_table_id]
+2025-01-24 02:25:54,053 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 02:25:54,119 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [null]
+2025-01-24 02:25:54,120 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [null]
+2025-01-24 02:25:54,780 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [null]
+2025-01-24 02:25:54,780 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting [null]
+2025-01-24 02:25:54,808 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [TESTDB]
+2025-01-24 02:25:54,809 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [TESTDB] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,809 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [PUBLIC]
+2025-01-24 02:25:54,809 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [PUBLIC] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,811 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_players]
+2025-01-24 02:25:54,812 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,824 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_room_players]
+2025-01-24 02:25:54,824 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_room_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,825 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_rooms]
+2025-01-24 02:25:54,826 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_rooms] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,827 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_rooms_table_index_map]
+2025-01-24 02:25:54,827 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_rooms_table_index_map] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,828 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_seats]
+2025-01-24 02:25:54,828 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_seats] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,829 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_table_players]
+2025-01-24 02:25:54,829 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_table_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,831 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_tables]
+2025-01-24 02:25:54,831 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_tables] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,833 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_tables_seats]
+2025-01-24 02:25:54,833 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_tables_seats] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,835 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_players]
+2025-01-24 02:25:54,835 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,837 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_room_players]
+2025-01-24 02:25:54,837 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_room_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,838 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_rooms]
+2025-01-24 02:25:54,839 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_rooms] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,839 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_rooms_table_index_map]
+2025-01-24 02:25:54,840 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_rooms_table_index_map] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,840 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_seats]
+2025-01-24 02:25:54,840 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_seats] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,842 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_table_players]
+2025-01-24 02:25:54,842 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_table_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,843 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_tables]
+2025-01-24 02:25:54,843 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_tables] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,844 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_tables_seats]
+2025-01-24 02:25:54,844 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_tables_seats] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,845 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_players]
+2025-01-24 02:25:54,845 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,845 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_room_players]
+2025-01-24 02:25:54,845 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_room_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,851 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_rooms]
+2025-01-24 02:25:54,851 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_rooms] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,851 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_rooms_table_index_map]
+2025-01-24 02:25:54,851 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_rooms_table_index_map] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,853 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_seats]
+2025-01-24 02:25:54,854 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_seats] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,855 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_table_players]
+2025-01-24 02:25:54,855 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_table_players] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,857 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_tables]
+2025-01-24 02:25:54,857 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_tables] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:54,857 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Normalizing identifier quoting for object name [yt_tables_seats]
+2025-01-24 02:25:54,857 TRACE o.h.e.j.e.i.NormalizingIdentifierHelperImpl [restartedMain] Rendering unquoted identifier [yt_tables_seats] in upper case for use in DatabaseMetaData
+2025-01-24 02:25:55,060 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@7e72d1e0]
+2025-01-24 02:25:55,061 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@75a0e8e]
+2025-01-24 02:25:55,170 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@11141121]
+2025-01-24 02:25:55,222 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@479283c7]
+2025-01-24 02:25:55,224 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@527d5e17]
+2025-01-24 02:25:55,320 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@c78996d]
+2025-01-24 02:25:55,321 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@676faa3c]
+2025-01-24 02:25:55,324 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@189e1c9c]
+2025-01-24 02:25:55,325 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@50655d13]
+2025-01-24 02:25:55,377 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@18278659]
+2025-01-24 02:25:55,379 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@716b3a20]
+2025-01-24 02:25:55,382 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@442a4777]
+2025-01-24 02:25:55,384 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@6a21fb9f]
+2025-01-24 02:25:55,394 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@196b930a]
+2025-01-24 02:25:55,396 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@483d8daf]
+2025-01-24 02:25:55,400 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@6847d4cf]
+2025-01-24 02:25:55,401 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@22775088]
+2025-01-24 02:25:55,702 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@920269099 wrapping prep1: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,707 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@600ecf97]
+2025-01-24 02:25:55,762 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1012976417 wrapping prep2: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.id=?]
+2025-01-24 02:25:55,764 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@1d4a14]
+2025-01-24 02:25:55,767 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1454479550 wrapping prep3: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,768 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@7f0a72e2]
+2025-01-24 02:25:55,816 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Starting after statement execution processing [ON_CLOSE]
+2025-01-24 02:25:55,817 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@1b00464b]
+2025-01-24 02:25:55,818 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[8a1f808b949733fc0194973402bd0000,Eiffel Tower]
+2025-01-24 02:25:55,820 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1026913236 wrapping prep5: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,821 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@25e02b6b]
+2025-01-24 02:25:55,822 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1388599183 wrapping prep6: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.id=?]
+2025-01-24 02:25:55,822 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@6fd5bd97]
+2025-01-24 02:25:55,824 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@111329868 wrapping prep7: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,824 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@34ee2901]
+2025-01-24 02:25:55,826 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Starting after statement execution processing [ON_CLOSE]
+2025-01-24 02:25:55,826 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@12608e7f]
+2025-01-24 02:25:55,827 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[8a1f808b949733fc0194973402f10001,Leaning Tower of Pisa]
+2025-01-24 02:25:55,828 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@958650110 wrapping prep9: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,828 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@358450c8]
+2025-01-24 02:25:55,829 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@789081685 wrapping prep10: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.id=?]
+2025-01-24 02:25:55,830 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@656a726b]
+2025-01-24 02:25:55,831 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@2122342034 wrapping prep11: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,832 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@27599dae]
+2025-01-24 02:25:55,834 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Starting after statement execution processing [ON_CLOSE]
+2025-01-24 02:25:55,835 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@642c1f63]
+2025-01-24 02:25:55,836 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[8a1f808b949733fc0194973402f90002,Sunshine 60 Tower]
+2025-01-24 02:25:55,837 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@2114080068 wrapping prep13: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,838 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@3ec8e942]
+2025-01-24 02:25:55,839 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1216118451 wrapping prep14: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.id=?]
+2025-01-24 02:25:55,839 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@7d41c3c0]
+2025-01-24 02:25:55,841 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@56346427 wrapping prep15: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,842 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@1448c444]
+2025-01-24 02:25:55,843 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Starting after statement execution processing [ON_CLOSE]
+2025-01-24 02:25:55,844 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@6d884645]
+2025-01-24 02:25:55,844 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[8a1f808b949733fc0194973403020003,Chang Tower]
+2025-01-24 02:25:55,845 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1590850529 wrapping prep17: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,846 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@ef039a9]
+2025-01-24 02:25:55,846 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1110743484 wrapping prep18: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.id=?]
+2025-01-24 02:25:55,847 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@5051e9c0]
+2025-01-24 02:25:55,848 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Registering last query statement [HikariProxyPreparedStatement@1285156753 wrapping prep19: select y1_0.id,y1_0.created,y1_0.lounge_name,y1_0.modified,y1_0.name from yt_rooms y1_0 where y1_0.name=?]
+2025-01-24 02:25:55,849 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@56c5e230]
+2025-01-24 02:25:55,851 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Starting after statement execution processing [ON_CLOSE]
+2025-01-24 02:25:55,851 TRACE o.h.e.j.i.JdbcCoordinatorImpl [restartedMain] Closing JDBC container [org.hibernate.engine.jdbc.internal.JdbcCoordinatorImpl@1e3e4ab]
+2025-01-24 02:25:55,852 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Found obj: YipeeRoom[8a1f808b949733fc01949734030a0004,Empire State Building]
+2025-01-24 02:25:55,951 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 02:25:55,990 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 02:25:57,182 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 02:25:57,194 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 02:25:57,249 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 02:25:57,269 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 02:25:57,285 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.091 seconds (process running for 8.698)
+2025-01-24 02:25:57,382 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-24 02:25:57,397 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Couldn't load shared library 'gdx64.dll' for target: Windows 10, x86, 64-bit
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:174)
+	at com.badlogic.gdx.utils.GdxNativesLoader.load(GdxNativesLoader.java:30)
+	at com.badlogic.gdx.backends.headless.HeadlessNativesLoader.load(HeadlessNativesLoader.java:24)
+	at com.badlogic.gdx.backends.headless.HeadlessApplication.<init>(HeadlessApplication.java:64)
+	at asg.games.server.yipeewebserver.headless.HeadlessLauncher.createApplication(HeadlessLauncher.java:35)
+	at asg.games.server.yipeewebserver.headless.HeadlessLauncher.launch(HeadlessLauncher.java:29)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.run(YipeeWebserverApplication.java:55)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:774)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Unable to read file for extraction: gdx64.dll
+	at com.badlogic.gdx.utils.SharedLibraryLoader.readFile(SharedLibraryLoader.java:183)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.loadFile(SharedLibraryLoader.java:339)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:170)
+	... 31 common frames omitted
+2025-01-24 02:25:57,583 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-24 02:25:57,728 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-24 02:34:45,553 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 154680 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 02:34:45,554 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 02:34:45,555 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 02:34:45,609 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 02:34:45,610 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 02:34:46,578 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 02:34:46,579 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 02:34:46,720 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 133 ms. Found 4 JPA repository interfaces.
+2025-01-24 02:34:48,104 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 02:34:48,117 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 02:34:48,121 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 02:34:48,122 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 02:34:48,199 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 02:34:48,200 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2590 ms
+2025-01-24 02:34:48,379 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 02:34:48,600 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 02:34:48,601 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 02:34:48,612 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 02:34:49,140 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 02:34:49,391 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 02:34:51,490 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 02:34:51,538 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 02:34:52,749 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 02:34:52,763 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 02:34:52,830 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 02:34:52,853 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 02:34:52,871 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.864 seconds (process running for 8.467)
+2025-01-24 02:34:52,971 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-24 02:34:52,990 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Couldn't load shared library 'gdx64.dll' for target: Windows 10, x86, 64-bit
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:174)
+	at com.badlogic.gdx.utils.GdxNativesLoader.load(GdxNativesLoader.java:30)
+	at com.badlogic.gdx.backends.headless.HeadlessNativesLoader.load(HeadlessNativesLoader.java:24)
+	at com.badlogic.gdx.backends.headless.HeadlessApplication.<init>(HeadlessApplication.java:64)
+	at asg.games.server.yipeewebserver.headless.HeadlessLauncher.createApplication(HeadlessLauncher.java:35)
+	at asg.games.server.yipeewebserver.headless.HeadlessLauncher.launch(HeadlessLauncher.java:29)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.run(YipeeWebserverApplication.java:55)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:774)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Unable to read file for extraction: gdx64.dll
+	at com.badlogic.gdx.utils.SharedLibraryLoader.readFile(SharedLibraryLoader.java:183)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.loadFile(SharedLibraryLoader.java:339)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:170)
+	... 31 common frames omitted
+2025-01-24 02:34:53,192 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-24 02:34:53,677 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-24 02:51:04,689 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 150384 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 02:51:04,691 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 02:51:04,692 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 02:51:04,754 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 02:51:04,754 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 02:51:05,821 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 02:51:05,821 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 02:51:05,965 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 136 ms. Found 4 JPA repository interfaces.
+2025-01-24 02:51:07,326 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 02:51:07,337 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 02:51:07,340 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 02:51:07,340 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 02:51:07,421 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 02:51:07,422 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2667 ms
+2025-01-24 02:51:07,580 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 02:51:07,792 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 02:51:07,794 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 02:51:07,805 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 02:51:08,426 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 02:51:08,660 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 02:51:10,350 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 02:51:10,417 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 02:51:11,684 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 02:51:11,696 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 02:51:11,764 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 02:51:11,792 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 02:51:11,870 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.745 seconds (process running for 8.526)
+2025-01-24 02:51:12,167 INFO o.s.b.a.l.ConditionEvaluationReportLogger [restartedMain] 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-01-24 02:51:12,188 ERROR o.s.b.SpringApplication [restartedMain] Application run failed
+com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Couldn't load shared library 'gdx64.dll' for target: Windows 10, x86, 64-bit
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:174)
+	at com.badlogic.gdx.utils.GdxNativesLoader.load(GdxNativesLoader.java:30)
+	at com.badlogic.gdx.backends.headless.HeadlessNativesLoader.load(HeadlessNativesLoader.java:24)
+	at com.badlogic.gdx.backends.headless.HeadlessApplication.<init>(HeadlessApplication.java:64)
+	at asg.games.server.yipeewebserver.headless.HeadlessLauncher.createApplication(HeadlessLauncher.java:35)
+	at asg.games.server.yipeewebserver.headless.HeadlessLauncher.launch(HeadlessLauncher.java:29)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.run(YipeeWebserverApplication.java:55)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$5(SpringApplication.java:790)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:798)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:789)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$3(SpringApplication.java:774)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:774)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:342)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at asg.games.server.yipeewebserver.YipeeWebserverApplication.main(YipeeWebserverApplication.java:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: com.badlogic.gdx.utils.SharedLibraryLoadRuntimeException: Unable to read file for extraction: gdx64.dll
+	at com.badlogic.gdx.utils.SharedLibraryLoader.readFile(SharedLibraryLoader.java:183)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.loadFile(SharedLibraryLoader.java:339)
+	at com.badlogic.gdx.utils.SharedLibraryLoader.load(SharedLibraryLoader.java:170)
+	... 31 common frames omitted
+2025-01-24 02:51:12,503 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown initiated...
+2025-01-24 02:51:12,556 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Shutdown completed.
+2025-01-24 03:05:12,981 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 150808 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 03:05:12,983 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 03:05:12,984 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 03:05:13,037 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 03:05:13,038 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 03:05:14,151 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 03:05:14,151 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 03:05:14,280 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 120 ms. Found 4 JPA repository interfaces.
+2025-01-24 03:05:15,934 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 03:05:15,945 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 03:05:15,949 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 03:05:15,949 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 03:05:16,018 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 03:05:16,020 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2979 ms
+2025-01-24 03:05:16,159 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 03:05:16,373 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 03:05:16,375 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 03:05:16,384 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 03:05:16,895 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 03:05:17,113 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 03:05:18,835 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 03:05:18,947 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 03:05:20,170 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 03:05:20,182 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 03:05:20,275 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 03:05:20,321 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 03:05:20,350 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.828 seconds (process running for 8.514)
+2025-01-24 03:05:20,665 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8001] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 03:21:10,091 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 03:21:10,094 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 03:21:15,999 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 99148 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 03:21:16,001 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 03:21:16,002 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 03:21:16,083 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 03:21:16,084 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 03:21:17,051 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 03:21:17,051 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 03:21:17,174 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 116 ms. Found 4 JPA repository interfaces.
+2025-01-24 03:21:18,541 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 03:21:18,553 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 03:21:18,555 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 03:21:18,555 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 03:21:18,621 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 03:21:18,622 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2537 ms
+2025-01-24 03:21:18,800 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 03:21:19,077 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 03:21:19,079 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 03:21:19,089 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 03:21:19,786 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 03:21:20,034 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 03:21:21,937 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 03:21:21,978 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 03:21:23,304 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 03:21:23,314 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 03:21:23,366 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 03:21:23,388 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 03:21:23,404 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.894 seconds (process running for 8.421)
+2025-01-24 03:21:23,500 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 03:33:24,434 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 03:33:24,437 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 03:33:29,586 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 152080 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 03:33:29,588 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 03:33:29,588 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 03:33:29,645 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 03:33:29,645 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 03:33:30,614 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 03:33:30,615 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 03:33:30,749 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 124 ms. Found 4 JPA repository interfaces.
+2025-01-24 03:33:31,982 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 03:33:31,993 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 03:33:31,996 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 03:33:31,996 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 03:33:32,068 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 03:33:32,069 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2422 ms
+2025-01-24 03:33:32,224 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 03:33:32,439 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 03:33:32,441 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 03:33:32,451 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 03:33:33,109 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 03:33:33,352 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 03:33:35,083 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 03:33:35,128 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 03:33:36,680 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 03:33:36,692 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 03:33:36,759 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 03:33:36,789 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 03:33:36,816 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.761 seconds (process running for 8.329)
+2025-01-24 03:33:36,930 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 06:09:19,341 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-24 06:09:19,341 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-01-24 06:09:19,342 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 1 ms
+2025-01-24 09:46:17,481 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 09:46:17,485 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 09:47:32,672 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 143072 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 09:47:32,673 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 09:47:32,674 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 09:47:32,731 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 09:47:32,732 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 09:47:33,858 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 09:47:33,859 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 09:47:33,993 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 125 ms. Found 4 JPA repository interfaces.
+2025-01-24 09:47:35,443 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 09:47:35,459 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:47:35,462 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 09:47:35,463 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 09:47:35,538 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 09:47:35,539 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2806 ms
+2025-01-24 09:47:35,705 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 09:47:35,963 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 09:47:35,965 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 09:47:35,974 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 09:47:36,659 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 09:47:36,922 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 09:47:38,703 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 09:47:38,742 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 09:47:40,052 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 09:47:40,063 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 09:47:40,131 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:47:40,186 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 09:47:40,228 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.515 seconds (process running for 10.526)
+2025-01-24 09:47:40,403 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 09:47:59,799 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 09:47:59,803 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 09:48:13,829 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 108368 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 09:48:13,831 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 09:48:13,832 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 09:48:13,884 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 09:48:13,884 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 09:48:14,975 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 09:48:14,976 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 09:48:15,113 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 128 ms. Found 4 JPA repository interfaces.
+2025-01-24 09:48:16,599 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 09:48:16,610 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:48:16,613 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 09:48:16,613 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 09:48:16,677 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 09:48:16,679 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2792 ms
+2025-01-24 09:48:16,823 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 09:48:17,047 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 09:48:17,049 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 09:48:17,060 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 09:48:17,595 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 09:48:17,835 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 09:48:19,458 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 09:48:19,499 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 09:48:20,720 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 09:48:20,732 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 09:48:20,787 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:48:20,811 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 09:48:20,826 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.458 seconds (process running for 7.954)
+2025-01-24 09:48:20,935 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 09:48:56,540 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 09:48:56,544 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 09:49:42,429 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 153032 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 09:49:42,430 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 09:49:42,431 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 09:49:42,484 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 09:49:42,484 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 09:49:43,412 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 09:49:43,412 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 09:49:43,556 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 134 ms. Found 4 JPA repository interfaces.
+2025-01-24 09:49:45,388 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 09:49:45,408 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:49:45,413 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 09:49:45,414 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 09:49:45,524 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 09:49:45,526 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3040 ms
+2025-01-24 09:49:45,682 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 09:49:45,927 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 09:49:45,930 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 09:49:45,942 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 09:49:46,616 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 09:49:46,856 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 09:49:48,546 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 09:49:48,591 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 09:49:49,853 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 09:49:49,865 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 09:49:49,926 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:49:49,950 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 09:49:49,967 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.063 seconds (process running for 8.758)
+2025-01-24 09:49:50,085 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 09:52:19,194 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 09:52:19,198 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 09:52:29,165 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 41288 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 09:52:29,167 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 09:52:29,168 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 09:52:29,224 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 09:52:29,225 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 09:52:30,083 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 09:52:30,084 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 09:52:30,217 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 126 ms. Found 4 JPA repository interfaces.
+2025-01-24 09:52:31,468 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 09:52:31,478 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:52:31,480 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 09:52:31,480 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 09:52:31,550 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 09:52:31,552 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2326 ms
+2025-01-24 09:52:31,693 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 09:52:31,923 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 09:52:31,925 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 09:52:31,937 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 09:52:32,504 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 09:52:32,715 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 09:52:34,304 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 09:52:34,340 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 09:52:35,459 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 09:52:35,471 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 09:52:35,527 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:52:35,549 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 09:52:35,566 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 6.968 seconds (process running for 7.567)
+2025-01-24 09:52:35,670 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 09:53:18,692 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 09:53:18,696 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 09:53:26,096 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 107376 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 09:53:26,100 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 09:53:26,103 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 09:53:26,172 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 09:53:26,173 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 09:53:27,102 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 09:53:27,102 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 09:53:27,226 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 116 ms. Found 4 JPA repository interfaces.
+2025-01-24 09:53:28,493 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 09:53:28,505 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:53:28,508 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 09:53:28,508 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 09:53:28,577 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 09:53:28,578 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2404 ms
+2025-01-24 09:53:28,734 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 09:53:28,961 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 09:53:28,963 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 09:53:28,973 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 09:53:29,523 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 09:53:29,745 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 09:53:31,357 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 09:53:31,399 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 09:53:32,542 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 09:53:32,553 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 09:53:32,611 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 09:53:32,633 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 09:53:32,649 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 7.107 seconds (process running for 7.706)
+2025-01-24 09:53:32,756 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 12:18:22,231 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-24 12:18:22,279 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-01-24 12:18:22,348 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 67 ms
+2025-01-24 13:31:00,023 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 13:31:00,065 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 13:35:36,513 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 159652 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 13:35:36,515 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 13:35:36,517 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 13:35:36,649 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 13:35:36,650 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 13:35:37,952 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 13:35:37,953 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 13:35:38,085 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 125 ms. Found 4 JPA repository interfaces.
+2025-01-24 13:35:39,839 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 13:35:39,853 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 13:35:39,855 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 13:35:39,855 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 13:35:39,941 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 13:35:39,943 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3291 ms
+2025-01-24 13:35:40,131 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 13:35:40,634 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 13:35:40,637 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 13:35:40,651 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 13:35:41,835 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 13:35:42,232 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 13:35:44,191 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 13:35:44,248 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 13:35:45,818 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 13:35:45,837 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 13:35:45,909 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 13:35:45,944 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 13:35:45,963 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 10.241 seconds (process running for 11.086)
+2025-01-24 13:35:46,086 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 16:49:39,789 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 16:49:39,849 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 22:32:14,386 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 161052 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 22:32:14,389 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 22:32:14,390 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 22:32:14,558 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 22:32:14,558 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 22:32:16,287 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 22:32:16,287 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 22:32:16,529 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 225 ms. Found 4 JPA repository interfaces.
+2025-01-24 22:32:18,435 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 22:32:18,449 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 22:32:18,452 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 22:32:18,452 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 22:32:18,559 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 22:32:18,561 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 4001 ms
+2025-01-24 22:32:18,766 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 22:32:19,104 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 22:32:19,107 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 22:32:19,118 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 22:32:19,965 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 22:32:20,259 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 22:32:22,602 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 22:32:22,679 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 22:32:24,534 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 22:32:24,548 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 22:32:24,646 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 22:32:24,670 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 22:32:24,688 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 11.208 seconds (process running for 12.445)
+2025-01-24 22:32:24,903 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 22:33:04,309 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 22:33:04,316 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-01-24 22:33:13,849 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 86864 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-01-24 22:33:13,852 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-01-24 22:33:13,853 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-01-24 22:33:13,930 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-01-24 22:33:13,930 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-01-24 22:33:15,124 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-24 22:33:15,124 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-24 22:33:15,277 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 142 ms. Found 4 JPA repository interfaces.
+2025-01-24 22:33:17,035 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-01-24 22:33:17,050 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-01-24 22:33:17,053 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-01-24 22:33:17,053 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-01-24 22:33:17,173 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-01-24 22:33:17,174 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3241 ms
+2025-01-24 22:33:17,451 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-01-24 22:33:17,834 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-01-24 22:33:17,836 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-01-24 22:33:17,863 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-01-24 22:33:18,764 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-24 22:33:19,047 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-01-24 22:33:21,301 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-24 22:33:21,351 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-01-24 22:33:22,997 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-01-24 22:33:23,011 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-01-24 22:33:23,092 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-01-24 22:33:23,135 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-01-24 22:33:23,154 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 9.85 seconds (process running for 10.696)
+2025-01-24 22:33:23,294 INFO a.g.y.t.LogUtil [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-01-24 22:33:34,816 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-01-24 22:33:34,841 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

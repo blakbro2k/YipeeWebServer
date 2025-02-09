@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE RoomConfigDTO [
+        <!ELEMENT RoomConfigDTO (Lounge*)>
+        <!ELEMENT Lounge (RoomName*)>
+        <!ELEMENT RoomName (#PCDATA)>
+
+        <!ATTLIST Lounge name CDATA #REQUIRED>
+        <!ATTLIST Lounge disabled CDATA #IMPLIED>
+        <!ATTLIST RoomName disabled CDATA #IMPLIED>
+        ]>
+<RoomConfigDTO>
+    <Lounge name="Social">
+        <RoomName>Eiffel Tower</RoomName>
+        <RoomName>Leaning Tower of Pisa</RoomName>
+        <RoomName disabled="false">Sunshine 60 Tower</RoomName>
+        <RoomName disabled="true">Two Union Square</RoomName>
+        <RoomName disabled="true">Tower of Babel Voice Chat</RoomName>
+    </Lounge>
+    <Lounge name="Beginner">
+        <RoomName>Chang Tower</RoomName>
+        <RoomName>Empire State Building</RoomName>
+        <RoomName disabled="true">Key Tower</RoomName>
+        <RoomName disabled="true">Olympia Centre</RoomName>
+        <RoomName disabled="true">One Astor Place</RoomName>
+        <RoomName disabled="true">Sears Tower</RoomName>
+    </Lounge>
+    <Lounge name="Intermediate" disabled="true">
+        <RoomName>World Trade Center in memory</RoomName>
+    </Lounge>
+    <Lounge name="Advanced" disabled="true">
+        <RoomName>CN Tower</RoomName>
+    </Lounge>
+    <Lounge name="All-Star" disabled="true">
+        <RoomName>Advanced Tournament advanced</RoomName>
+        <RoomName>All-Star Ladder ladder</RoomName>
+        <RoomName>Beginner Tournament beginner</RoomName>
+        <RoomName>Gregarious Group social</RoomName>
+    </Lounge>
+</RoomConfigDTO>

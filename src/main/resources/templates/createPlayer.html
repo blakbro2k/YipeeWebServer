@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{game.title} + ' : ' + #{game.createPlayer}">_title.</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap4-toggle/bootstrap4-toggle.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+</head>
+<body>
+<div class="container my-2" align="center">
+
+    <form th:action="@{/savePlayer}" th:object="${webPlayerDTO}" method="post">
+        <div class="form-row">
+            <div class="col-md-6 form-group">
+                <label>User Name</label>
+                <input type="text" class="form-control" th:field="*{username}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-3">Create Player</button>
+    </form>
+</div>
+</body>

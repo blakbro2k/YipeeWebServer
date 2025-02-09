@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="#{game.title} + ' : ' + #{game.tableJoin}">_title.</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap4-toggle/bootstrap4-toggle.min.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <script type="text/javascript">
+          function openLink(id, url) {
+              jQuery.get('game.html', function(data) {
+                    if(data == 'goToGame') {
+                         window.open(url);
+                     }
+                 }, 'text');
+            }
+                                           function createNewTable(var roomId) {
+                                                window.open("http://localhost:8080/createTable?roomId=$roomId", "_blank", "top=100,left=20,height=200,width=100,toolbar=no,resizable=no");
+                                            }
+</script>
+</head>
+<body>
+
+<div class="container my-2" align="center">
+    <div>
+        <table border="1" class="table table-striped table-responsive-md" style="width:100%">
+            <tr>
+                <td colspan="2"><p th:text="#{game.title} + ' ' + ${roomTitle}"></p></td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width: 6em">
+                                <table style="width: 100%;" border="1" class="table table-striped table-responsive-md">
+                                    <tr><td style="width: 100%;"><a th:href="@{/createTable/{id}(id=${roomId})}" class="btn btn-primary">Play New</a></td></tr>
+                                    <tr><td>
+                                        <a class="btn btn-primary" th:href="@{/createTable?roomId={id}(id=${roomId})}" target="_blank" href="#" th:onclick="createNewTable(${roomId})">Create Table</a>
+                                    </td></tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td><p>Table Widget</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <form:form action="#" method="post">
+                                    <input type = "submit" name = "playNew" value="Play Now"/>
+                                </form:form>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width: 6em">
+                                <table style="width: 100%;" border="1" class="table table-striped table-responsive-md">
+                                    <tr>
+                                        <td><p>Ratings</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p>Options</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a th:href="@{/home}" class="btn btn-primary">Exit Room</a></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td><p>Connected to games server as....</p></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p>Chat Widget</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table style="width: 100%">
+                                    <tr>
+                                        <td><p>Player Widget</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+
+
