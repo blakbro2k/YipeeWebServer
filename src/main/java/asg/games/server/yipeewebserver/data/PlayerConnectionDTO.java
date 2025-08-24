@@ -1,7 +1,6 @@
 package asg.games.server.yipeewebserver.data;
 
-import asg.games.yipee.objects.AbstractYipeeObject;
-import asg.games.yipee.objects.YipeePlayer;
+import asg.games.yipee.core.objects.YipeePlayer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

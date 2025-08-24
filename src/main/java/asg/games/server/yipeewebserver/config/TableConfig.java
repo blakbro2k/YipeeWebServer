@@ -3,8 +3,8 @@ package asg.games.server.yipeewebserver.config;
 import asg.games.server.yipeewebserver.YipeeWebserverApplication;
 import asg.games.server.yipeewebserver.data.RoomConfigDTO;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
-import asg.games.yipee.objects.YipeeRoom;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import asg.games.yipee.core.objects.YipeeRoom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class TableConfig {
             createDatabaseLounges(value);
             success = true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error attempting to load rooms",e);
         }
         logger.trace("exit loadRooms()={}", success);
         return success;

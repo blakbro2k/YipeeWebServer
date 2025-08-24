@@ -1,6 +1,6 @@
 package asg.games.server.yipeewebserver.services;
 
-import asg.games.yipee.objects.YipeePlayer;
+import asg.games.yipee.core.objects.YipeePlayer;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public interface ClientPlayerServices {

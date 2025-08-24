@@ -1,7 +1,7 @@
 package asg.games.server.yipeewebserver.data;
 
-import asg.games.yipee.objects.Copyable;
-import asg.games.yipee.tools.TimeUtils;
+import asg.games.yipee.core.objects.Copyable;
+import asg.games.yipee.core.tools.TimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -56,8 +56,8 @@ public abstract class AbstractDTO implements DTOObject, Copyable<DTOObject> {
     }
 
     public String toString() {
-        String var10000 = this.getClass().getSimpleName();
-        return var10000 + "[" + this.getId() + "," + this.getName() + "]";
+        String clazz = this.getClass().getSimpleName();
+        return clazz + "[" + this.getId() + "," + this.getName() + "]";
     }
 
     protected void copyParent(DTOObject o) {

@@ -2,7 +2,7 @@ package asg.games.server.yipeewebserver.controllers;
 
 
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
-import asg.games.yipee.objects.YipeeRoom;
+import asg.games.yipee.core.objects.YipeeRoom;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

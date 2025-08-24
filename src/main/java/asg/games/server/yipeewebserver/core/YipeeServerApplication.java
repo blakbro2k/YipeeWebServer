@@ -1,14 +1,16 @@
 package asg.games.server.yipeewebserver.core;
 
-import asg.games.yipee.aspects.Untraced;
-import asg.games.yipee.game.Version;
-import asg.games.yipee.persistence.Storage;
+import asg.games.server.yipeewebserver.aspects.Untraced;
+import asg.games.server.yipeewebserver.Version;
+import asg.games.yipee.core.persistence.Storage;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
@@ -19,13 +21,14 @@ public class YipeeServerApplication extends ApplicationAdapter {
     private static final Logger logger = LoggerFactory.getLogger(YipeeServerApplication.class);
 
     // Game server manager instance
-    GameServerManager daemon = new GameServerManager();
+    ServerManager daemon = new ServerManager();
     private static final String CONST_TITLE = "Yipee! Game Server";
+    private static final int CONST_SRV_FPS = 60;
+    private static final float CONST_SRV_TICK_INTERVAL = 1.0f / 20; // Default tick interval
     private int tcpPort = 80; // Default TCP port
     private int udpPort = 54225; // Default UDP port
     private float tickRate = 20.0f; // Default tick rate (20 ticks/sec)
-    private static final float DEFAULT_TICK_INTERVAL = 1.0f / 20; // Default tick interval
-    private float tickInterval = DEFAULT_TICK_INTERVAL;
+    private float tickInterval = CONST_SRV_TICK_INTERVAL;
     private float accumulator = 0f;
 
     /**
@@ -38,17 +41,21 @@ public class YipeeServerApplication extends ApplicationAdapter {
      * @param tcpPort
      * @param udpPort
      * @param tickRate
-     * @param yipeeGameService
+     * @param yipeeGameJPAService
      */
-    public void setConfiguration(int tcpPort, int udpPort, float tickRate, Storage yipeeGameService) {
+    public void setConfiguration(int tcpPort, int udpPort, float tickRate, Storage yipeeGameJPAService) {
         logger.info("{} Build {}", CONST_TITLE, Version.printVersion());
         logger.info("Setting up server to listen on the following ports: TCP[{}], UDP[{}], TICKRATE[{}]", tcpPort, udpPort, tickRate);
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
         this.tickRate = tickRate;
         this.tickInterval = 1.0f / tickRate;
-        daemon.setDBService(yipeeGameService);
+        daemon.setDBService(yipeeGameJPAService);
         logger.debug("tick rate interval = {}.", tickInterval);
+    }
+
+    public void setForgroundFPS(int fps) {
+        Gdx.graphics.setForegroundFPS(fps);
     }
 
     /**
@@ -56,13 +63,15 @@ public class YipeeServerApplication extends ApplicationAdapter {
      * Logs any startup errors and rethrows them as GdxRuntimeException.
      */
     public void create() {
-        Gdx.graphics.setForegroundFPS(60);
+        setForgroundFPS(CONST_SRV_FPS);
         logger.info("Starting server on tcp port [{}] and udp port [{}], with tick rate [{} ticks/sec]...", tcpPort, udpPort, tickRate);
         try {
             daemon.setUpServer(tcpPort, udpPort);
         } catch (IOException e) {
             logger.error("Error creating server thread.", e);
             throw new GdxRuntimeException("Error creating server thread.", e);
+        } catch (ParserConfigurationException | SAXException e) {
+            logger.error("There was an issue creating the server daemon.",e);
         }
     }
 

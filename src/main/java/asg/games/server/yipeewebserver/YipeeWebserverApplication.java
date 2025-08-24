@@ -2,9 +2,6 @@ package asg.games.server.yipeewebserver;
 
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import jakarta.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

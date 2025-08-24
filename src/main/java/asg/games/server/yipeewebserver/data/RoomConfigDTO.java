@@ -5,6 +5,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,8 @@ public class RoomConfigDTO {
         return sb.toString();
     }
 
+    @Setter
+    @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class RoomDTO {
         @JacksonXmlText
@@ -80,10 +84,6 @@ public class RoomConfigDTO {
             return disabled;
         }
 
-        public String getName() {
-            return name;
-        }
-
         public void setName(String name) {
             this.name = name;
         }
@@ -93,11 +93,14 @@ public class RoomConfigDTO {
         }
     }
 
+    @Setter
+    @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class LoungeDTO {
         @JacksonXmlElementWrapper(localName = "RoomName", useWrapping = false)
         @JacksonXmlProperty()
         private RoomDTO[] RoomName;
+
 
         @JacksonXmlProperty(localName = "name", isAttribute = true)
         private String name;
@@ -128,20 +131,8 @@ public class RoomConfigDTO {
             this.RoomName = rooms;
         }
 
-        public void setDisabled(boolean disabled) {
-            this.disabled = disabled;
-        }
-
         public boolean getDisabled() {
             return disabled;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
 
         public String toString() {

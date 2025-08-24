@@ -1,6 +1,6 @@
 package asg.games.server.yipeewebserver.services;
 
-import asg.games.yipee.persistence.YipeeObjectTerminatorAdapter;
+import asg.games.yipee.core.persistence.YipeeObjectTerminatorAdapter;
 
 public interface YipeeTerminateServices extends YipeeObjectTerminatorAdapter {
 }
