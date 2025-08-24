@@ -1,12 +1,10 @@
 package asg.games.server.yipeewebserver.data;
 
-import asg.games.yipee.objects.YipeeRoom;
-import asg.games.yipee.objects.YipeeTable;
+import asg.games.yipee.core.objects.YipeeRoom;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import java.io.Serializable;
 

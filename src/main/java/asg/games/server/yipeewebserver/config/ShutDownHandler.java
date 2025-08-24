@@ -22,7 +22,7 @@ public class ShutDownHandler {
     @PreDestroy
     public void onShutdown() {
         // Your shutdown logic here
-        System.out.println("Application is shutting down...");
+        logger.info("Application is shutting down...");
         launcher.shutDown();
     }
 

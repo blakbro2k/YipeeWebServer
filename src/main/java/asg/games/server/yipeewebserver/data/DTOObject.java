@@ -1,6 +1,6 @@
 package asg.games.server.yipeewebserver.data;
 
-import asg.games.yipee.objects.YipeeObject;
+import asg.games.yipee.core.objects.YipeeObject;
 
 /**
  * The {@code DTOObject} interface defines a standard structure for Data Transfer Objects (DTOs)
