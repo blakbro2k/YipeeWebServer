@@ -17,6 +17,7 @@ package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.Version;
 import asg.games.yipee.common.game.GameBoardState;
+import asg.games.yipee.core.objects.Disposable;
 import asg.games.yipee.net.game.GameManager;
 import asg.games.yipee.core.game.YipeeGameBoard;
 import asg.games.yipee.common.packets.PlayerAction;
@@ -29,10 +30,8 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
-import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -58,24 +57,20 @@ import java.util.concurrent.TimeUnit;
 public class ServerGameManager {
     private static final Logger logger = LoggerFactory.getLogger(GameManager.class);
     private static final String CONST_TITLE = "Yipee! Game Manager";
-    private final ScheduledExecutorService gameLoopExecutor; // Manages the game loop
-    private final ExecutorService playerActionExecutor; // Handles player action processing
-    private final Queue<YipeeSerializable> playersActionQueue = new ConcurrentLinkedQueue<>(); // Stores pending player actions
+    private final Queue<PlayerAction> actionHistory = new ConcurrentLinkedQueue<>(); // Stores pending player actions
+    private final Queue<PlayerAction> pendingActions = new ConcurrentLinkedQueue<>(); // Stores pending player actions
     private final Map<Integer, GamePlayerBoard> gameBoardMap = new ConcurrentHashMap<>(); // Maps seat IDs to game boards
 
     @Getter
     @Setter
     private long gameSeed;
 
-    public Object getAllBoardStates() {
-    }
-
     /**
      * Holds the player, their assigned board (if server-side), and a timeline of board states.
      */
     @Getter
     @Setter
-    public class GamePlayerBoard {
+    public class GamePlayerBoard implements Disposable {
 
         /** The player assigned to this seat (may be null if unoccupied). */
         private YipeePlayer player;
@@ -89,23 +84,29 @@ public class ServerGameManager {
         /** Map of tick → game state, allows timeline reconstruction. */
         private final Map<Integer, GameBoardState> gameBoardStates = new TreeMap<>();
 
-        /**
-         * Constructs a new GamePlayerBoard with an uninitialized board.
-         */
-        public GamePlayerBoard() {
-            this(-1);
-        }
+        private int seatIndex;
+
+        private int maxHistoryTicks;
 
         /**
          * Constructs a new GamePlayerBoard with a seeded YipeeGameBoard.
          * @param seed used to initialize the server-side board.
          */
-        public GamePlayerBoard(long seed) {
-            this.board = new YipeeGameBoard(seed);
+        public GamePlayerBoard(long seed, int seatIndex, int maxHistoryTicks) {
+            setBoardSeed(seed);
+            this.seatIndex = seatIndex;
+            this.maxHistoryTicks = maxHistoryTicks;
         }
 
         public Map<Integer, GameBoardState> getAllGameBoardMap() {
             return gameBoardStates;
+        }
+
+        public void applyAction(int tick, PlayerAction action) {
+            if(action != null){
+                gameBoardStates.put(tick, board.exportGameState());
+                board.applyPlayerAction(action);
+            }
         }
 
         /**
@@ -113,7 +114,7 @@ public class ServerGameManager {
          * @param tick the tick number
          * @param state the game board state
          */
-        public void addStateAtTick(int tick, GameBoardState state) {
+        private void addStateAtTick(int tick, GameBoardState state) {
             gameBoardStates.put(tick, state);
         }
 
@@ -184,6 +185,13 @@ public class ServerGameManager {
         public boolean hasStarted() {
             return board != null && board.hasGameStarted();
         }
+
+        @Override
+        public void dispose() {
+            player.dispose();
+            board.dispose();
+            gameBoardStates.clear();
+        }
     }
 
     /**
@@ -193,9 +201,7 @@ public class ServerGameManager {
         logger.info("{} Build {}", CONST_TITLE, Version.printVersion());
         logger.info("Initializing Gamestates...");
         logger.info("Initializing Game loop...");
-        gameLoopExecutor = Executors.newScheduledThreadPool(1); // Single thread for game loop
         logger.info("Initializing Actions...");
-        playerActionExecutor = Executors.newFixedThreadPool(10); // Thread pool for player actions
         logger.info("Initializing Seats...");
         //local seat is ignored, setting to -1
         initialize(TimeUtils.millis(), -1);
@@ -203,6 +209,9 @@ public class ServerGameManager {
 
     public void initialize(long seed, int localSeatId) {
         reset(seed);
+    }
+
+    public Object getAllBoardStates() {
     }
 
     /**
@@ -326,14 +335,14 @@ public class ServerGameManager {
      * @param seatId the ID of the seat (1-8)
      * @return the YipeeGameBoard instance or null if none exists
      */
-    public Map<Integer, GameBoardState> getGameBoardStates(int seatId) {
+    public Map<Integer, GameBoardState> getGameBoardStatesMap(int seatId) {
         validateSeat(seatId);
         GamePlayerBoard gameBoardObj = gameBoardMap.get(seatId);
-        Queue<GameBoardState> states = null;
+        Map<Integer, GameBoardState> statesMap = null;
         if (gameBoardObj != null) {
-            states = gameBoardObj.getGameBoardStates();
+            statesMap = gameBoardObj.getAllGameBoardMap();
         }
-        return states;
+        return statesMap;
     }
 
     /**
@@ -347,20 +356,6 @@ public class ServerGameManager {
      */
     public void update(float delta) {
         gameLoopTick(delta);
-    }
-
-    /**
-     * Queues a player action (or other message) from a local source.
-     * <p>
-     * On the server, this typically means accepting an action
-     * that will be processed in a future game tick. Only valid
-     * YipeeSerializable messages (like PlayerAction) will be executed.
-     * </p>
-     *
-     * @param action the serialized action received from the network
-     */
-    public void applyLocalPlayerAction(YipeeSerializable action) {
-        addPlayerAction(action);
     }
 
     /**
@@ -381,7 +376,7 @@ public class ServerGameManager {
      * Retrieves the latest single game board state for a given seat.
      * <p>
      * Typically used to serialize and broadcast the most recent state
-     * to connected clients.
+     * to connected clients.h                                                                                                                                
      * </p>
      *
      * @param seatId the seat ID (0-7)
@@ -402,6 +397,8 @@ public class ServerGameManager {
      * @return an Iterable of all YipeeGameBoardState objects for the seat
      */
     public Iterable<GameBoardState> getBoardStates(int seatId) {
+        GamePlayerBoard gameBoardObj = gameBoardMap.get(seatId);
+
         return getGameBoardStates(seatId);
     }
 
@@ -510,8 +507,8 @@ public class ServerGameManager {
      */
     public void gameLoopTick(float delta) {
         // Process Player Actions
-        YipeeSerializable action;
-        while ((action = playersActionQueue.poll()) != null) {
+        PlayerAction action;
+        while ((action = pendingActions.poll()) != null) {
             processPlayerAction(action, delta);
         }
         // 3. Check Win/Loss Conditions
@@ -530,13 +527,15 @@ public class ServerGameManager {
      * if it's a supported PlayerAction. Invalid or unexpected types are logged and ignored.
      * </p>
      *
-     * @param serializable the action or message received
+     * @param action the action or message received
      * @param delta the time step for the game loop
      */
-    public void processPlayerAction(YipeeSerializable serializable, float delta) {
-        PlayerAction action = getPlayerActionFromSerializable(serializable);
+    public void processPlayerAction(PlayerAction action, float delta) {
         if (action == null) {
             // Invalid or unsupported type; safely ignore.
+            action.getInitiatingBoardId();
+            int target = action.getTargetBoardId();
+
             return;
         }
 
@@ -555,38 +554,15 @@ public class ServerGameManager {
         // Submit the player action to the executor service for async processing.
         // Synchronize on the target board to ensure thread-safe updates.
         // Wrap in try/catch to avoid unhandled exceptions crashing the thread.
-        playerActionExecutor.submit(() -> {
-            synchronized (board) {
-                try {
-                    //board.updateGameState(delta, , );
-                    board.applyPlayerAction(action);
-                    addState(targetSeatId, board.exportGameState());
-                } catch (Exception e) {
-                    logger.error("Error processing player action", e);
-                }
+        synchronized (board) {
+            try {
+                board.applyPlayerAction(action);
+                actionHistory.offer(action);
+            } catch (Exception e) {
+                logger.error("Error processing player action", e);
             }
-        });
-    }
-
-    /**
-     * Attempts to extract a PlayerAction from the given YipeeSerializable object.
-     * <p>
-     * If the object is of type PlayerAction, it will be cast and returned.
-     * Otherwise, this method logs a warning and returns {@code null} to indicate
-     * the action should be ignored without crashing the server.
-     * </p>
-     *
-     * @param serializable the incoming serializable object from the network
-     * @return the PlayerAction if valid, or {@code null} if not a PlayerAction
-     */
-    private PlayerAction getPlayerActionFromSerializable(YipeeSerializable serializable) {
-        if (serializable instanceof PlayerAction) {
-            return (PlayerAction) serializable;
         }
-        logger.warn("Ignoring unsupported serializable type: {}", serializable.getClass());
-        return null;
     }
-
 
     /**
      * Gracefully shuts down the game server by terminating executor services
@@ -597,15 +573,9 @@ public class ServerGameManager {
      */
     public void shutDownServer() {
         logger.info("Attempting to shutdown GameServer...");
-
-        gameLoopExecutor.shutdown();
-        playerActionExecutor.shutdown();
-        try {
-            boolean gameLoopTerminator = gameLoopExecutor.awaitTermination(5, TimeUnit.SECONDS);
-            boolean gameActionExe = playerActionExecutor.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            logger.error("Error shutting down executors", e);
-        }
+        actionHistory.clear();
+        pendingActions.clear();
+        gameBoardMap.clear();
     }
 
     /**
@@ -617,8 +587,8 @@ public class ServerGameManager {
      *
      * @param action the incoming {@link YipeeSerializable} action or message
      */
-    public void addPlayerAction(YipeeSerializable action) {
-        playersActionQueue.offer(action);
+    public void addPlayerAction(PlayerAction action) {
+        pendingActions.offer(action);
     }
 
     /**
