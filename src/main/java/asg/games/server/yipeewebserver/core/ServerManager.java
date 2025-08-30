@@ -314,7 +314,7 @@ public class ServerManager implements Disposable {
             throw new RuntimeException(e);
         }
         YipeePlayer player = playerDTO.getPlayer();
-        YipeeKeyMap newMap = request.getKeyConfig();
+        YipeeKeyMap newMap = rvequest.getKeyConfig();
         player.setKeyConfig(newMap);
         logger.info("Updated key map for player {}", player.getName());
 
