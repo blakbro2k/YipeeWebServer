@@ -7,6 +7,8 @@ import asg.games.yipee.core.net.PacketRegistrar;
 import asg.games.yipee.core.objects.YipeeKeyMap;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.persistence.Storage;
+import asg.games.yipee.core.tools.Util;
+import asg.games.yipee.net.game.GameStatePair;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
 import asg.games.yipee.net.packets.DisconnectRequest;
@@ -26,6 +28,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -33,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Manages the game server, including networking, player connections, and game state updates.
@@ -41,6 +46,7 @@ public class ServerManager implements Disposable {
     private static final Logger logger = LoggerFactory.getLogger(ServerManager.class);
     private static final String ARG_USER_CONNECT_NAME_TAG = "#CONNECTION";
     private static final String ARG_NO_PLAYER_NAME_TAG = "_no_player_name";
+    private final AtomicBoolean ticking = new AtomicBoolean(false);
 
     // The KryoNet server instance
     Server server = new Server();
@@ -48,10 +54,11 @@ public class ServerManager implements Disposable {
     // Unique identifier for the server instance
     String serverId = UUID.randomUUID().toString();
     private int currentTick = 0;
-    private final ConcurrentHashMap<Long, Thread> gameThreads = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService gameExecutor = Executors.newScheduledThreadPool(8); // Adjust thread pool size
-    private final ConcurrentHashMap<Long, ServerGameManager> gameManagers = new ConcurrentHashMap<>();
-    Map<Long, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Thread> gameThreads = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ServerGameManager> gameManagers = new ConcurrentHashMap<>();
+    Map<String, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
+    private final Map<Integer, String> connectionToGameIdx = new ConcurrentHashMap<>();
+
     private Storage storageAdapter;
 
     /**
@@ -64,16 +71,22 @@ public class ServerManager implements Disposable {
      * Broadcasts the current game state to all connected clients.
      * This method should be called periodically during the game loop.
      */
-    public void broadcastGameState() {
-        for (Map.Entry<Long, ServerGameManager> entry : gameManagers.entrySet()) {
-            long gameId = entry.getKey();
-            ServerGameManager manager = entry.getValue();
-
-            int currentTick = getCurrentTick(); // Track or increment this elsewhere
-            TableStateBroadcastResponse tickPacket = new TableStateBroadcastResponse(currentTick, manager.getLatestGameBoardStates());
-
-            sendToAllPlayersInGame(gameId, tickPacket);
+    public void broadcastServerResponses(List<TableStateBroadcastResponse> responses) {
+        for (TableStateBroadcastResponse response : responses) {
+            sendTCPs(getConnectionsFromGameId(response.getGameId()), response);
         }
+    }
+
+    private void sendTCPs(List<Connection> connections, TableStateBroadcastResponse response) {
+        for(Connection connection : Util.safeIterable(connections)) {
+            if(connection != null && connection.isConnected()) {
+                connection.sendTCP(response);
+            }
+        }
+    }
+
+    public List<Connection> getConnectionsFromGameId(String gameId) {
+        return connectionsPerGame.getOrDefault(gameId, Collections.emptyList());
     }
 
     private int getCurrentTick() {
@@ -81,26 +94,25 @@ public class ServerManager implements Disposable {
     }
 
     private void incrementCurrentTick() {
-        currentTick++;
-        if(currentTick > 60) {
-            currentTick = 0;
-        }
+        currentTick = (currentTick + 1) % 60; // 0..59
     }
 
-    private void sendToAllPlayersInGame(long gameId, TableStateBroadcastResponse packet) {
-        List<Connection> playerConnections = getConnectionsForGame(gameId);
-        for (Connection connection : playerConnections) {
-            connection.sendTCP(packet);
-        }
-    }
-
-    public long createNewGame() {
-        long gameId = generateUniqueGameId();
+    public String createNewGame() {
         ServerGameManager manager = new ServerGameManager();
+        String gameId = generateUniqueGameId();
+        manager.setGameId(gameId);
         gameManagers.put(gameId, manager);
         connectionsPerGame.put(gameId, new ArrayList<>());
-        startGameLoop(gameId, manager);
         return gameId;
+    }
+
+    private String generateUniqueGameId() {
+        String id;
+        do {
+            id = UUID.randomUUID().toString().substring(0, 8);
+        }
+        while (gameManagers.containsKey(id));
+        return id;
     }
 
     /**
@@ -329,11 +341,6 @@ public class ServerManager implements Disposable {
         response.setConnected(true);
     }
 
-    private void startGameLoop(long clientId, ServerGameManager gameManager) {
-        Runnable gameLoopTask = () -> gameManager.update(1 / 60f);
-        gameExecutor.scheduleAtFixedRate(gameLoopTask, 0, 16, TimeUnit.MILLISECONDS);
-    }
-
     /**
      * Updates the game server logic, such as broadcasting state or handling timeouts.
      *
@@ -343,7 +350,8 @@ public class ServerManager implements Disposable {
         // increment on every tick
         incrementCurrentTick();
 
-        for (Map.Entry<Long, ServerGameManager> entry : gameManagers.entrySet()) {
+        List<TableStateBroadcastResponse> serverResponses = new LinkedList<>();
+        for (Map.Entry<String, ServerGameManager> entry : gameManagers.entrySet()) {
             ServerGameManager gameManager = entry.getValue();
 
             // 1. Run one tick of game logic
@@ -352,13 +360,14 @@ public class ServerManager implements Disposable {
             // 2. Get per-seat game state
             TableStateBroadcastResponse tickPacket = new TableStateBroadcastResponse();
             tickPacket.setServerTick(currentTick);
-            tickPacket.setGameBoardStates(gameManager.getAllBoardStates());
-
-            // 3. Send to only active players at this table
-            for (Connection conn : gameManager.getActiveConnections()) {
-                conn.sendTCP(tickPacket);
-            }
+            tickPacket.setStates(gameManager.getAllBoardStates());
+            tickPacket.setGameId(gameManager.getGameId());
+            tickPacket.setServerId(serverId);
+            serverResponses.add(tickPacket);
         }
+
+        // 3. Send to only active players at this table
+        broadcastServerResponses(serverResponses);
     }
 
     /**
@@ -368,30 +377,17 @@ public class ServerManager implements Disposable {
     public void dispose() {
         try {
             logger.trace("Entering Game Dispose");
-            server.dispose(); // Dispose of the server resources
-            logger.info("GameServerManager shutting down ...");
 
-            logger.info("Clearing threads...");
-            // Stop all active game threads
-            gameThreads.values().forEach(Thread::interrupt);
-            gameThreads.clear();
-            logger.info("threads cleared...");
+            if (server != null) server.stop();
 
-            // Stop the ScheduledExecutorService
-            gameExecutor.shutdown();
-            if (!gameExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-                gameExecutor.shutdownNow();
-            }
+            gameManagers.clear();
+            connectionsPerGame.clear();
+            connectionToGameIdx.clear();
 
-            // Dispose of the server resources
-            if (server != null) {
-                server.stop();
-            }
         } catch (Exception e) {
             logger.error("Error while shutting down GameServerManager", e);
-            throw new RuntimeException("Error while shutting down GameServerManager", e);
+            throw new RuntimeException(e);
         } finally {
-            logger.info("GameServerManager shutdown complete ...");
             logger.trace("Exit Game Dispose");
         }
     }

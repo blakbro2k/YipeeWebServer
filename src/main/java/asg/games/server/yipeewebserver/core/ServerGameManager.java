@@ -17,14 +17,14 @@ package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.Version;
 import asg.games.yipee.common.game.GameBoardState;
-import asg.games.yipee.core.objects.Disposable;
-import asg.games.yipee.net.game.GameManager;
-import asg.games.yipee.core.game.YipeeGameBoard;
 import asg.games.yipee.common.packets.PlayerAction;
 import asg.games.yipee.common.packets.YipeeSerializable;
+import asg.games.yipee.core.game.YipeeGameBoard;
+import asg.games.yipee.core.objects.Disposable;
 import asg.games.yipee.core.objects.YipeeGameBoardState;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.tools.TimeUtils;
+import asg.games.yipee.net.game.GameManager;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -35,10 +35,6 @@ import java.util.Queue;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The GameManager class serves as the backbone for managing a Yipee game session.
@@ -64,6 +60,10 @@ public class ServerGameManager {
     @Getter
     @Setter
     private long gameSeed;
+
+    @Getter
+    @Setter
+    private String gameId;
 
     /**
      * Holds the player, their assigned board (if server-side), and a timeline of board states.

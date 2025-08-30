@@ -50,6 +50,8 @@ public class YipeeServerApplication extends ApplicationAdapter {
         this.udpPort = udpPort;
         this.tickRate = tickRate;
         this.tickInterval = 1.0f / tickRate;
+
+        logger.info("Setting up Database Services....");
         daemon.setDBService(yipeeGameJPAService);
         logger.debug("tick rate interval = {}.", tickInterval);
     }
@@ -63,9 +65,11 @@ public class YipeeServerApplication extends ApplicationAdapter {
      * Logs any startup errors and rethrows them as GdxRuntimeException.
      */
     public void create() {
+        logger.info("Setting FPS to {}", CONST_SRV_FPS);
         setForgroundFPS(CONST_SRV_FPS);
         logger.info("Starting server on tcp port [{}] and udp port [{}], with tick rate [{} ticks/sec]...", tcpPort, udpPort, tickRate);
         try {
+            logger.info("Setting server...");
             daemon.setUpServer(tcpPort, udpPort);
         } catch (IOException e) {
             logger.error("Error creating server thread.", e);
