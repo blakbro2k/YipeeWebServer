@@ -8,7 +8,6 @@ import asg.games.yipee.core.objects.YipeeKeyMap;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.persistence.Storage;
 import asg.games.yipee.core.tools.Util;
-import asg.games.yipee.net.game.GameStatePair;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
 import asg.games.yipee.net.packets.DisconnectRequest;
@@ -34,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -162,16 +158,16 @@ public class ServerManager implements Disposable {
                 }
                 if (object instanceof ClientHandshakeRequest request) {
                     logger.trace("received instance of {}...", ClientHandshakeRequest.class.getSimpleName());
-                    handleClientHandshake(connection, (ClientHandshakeRequest) request);
+                    handleClientHandshake(connection, request);
                 } else if (object instanceof DisconnectRequest request) {
                     logger.trace("received instance of {}...", DisconnectRequest.class.getSimpleName());
-                    handleDisconnectRequest(connection,(DisconnectRequest) request);
+                    handleDisconnectRequest(connection, request);
                 } else if (object instanceof TableStateUpdateRequest request) {
                     logger.trace("received instance of {}...", TableStateUpdateRequest.class.getSimpleName());
-                    handleTableStateUpdateRequest(connection,(TableStateUpdateRequest) request);
+                    handleTableStateUpdateRequest(connection, request);
                 } else if (object instanceof MappedKeyUpdateRequest request) {
                     logger.trace("received instance of {}...", MappedKeyUpdateRequest.class.getSimpleName());
-                    handlePlayerMappedKeyUpdateRequest(connection,(MappedKeyUpdateRequest) request);
+                    handlePlayerMappedKeyUpdateRequest(connection, request);
                 } else {
                     logger.warn("Received unexpected object: " + object.getClass().getName());
                 }
@@ -182,7 +178,7 @@ public class ServerManager implements Disposable {
     /**
      * Saves a {@code DTOObject} to the persistence storage
      *
-     * @param object
+     * @param object object to save to database
      */
     private void persistObject(DTOObject object) {
         if(storageAdapter != null) {
@@ -193,7 +189,7 @@ public class ServerManager implements Disposable {
     /**
      * Deletes a {@code DTOObject} from the persistence storage
      *
-     * @param object
+     * @param object object to delete from database
      */
     private void dePersistObject(DTOObject object) {
         if(storageAdapter != null) {
@@ -204,7 +200,7 @@ public class ServerManager implements Disposable {
     /**
      * Gets a {@code DTOObject} from the persistence storage
      *
-     * @param object
+     * @param object to get from database
      */
     private <T extends DTOObject> T getPersistObject(Class<T> clazz, DTOObject object) {
         T obj = null;
@@ -249,14 +245,14 @@ public class ServerManager implements Disposable {
         YipeePlayer player = NetUtil.getPlayerFromNetYipeePlayer(request.getPlayer());
         String sessionId = UUID.randomUUID().toString() + TimeUtils.millis();
 
-        PlayerConnectionDTO playerConnectDB = new PlayerConnectionDTO();
-        playerConnectDB.setClientId(request.getClientId());
-        playerConnectDB.setSessionId(sessionId);
-        playerConnectDB.setConnected(true);
-        playerConnectDB.setPlayer(player);
-        playerConnectDB.setTimeStamp(TimeUtils.millis());
-        playerConnectDB.setName(buildPlayerConnectionName(player));
-        persistObject(playerConnectDB);
+        PlayerConnectionDTO playerConnectDTO = new PlayerConnectionDTO();
+        playerConnectDTO.setClientId(request.getClientId());
+        playerConnectDTO.setSessionId(sessionId);
+        playerConnectDTO.setConnected(true);
+        playerConnectDTO.setPlayer(player);
+        playerConnectDTO.setTimeStamp(TimeUtils.millis());
+        playerConnectDTO.setName(buildPlayerConnectionName(player));
+        persistObject(playerConnectDTO);
 
         ClientHandshakeResponse response = new ClientHandshakeResponse();
         response.setSessionKey("session-xyz");
