@@ -25,11 +25,13 @@ import asg.games.yipee.core.objects.YipeeGameBoardState;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.tools.TimeUtils;
 import asg.games.yipee.net.game.GameManager;
+import asg.games.yipee.net.game.GameStatePair;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
@@ -53,6 +55,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ServerGameManager {
     private static final Logger logger = LoggerFactory.getLogger(GameManager.class);
     private static final String CONST_TITLE = "Yipee! Game Manager";
+    private static final int MAX_TICK_HISTORY = 1024;
     private final Queue<PlayerAction> actionHistory = new ConcurrentLinkedQueue<>(); // Stores pending player actions
     private final Queue<PlayerAction> pendingActions = new ConcurrentLinkedQueue<>(); // Stores pending player actions
     private final Map<Integer, GamePlayerBoard> gameBoardMap = new ConcurrentHashMap<>(); // Maps seat IDs to game boards
@@ -211,7 +214,7 @@ public class ServerGameManager {
         reset(seed);
     }
 
-    public Object getAllBoardStates() {
+    public List<GameStatePair> getAllBoardStates() {
     }
 
     /**
@@ -493,8 +496,12 @@ public class ServerGameManager {
      */
     public void resetGameBoard(long seed, int seatId) {
         GamePlayerBoard gameBoard = gameBoardMap.get(seatId);
+
+        //Set partner seats to a different seed
+        int offSet = 23 * (seatId % 2);
+
         if (gameBoard == null) {
-            gameBoard = new GamePlayerBoard(seed);
+            gameBoard = new GamePlayerBoard(seed + offSet, seatId, MAX_TICK_HISTORY);
             gameBoardMap.put(seatId, gameBoard); // BUGFIX: ensure it's stored
         }
         gameBoard.reset(seed);

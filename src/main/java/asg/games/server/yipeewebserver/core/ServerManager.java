@@ -35,6 +35,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static asg.games.server.yipeewebserver.tools.NetUtil.getPlayerFromNetYipeePlayer;
+
 /**
  * Manages the game server, including networking, player connections, and game state updates.
  */
@@ -242,7 +244,7 @@ public class ServerManager implements Disposable {
      * @param request    The connection request object.
      */
     private void handleClientHandshake(Connection connection, ClientHandshakeRequest request) {
-        YipeePlayer player = NetUtil.getPlayerFromNetYipeePlayer(request.getPlayer());
+        YipeePlayer player = getPlayerFromNetYipeePlayer(request.getPlayer());
         String sessionId = UUID.randomUUID().toString() + TimeUtils.millis();
 
         PlayerConnectionDTO playerConnectDTO = new PlayerConnectionDTO();
@@ -283,7 +285,7 @@ public class ServerManager implements Disposable {
             gameThreads.remove(clientId);
         }
 
-        YipeePlayer player = NetUtil.getPlayerFromNetYipeePlayer(request.getPlayer());
+        YipeePlayer player = getPlayerFromNetYipeePlayer(request.getPlayer());
         String playerName = buildPlayerConnectionName(player);
         PlayerConnectionDTO user = null;
         try {
@@ -310,7 +312,7 @@ public class ServerManager implements Disposable {
             throw new RuntimeException(e);
         }
         YipeePlayer player = playerDTO.getPlayer();
-        YipeeKeyMap newMap = request.getKeyConfig();
+        YipeeKeyMap newMap = getPlayerFromNetYipeePlayer(request.getKeyConfig());
         player.setKeyConfig(newMap);
         logger.info("Updated key map for player {}", player.getName());
 
