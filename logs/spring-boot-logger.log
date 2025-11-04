@@ -1,123 +1,605 @@
-2025-02-07 00:15:00,231 TRACE a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Entering Game Dispose
-2025-02-07 00:15:00,311 INFO a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Shutting down GameServerManager...
-2025-02-07 00:15:00,311 TRACE a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Exit Game Dispose
-2025-02-07 00:15:00,315 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
-2025-02-07 00:15:00,318 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
-2025-02-07 00:17:18,208 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 67728 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
-2025-02-07 00:17:18,211 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
-2025-02-07 00:17:18,212 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
-2025-02-07 00:17:18,368 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-02-07 00:17:18,370 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-02-07 00:17:19,584 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
-2025-02-07 00:17:19,585 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-02-07 00:17:19,727 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 134 ms. Found 5 JPA repository interfaces.
-2025-02-07 00:17:21,129 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
-2025-02-07 00:17:21,142 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
-2025-02-07 00:17:21,145 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
-2025-02-07 00:17:21,145 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
-2025-02-07 00:17:21,217 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
-2025-02-07 00:17:21,218 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2845 ms
-2025-02-07 00:17:21,468 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
-2025-02-07 00:17:21,688 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
-2025-02-07 00:17:21,690 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
-2025-02-07 00:17:21,700 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
-2025-02-07 00:17:22,247 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-02-07 00:17:22,476 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
-2025-02-07 00:17:24,150 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
-2025-02-07 00:17:24,256 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
-2025-02-07 00:17:24,256 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Eiffel Tower
-2025-02-07 00:17:24,256 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:17:24,412 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]]
-2025-02-07 00:17:24,412 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Leaning Tower of Pisa
-2025-02-07 00:17:24,412 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:17:24,415 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]]
-2025-02-07 00:17:24,415 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Sunshine 60 Tower
-2025-02-07 00:17:24,415 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:17:24,417 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]]
-2025-02-07 00:17:24,417 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Chang Tower
-2025-02-07 00:17:24,417 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:17:24,419 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]]
-2025-02-07 00:17:24,419 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Empire State Building
-2025-02-07 00:17:24,419 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:17:24,420 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]]
-2025-02-07 00:17:24,421 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
-2025-02-07 00:17:24,421 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
-2025-02-07 00:17:24,504 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-02-07 00:17:24,549 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
-2025-02-07 00:17:25,873 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
-2025-02-07 00:17:25,884 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
-2025-02-07 00:17:25,942 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
-2025-02-07 00:17:25,966 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
-2025-02-07 00:17:25,991 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 8.382 seconds (process running for 8.955)
-2025-02-07 00:17:26,029 INFO a.g.s.y.YipeeWebserverApplication [restartedMain] Starting Web Server, launching HeadlessLauncher
-2025-02-07 00:17:26,029 DEBUG a.g.s.y.h.HeadlessLauncher [restartedMain] launcher tcpPort: 8081
-2025-02-07 00:17:26,029 DEBUG a.g.s.y.h.HeadlessLauncher [restartedMain] launcher udpPort: 
-2025-02-07 00:17:26,030 DEBUG a.g.s.y.h.HeadlessLauncher [restartedMain] launcher tickRate: 
-2025-02-07 00:17:26,073 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Yipee! Game Server Build 1.13.0p0
-2025-02-07 00:17:26,073 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
-2025-02-07 00:17:26,074 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
-2025-02-07 00:17:26,091 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
-2025-02-07 00:25:07,930 TRACE a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Entering Game Dispose
-2025-02-07 00:25:07,931 INFO a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Shutting down GameServerManager...
-2025-02-07 00:25:07,931 TRACE a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Exit Game Dispose
-2025-02-07 00:25:07,935 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
-2025-02-07 00:25:07,939 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
-2025-02-07 00:27:00,942 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.2 with PID 60504 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
-2025-02-07 00:27:00,944 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
-2025-02-07 00:27:00,945 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
-2025-02-07 00:27:01,000 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2025-02-07 00:27:01,000 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2025-02-07 00:27:01,823 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
-2025-02-07 00:27:01,824 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-02-07 00:27:01,958 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 126 ms. Found 5 JPA repository interfaces.
-2025-02-07 00:27:03,156 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
-2025-02-07 00:27:03,168 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
-2025-02-07 00:27:03,170 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
-2025-02-07 00:27:03,170 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
-2025-02-07 00:27:03,246 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
-2025-02-07 00:27:03,247 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2245 ms
-2025-02-07 00:27:03,402 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
-2025-02-07 00:27:03,615 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
-2025-02-07 00:27:03,617 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
-2025-02-07 00:27:03,627 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
-2025-02-07 00:27:04,146 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-02-07 00:27:04,367 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
-2025-02-07 00:27:05,578 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
-2025-02-07 00:27:05,668 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
-2025-02-07 00:27:05,668 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Eiffel Tower
-2025-02-07 00:27:05,668 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:27:05,852 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]]
-2025-02-07 00:27:05,853 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Leaning Tower of Pisa
-2025-02-07 00:27:05,853 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:27:05,856 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]]
-2025-02-07 00:27:05,856 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Sunshine 60 Tower
-2025-02-07 00:27:05,856 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:27:05,859 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]]
-2025-02-07 00:27:05,859 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Chang Tower
-2025-02-07 00:27:05,859 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:27:05,861 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]]
-2025-02-07 00:27:05,862 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.objects.YipeeRoom, Empire State Building
-2025-02-07 00:27:05,862 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy159
-2025-02-07 00:27:05,864 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]]
-2025-02-07 00:27:05,865 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
-2025-02-07 00:27:05,865 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
-2025-02-07 00:27:05,959 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-02-07 00:27:06,003 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
-2025-02-07 00:27:07,169 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
-2025-02-07 00:27:07,179 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
-2025-02-07 00:27:07,233 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
-2025-02-07 00:27:07,256 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
-2025-02-07 00:27:07,270 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 6.895 seconds (process running for 7.489)
-2025-02-07 00:27:07,306 INFO a.g.s.y.YipeeWebserverApplication [restartedMain] Starting Web Server, launching HeadlessLauncher
-2025-02-07 00:27:07,306 DEBUG a.g.s.y.h.HeadlessLauncher [restartedMain] launcher tcpPort: 8081
-2025-02-07 00:27:07,306 DEBUG a.g.s.y.h.HeadlessLauncher [restartedMain] launcher udpPort: 
-2025-02-07 00:27:07,306 DEBUG a.g.s.y.h.HeadlessLauncher [restartedMain] launcher tickRate: 
-2025-02-07 00:27:07,347 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Yipee! Game Server Build 1.13.0p0
-2025-02-07 00:27:07,347 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
-2025-02-07 00:27:07,347 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
-2025-02-07 00:27:07,361 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
-2025-02-07 00:35:43,626 TRACE a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Entering Game Dispose
-2025-02-07 00:35:43,627 INFO a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Shutting down GameServerManager...
-2025-02-07 00:35:43,627 TRACE a.g.s.y.c.GameServerManager [SpringApplicationShutdownHook] Exit Game Dispose
-2025-02-07 00:35:43,631 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
-2025-02-07 00:35:43,633 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-11-03 22:26:01,991 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.13 with PID 107508 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-11-03 22:26:02,013 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-11-03 22:26:02,014 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-11-03 22:26:02,185 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-03 22:26:02,186 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-03 22:26:03,924 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-03 22:26:03,925 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-03 22:26:04,107 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 169 ms. Found 5 JPA repository interfaces.
+2025-11-03 22:26:05,755 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-11-03 22:26:05,773 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-11-03 22:26:05,777 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-11-03 22:26:05,779 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-11-03 22:26:05,866 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-11-03 22:26:05,868 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3679 ms
+2025-11-03 22:26:06,075 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-11-03 22:26:06,414 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-11-03 22:26:06,416 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-11-03 22:26:06,428 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-11-03 22:26:07,458 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-03 22:26:07,739 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-11-03 22:26:09,135 INFO o.s.d.j.r.q.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-03 22:26:09,803 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor [restartedMain] Autowired annotation is not supported on static fields: private static int asg.games.server.yipeewebserver.headless.HeadlessLauncher.serverLogLevel
+2025-11-03 22:26:09,828 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
+2025-11-03 22:26:09,961 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
+2025-11-03 22:26:09,999 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Eiffel Tower
+2025-11-03 22:26:09,999 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:26:10,144 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]]
+2025-11-03 22:26:10,146 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Leaning Tower of Pisa
+2025-11-03 22:26:10,146 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:26:10,150 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]]
+2025-11-03 22:26:10,151 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Sunshine 60 Tower
+2025-11-03 22:26:10,151 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:26:10,153 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]]
+2025-11-03 22:26:10,154 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Chang Tower
+2025-11-03 22:26:10,154 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:26:10,155 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]]
+2025-11-03 22:26:10,156 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Empire State Building
+2025-11-03 22:26:10,156 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:26:10,158 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]]
+2025-11-03 22:26:10,158 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
+2025-11-03 22:26:10,158 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
+2025-11-03 22:26:10,258 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-03 22:26:10,321 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-11-03 22:26:12,322 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-11-03 22:26:12,335 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-11-03 22:26:12,410 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-11-03 22:26:12,437 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-11-03 22:26:12,456 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 11.286 seconds (process running for 12.179)
+2025-11-03 22:26:12,526 INFO a.g.s.y.YipeeWebserverApplication [restartedMain] Starting Web Server, launching HeadlessLauncher
+2025-11-03 22:26:12,526 INFO a.g.s.y.h.HeadlessLauncher [restartedMain] Launching headless server: tcp=8081 udp=55000 tickRate=30.0
+2025-11-03 22:26:12,609 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Yipee! Game Server Build 0.3.0.0
+2025-11-03 22:26:12,609 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-11-03 22:26:12,609 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up Database Services....
+2025-11-03 22:26:12,609 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
+2025-11-03 22:26:12,660 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Setting FPS to 60
+2025-11-03 22:26:12,662 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-11-03 22:26:12,662 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Setting server...
+2025-11-03 22:26:12,663 INFO a.g.s.y.c.ServerManager [HeadlessApplication] Starting Kryo Server...
+2025-11-03 22:26:12,691 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.AbstractClientRequest => ID 901
+2025-11-03 22:26:12,691 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.AbstractServerResponse => ID 902
+2025-11-03 22:26:12,691 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ClientHandshakeRequest => ID 904
+2025-11-03 22:26:12,691 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ClientHandshakeResponse => ID 905
+2025-11-03 22:26:12,691 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.DisconnectRequest => ID 906
+2025-11-03 22:26:12,691 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.DisconnectResponse => ID 908
+2025-11-03 22:26:12,692 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ErrorCode => ID 909
+2025-11-03 22:26:12,692 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ErrorResponse => ID 910
+2025-11-03 22:26:12,692 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.MappedKeyUpdateRequest => ID 912
+2025-11-03 22:26:12,692 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.MappedKeyUpdateResponse => ID 913
+2025-11-03 22:26:12,692 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.PlayerActionRequest => ID 920
+2025-11-03 22:26:12,693 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.PlayerActionResponse => ID 921
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.SeatSelectionRequest => ID 922
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.SeatSelectionResponse => ID 923
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.TableStateBroadcastResponse => ID 924
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.TableStateUpdateRequest => ID 925
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.common.packets.YipeeSerializable => ID 926
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.lang.String => ID 1003
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.ArrayList => ID 1006
+2025-11-03 22:26:12,694 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.lang.Integer => ID 1032
+2025-11-03 22:26:12,695 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.Set => ID 1015
+2025-11-03 22:26:12,696 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.Map => ID 1016
+2025-11-03 22:26:12,697 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.HashMap => ID 1017
+2025-11-03 22:26:12,697 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped com.badlogic.gdx.utils.ObjectMap => ID 1116
+2025-11-03 22:26:12,699 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.common.packets.PlayerAction$ActionType => ID 1117
+2025-11-03 22:26:12,699 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeKeyMap => ID 903
+2025-11-03 22:26:12,699 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBlockMove => ID 1018
+2025-11-03 22:26:12,699 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBlock => ID 1019
+2025-11-03 22:26:12,699 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeGameBoardState => ID 1020
+2025-11-03 22:26:12,699 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeClock => ID 1021
+2025-11-03 22:26:12,700 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBrokenBlock => ID 1026
+2025-11-03 22:26:12,703 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeSeatDTO => ID 1027
+2025-11-03 22:26:12,703 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBoardPair => ID 1028
+2025-11-03 22:26:12,703 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeTableDTO => ID 1029
+2025-11-03 22:26:12,703 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeePlayer => ID 900
+2025-11-03 22:26:12,704 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeObjectGDX => ID 2011
+2025-11-03 22:26:12,704 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.AbstractYipeeObjectGDX => ID 2012
+2025-11-03 22:26:12,704 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeePieceGDX => ID 2013
+2025-11-03 22:26:12,705 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeRoomGDX => ID 2014
+2025-11-03 22:26:12,705 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeKeyMapGDX => ID 2903
+2025-11-03 22:26:12,705 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBlockMoveGDX => ID 2018
+2025-11-03 22:26:12,705 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBlockGDX => ID 2019
+2025-11-03 22:26:12,706 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeGameBoardStateGDX => ID 2020
+2025-11-03 22:26:12,706 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeClockGDX => ID 2021
+2025-11-03 22:26:12,706 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBrokenBlockGDX => ID 2026
+2025-11-03 22:26:12,706 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeSeatDTOGDX => ID 2027
+2025-11-03 22:26:12,706 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBoardPairGDX => ID 2028
+2025-11-03 22:26:12,707 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeTableDTOGDX => ID 2029
+2025-11-03 22:26:12,707 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeePlayerGDX => ID 2900
+2025-11-03 22:26:12,707 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] PacketRegistrar initialized with 5 packages and 49 explicit mappings.
+2025-11-03 22:26:12,707 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: int[] with ID 501
+2025-11-03 22:26:12,708 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: int[][] with ID 502
+2025-11-03 22:26:12,709 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: float[] with ID 503
+2025-11-03 22:26:12,709 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: float[][] with ID 504
+2025-11-03 22:26:12,709 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: double[] with ID 505
+2025-11-03 22:26:12,709 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: double[][] with ID 506
+2025-11-03 22:26:12,709 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: boolean[] with ID 507
+2025-11-03 22:26:12,709 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: boolean[][] with ID 508
+2025-11-03 22:26:12,710 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: char[] with ID 509
+2025-11-03 22:26:12,710 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: char[][] with ID 510
+2025-11-03 22:26:12,710 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: byte[] with ID 511
+2025-11-03 22:26:12,710 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: byte[][] with ID 512
+2025-11-03 22:26:12,710 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: short[] with ID 513
+2025-11-03 22:26:12,711 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: short[][] with ID 514
+2025-11-03 22:26:12,711 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: long[] with ID 515
+2025-11-03 22:26:12,711 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: long[][] with ID 516
+2025-11-03 22:26:12,711 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.String[] with ID 517
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.String[][] with ID 518
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Integer[] with ID 519
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Integer[][] with ID 520
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Float[] with ID 521
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Float[][] with ID 522
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Double[] with ID 523
+2025-11-03 22:26:12,712 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Double[][] with ID 524
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Boolean[] with ID 525
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Boolean[][] with ID 526
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Character[] with ID 527
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Character[][] with ID 528
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Byte[] with ID 529
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Byte[][] with ID 530
+2025-11-03 22:26:12,713 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Short[] with ID 531
+2025-11-03 22:26:12,714 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Short[][] with ID 532
+2025-11-03 22:26:12,714 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Long[] with ID 533
+2025-11-03 22:26:12,714 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Long[][] with ID 534
+2025-11-03 22:26:12,715 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] All primitive and boxed arrays (1D and 2D) registration complete.
+2025-11-03 22:26:12,718 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: java.lang.String
+2025-11-03 22:26:12,720 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.net.NetYipeePlayer
+2025-11-03 22:26:12,722 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Lasg.games.yipee.net.packets.ErrorCode;
+2025-11-03 22:26:12,726 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.packets.PlayerAction
+2025-11-03 22:26:12,730 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.enums.TableUpdateType
+2025-11-03 22:26:12,731 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [B
+2025-11-03 22:26:12,731 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Ljava.io.ObjectStreamField;
+2025-11-03 22:26:12,731 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Ljava.lang.Object;
+2025-11-03 22:26:12,731 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: java.lang.Class
+2025-11-03 22:26:12,731 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [C
+2025-11-03 22:26:12,732 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [I
+2025-11-03 22:26:12,732 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Ljava.util.HashMap$Node;
+2025-11-03 22:26:12,739 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Lasg.games.yipee.common.packets.PlayerAction$ActionType;
+2025-11-03 22:26:12,755 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.game.GamePhase
+2025-11-03 22:26:12,756 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [[I
+2025-11-03 22:26:12,756 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Z
+2025-11-03 22:26:12,759 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.core.objects.YipeeSeatDTO
+2025-11-03 22:26:12,764 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.core.objects.YipeeTableDTO
+2025-11-03 22:26:12,781 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.libgdx.objects.YipeeSeatDTOGDX
+2025-11-03 22:26:12,782 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.libgdx.objects.YipeeTableDTOGDX
+2025-11-03 22:26:12,808 DEBUG a.g.s.y.c.ServerManager [HeadlessApplication] 
+
+=== Registered Packets ======
+<-- Kryo Classes ------------>
+ID: 50     Class: RegisterTCP
+ID: 51     Class: RegisterUDP
+ID: 52     Class: KeepAlive
+ID: 53     Class: DiscoverHost
+ID: 54     Class: Ping
+<-- Registered Primitives -->
+ID: 501    Class: int[]
+ID: 502    Class: int[][]
+ID: 503    Class: float[]
+ID: 504    Class: float[][]
+ID: 505    Class: double[]
+ID: 506    Class: double[][]
+ID: 507    Class: boolean[]
+ID: 508    Class: boolean[][]
+ID: 509    Class: char[]
+ID: 510    Class: char[][]
+ID: 511    Class: byte[]
+ID: 512    Class: byte[][]
+ID: 513    Class: short[]
+ID: 514    Class: short[][]
+ID: 515    Class: long[]
+ID: 516    Class: long[][]
+ID: 517    Class: java.lang.String[]
+ID: 518    Class: java.lang.String[][]
+ID: 519    Class: java.lang.Integer[]
+ID: 520    Class: java.lang.Integer[][]
+ID: 521    Class: java.lang.Float[]
+ID: 522    Class: java.lang.Float[][]
+ID: 523    Class: java.lang.Double[]
+ID: 524    Class: java.lang.Double[][]
+ID: 525    Class: java.lang.Boolean[]
+ID: 526    Class: java.lang.Boolean[][]
+ID: 527    Class: java.lang.Character[]
+ID: 528    Class: java.lang.Character[][]
+ID: 529    Class: java.lang.Byte[]
+ID: 530    Class: java.lang.Byte[][]
+ID: 531    Class: java.lang.Short[]
+ID: 532    Class: java.lang.Short[][]
+ID: 533    Class: java.lang.Long[]
+ID: 534    Class: java.lang.Long[][]
+<-- Registered Classes ------>
+ID: 901    Class: asg.games.yipee.net.packets.AbstractClientRequest
+ID: 902    Class: asg.games.yipee.net.packets.AbstractServerResponse
+ID: 904    Class: asg.games.yipee.net.packets.ClientHandshakeRequest
+ID: 905    Class: asg.games.yipee.net.packets.ClientHandshakeResponse
+ID: 906    Class: asg.games.yipee.net.packets.DisconnectRequest
+ID: 908    Class: asg.games.yipee.net.packets.DisconnectResponse
+ID: 909    Class: asg.games.yipee.net.packets.ErrorCode
+ID: 910    Class: asg.games.yipee.net.packets.ErrorResponse
+ID: 912    Class: asg.games.yipee.net.packets.MappedKeyUpdateRequest
+ID: 913    Class: asg.games.yipee.net.packets.MappedKeyUpdateResponse
+ID: 920    Class: asg.games.yipee.net.packets.PlayerActionRequest
+ID: 921    Class: asg.games.yipee.net.packets.PlayerActionResponse
+ID: 922    Class: asg.games.yipee.net.packets.SeatSelectionRequest
+ID: 923    Class: asg.games.yipee.net.packets.SeatSelectionResponse
+ID: 924    Class: asg.games.yipee.net.packets.TableStateBroadcastResponse
+ID: 925    Class: asg.games.yipee.net.packets.TableStateUpdateRequest
+ID: 926    Class: asg.games.yipee.common.packets.YipeeSerializable
+ID: 1003   Class: java.lang.String
+ID: 1006   Class: java.util.ArrayList
+ID: 1032   Class: java.lang.Integer
+ID: 1015   Class: java.util.Set
+ID: 1016   Class: java.util.Map
+ID: 1017   Class: java.util.HashMap
+ID: 1116   Class: com.badlogic.gdx.utils.ObjectMap
+ID: 1117   Class: asg.games.yipee.common.packets.PlayerAction$ActionType
+ID: 903    Class: asg.games.yipee.core.objects.YipeeKeyMap
+ID: 1018   Class: asg.games.yipee.core.objects.YipeeBlockMove
+ID: 1019   Class: asg.games.yipee.core.objects.YipeeBlock
+ID: 1020   Class: asg.games.yipee.core.objects.YipeeGameBoardState
+ID: 1021   Class: asg.games.yipee.core.objects.YipeeClock
+ID: 1026   Class: asg.games.yipee.core.objects.YipeeBrokenBlock
+ID: 1027   Class: asg.games.yipee.core.objects.YipeeSeatDTO
+ID: 1028   Class: asg.games.yipee.core.objects.YipeeBoardPair
+ID: 1029   Class: asg.games.yipee.core.objects.YipeeTableDTO
+ID: 900    Class: asg.games.yipee.core.objects.YipeePlayer
+ID: 2011   Class: asg.games.yipee.libgdx.objects.YipeeObjectGDX
+ID: 2012   Class: asg.games.yipee.libgdx.objects.AbstractYipeeObjectGDX
+ID: 2013   Class: asg.games.yipee.libgdx.objects.YipeePieceGDX
+ID: 2014   Class: asg.games.yipee.libgdx.objects.YipeeRoomGDX
+ID: 2903   Class: asg.games.yipee.libgdx.objects.YipeeKeyMapGDX
+ID: 2018   Class: asg.games.yipee.libgdx.objects.YipeeBlockMoveGDX
+ID: 2019   Class: asg.games.yipee.libgdx.objects.YipeeBlockGDX
+ID: 2020   Class: asg.games.yipee.libgdx.objects.YipeeGameBoardStateGDX
+ID: 2021   Class: asg.games.yipee.libgdx.objects.YipeeClockGDX
+ID: 2026   Class: asg.games.yipee.libgdx.objects.YipeeBrokenBlockGDX
+ID: 2027   Class: asg.games.yipee.libgdx.objects.YipeeSeatDTOGDX
+ID: 2028   Class: asg.games.yipee.libgdx.objects.YipeeBoardPairGDX
+ID: 2029   Class: asg.games.yipee.libgdx.objects.YipeeTableDTOGDX
+ID: 2900   Class: asg.games.yipee.libgdx.objects.YipeePlayerGDX
+===========================
+
+2025-11-03 22:26:22,232 INFO a.g.s.y.c.ShutDownHandler [SpringApplicationShutdownHook] Application is shutting down...
+2025-11-03 22:26:22,241 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-11-03 22:26:22,246 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2025-11-03 22:28:20,479 INFO o.s.b.StartupInfoLogger [restartedMain] Starting YipeeWebserverApplication using Java 17.0.13 with PID 102864 (U:\YipeeWebServer\target\classes started by Blakbro2k in U:\YipeeWebServer)
+2025-11-03 22:28:20,481 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v3.3.6, Spring v6.1.15
+2025-11-03 22:28:20,482 INFO o.s.b.SpringApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2025-11-03 22:28:20,557 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-11-03 22:28:20,559 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-11-03 22:28:22,237 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Multiple Spring Data modules found, entering strict repository configuration mode
+2025-11-03 22:28:22,237 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-11-03 22:28:22,430 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 182 ms. Found 5 JPA repository interfaces.
+2025-11-03 22:28:24,808 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port 8080 (http)
+2025-11-03 22:28:24,840 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2025-11-03 22:28:24,853 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2025-11-03 22:28:24,854 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.33]
+2025-11-03 22:28:25,017 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2025-11-03 22:28:25,051 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 4479 ms
+2025-11-03 22:28:25,370 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2025-11-03 22:28:25,888 INFO c.z.h.p.HikariPool [restartedMain] HikariPool-1 - Added connection conn0: url=jdbc:h2:file:./testdb user=USER
+2025-11-03 22:28:25,891 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2025-11-03 22:28:25,907 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:h2:file:./testdb'
+2025-11-03 22:28:27,152 WARN o.h.e.j.d.i.DialectFactoryImpl [restartedMain] HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-11-03 22:28:27,551 WARN o.h.i.UUIDHexGenerator [restartedMain] HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2025-11-03 22:28:29,330 INFO o.s.d.j.r.q.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-11-03 22:28:30,307 INFO o.s.b.f.a.AutowiredAnnotationBeanPostProcessor [restartedMain] Autowired annotation is not supported on static fields: private static int asg.games.server.yipeewebserver.headless.HeadlessLauncher.serverLogLevel
+2025-11-03 22:28:30,344 TRACE a.g.s.y.c.TableConfig [restartedMain] start loadRooms()
+2025-11-03 22:28:30,621 TRACE a.g.s.y.c.TableConfig [restartedMain] start createDatabaseLounges()
+2025-11-03 22:28:30,661 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Eiffel Tower
+2025-11-03 22:28:30,662 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:28:31,166 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b3f0000,Eiffel Tower]]
+2025-11-03 22:28:31,172 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Leaning Tower of Pisa
+2025-11-03 22:28:31,173 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:28:31,178 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b750001,Leaning Tower of Pisa]]
+2025-11-03 22:28:31,180 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Sunshine 60 Tower
+2025-11-03 22:28:31,180 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:28:31,186 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b7d0002,Sunshine 60 Tower]]
+2025-11-03 22:28:31,187 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Chang Tower
+2025-11-03 22:28:31,197 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:28:31,226 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b850003,Chang Tower]]
+2025-11-03 22:28:31,227 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] Enter getObjectByName()=class asg.games.yipee.core.objects.YipeeRoom, Empire State Building
+2025-11-03 22:28:31,228 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] repository()=$Proxy165
+2025-11-03 22:28:31,232 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [restartedMain] exit getObjectByName()=Optional[YipeeRoom[e4c0e48694c577850194c5778b8c0004,Empire State Building]]
+2025-11-03 22:28:31,233 TRACE a.g.s.y.c.TableConfig [restartedMain] exit createDatabaseLounges()
+2025-11-03 22:28:31,234 TRACE a.g.s.y.c.TableConfig [restartedMain] exit loadRooms()=true
+2025-11-03 22:28:31,843 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-11-03 22:28:31,968 INFO o.s.b.a.w.s.WelcomePageHandlerMapping [restartedMain] Adding welcome page template: index
+2025-11-03 22:28:35,497 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2025-11-03 22:28:35,515 INFO o.s.b.a.e.w.EndpointLinksResolver [restartedMain] Exposing 1 endpoint beneath base path '/actuator'
+2025-11-03 22:28:35,643 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2025-11-03 22:28:35,691 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port 8080 (http) with context path '/'
+2025-11-03 22:28:35,715 INFO o.s.b.StartupInfoLogger [restartedMain] Started YipeeWebserverApplication in 15.981 seconds (process running for 16.761)
+2025-11-03 22:28:35,830 INFO a.g.s.y.YipeeWebserverApplication [restartedMain] Starting Web Server, launching HeadlessLauncher
+2025-11-03 22:28:35,831 INFO a.g.s.y.h.HeadlessLauncher [restartedMain] Launching headless server: tcp=8081 udp=55000 tickRate=30.0
+2025-11-03 22:28:35,955 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Yipee! Game Server Build 0.3.0.0
+2025-11-03 22:28:35,955 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up server to listen on the following ports: TCP[8081], UDP[55000], TICKRATE[30.0]
+2025-11-03 22:28:35,955 INFO a.g.s.y.c.YipeeServerApplication [restartedMain] Setting up Database Services....
+2025-11-03 22:28:35,956 DEBUG a.g.s.y.c.YipeeServerApplication [restartedMain] tick rate interval = 0.033333335.
+2025-11-03 22:28:35,997 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Setting FPS to 60
+2025-11-03 22:28:35,997 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Starting server on tcp port [8081] and udp port [55000], with tick rate [30.0 ticks/sec]...
+2025-11-03 22:28:35,997 INFO a.g.s.y.c.YipeeServerApplication [HeadlessApplication] Setting server...
+2025-11-03 22:28:35,997 INFO a.g.s.y.c.ServerManager [HeadlessApplication] Starting Kryo Server...
+2025-11-03 22:28:36,024 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.AbstractClientRequest => ID 901
+2025-11-03 22:28:36,024 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.AbstractServerResponse => ID 902
+2025-11-03 22:28:36,024 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ClientHandshakeRequest => ID 904
+2025-11-03 22:28:36,024 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ClientHandshakeResponse => ID 905
+2025-11-03 22:28:36,024 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.DisconnectRequest => ID 906
+2025-11-03 22:28:36,024 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.DisconnectResponse => ID 908
+2025-11-03 22:28:36,025 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ErrorCode => ID 909
+2025-11-03 22:28:36,029 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.ErrorResponse => ID 910
+2025-11-03 22:28:36,030 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.MappedKeyUpdateRequest => ID 912
+2025-11-03 22:28:36,030 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.MappedKeyUpdateResponse => ID 913
+2025-11-03 22:28:36,030 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.PlayerActionRequest => ID 920
+2025-11-03 22:28:36,031 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.PlayerActionResponse => ID 921
+2025-11-03 22:28:36,031 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.SeatSelectionRequest => ID 922
+2025-11-03 22:28:36,031 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.SeatSelectionResponse => ID 923
+2025-11-03 22:28:36,031 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.TableStateBroadcastResponse => ID 924
+2025-11-03 22:28:36,031 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.net.packets.TableStateUpdateRequest => ID 925
+2025-11-03 22:28:36,031 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.common.packets.YipeeSerializable => ID 926
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.lang.String => ID 1003
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.ArrayList => ID 1006
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.lang.Integer => ID 1032
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.Set => ID 1015
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.Map => ID 1016
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped java.util.HashMap => ID 1017
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped com.badlogic.gdx.utils.ObjectMap => ID 1116
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.common.packets.PlayerAction$ActionType => ID 1117
+2025-11-03 22:28:36,032 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeKeyMap => ID 903
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBlockMove => ID 1018
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBlock => ID 1019
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeGameBoardState => ID 1020
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeClock => ID 1021
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBrokenBlock => ID 1026
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeSeatDTO => ID 1027
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeBoardPair => ID 1028
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeeTableDTO => ID 1029
+2025-11-03 22:28:36,033 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.core.objects.YipeePlayer => ID 900
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeObjectGDX => ID 2011
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.AbstractYipeeObjectGDX => ID 2012
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeePieceGDX => ID 2013
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeRoomGDX => ID 2014
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeKeyMapGDX => ID 2903
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBlockMoveGDX => ID 2018
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBlockGDX => ID 2019
+2025-11-03 22:28:36,034 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeGameBoardStateGDX => ID 2020
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeClockGDX => ID 2021
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBrokenBlockGDX => ID 2026
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeSeatDTOGDX => ID 2027
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeBoardPairGDX => ID 2028
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeeTableDTOGDX => ID 2029
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] Mapped asg.games.yipee.libgdx.objects.YipeePlayerGDX => ID 2900
+2025-11-03 22:28:36,035 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] PacketRegistrar initialized with 5 packages and 49 explicit mappings.
+2025-11-03 22:28:36,036 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: int[] with ID 501
+2025-11-03 22:28:36,038 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: int[][] with ID 502
+2025-11-03 22:28:36,038 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: float[] with ID 503
+2025-11-03 22:28:36,038 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: float[][] with ID 504
+2025-11-03 22:28:36,039 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: double[] with ID 505
+2025-11-03 22:28:36,039 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: double[][] with ID 506
+2025-11-03 22:28:36,039 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: boolean[] with ID 507
+2025-11-03 22:28:36,039 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: boolean[][] with ID 508
+2025-11-03 22:28:36,039 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: char[] with ID 509
+2025-11-03 22:28:36,039 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: char[][] with ID 510
+2025-11-03 22:28:36,040 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: byte[] with ID 511
+2025-11-03 22:28:36,040 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: byte[][] with ID 512
+2025-11-03 22:28:36,040 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: short[] with ID 513
+2025-11-03 22:28:36,040 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: short[][] with ID 514
+2025-11-03 22:28:36,040 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: long[] with ID 515
+2025-11-03 22:28:36,040 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: long[][] with ID 516
+2025-11-03 22:28:36,041 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.String[] with ID 517
+2025-11-03 22:28:36,041 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.String[][] with ID 518
+2025-11-03 22:28:36,042 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Integer[] with ID 519
+2025-11-03 22:28:36,042 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Integer[][] with ID 520
+2025-11-03 22:28:36,042 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Float[] with ID 521
+2025-11-03 22:28:36,042 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Float[][] with ID 522
+2025-11-03 22:28:36,043 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Double[] with ID 523
+2025-11-03 22:28:36,043 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Double[][] with ID 524
+2025-11-03 22:28:36,043 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Boolean[] with ID 525
+2025-11-03 22:28:36,043 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Boolean[][] with ID 526
+2025-11-03 22:28:36,043 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Character[] with ID 527
+2025-11-03 22:28:36,043 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Character[][] with ID 528
+2025-11-03 22:28:36,044 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Byte[] with ID 529
+2025-11-03 22:28:36,044 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Byte[][] with ID 530
+2025-11-03 22:28:36,044 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Short[] with ID 531
+2025-11-03 22:28:36,044 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Short[][] with ID 532
+2025-11-03 22:28:36,044 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered array type: java.lang.Long[] with ID 533
+2025-11-03 22:28:36,044 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Registered 2D array type: java.lang.Long[][] with ID 534
+2025-11-03 22:28:36,044 INFO a.g.y.n.t.PacketRegistrar [HeadlessApplication] All primitive and boxed arrays (1D and 2D) registration complete.
+2025-11-03 22:28:36,045 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: java.lang.String
+2025-11-03 22:28:36,047 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.net.NetYipeePlayer
+2025-11-03 22:28:36,049 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Lasg.games.yipee.net.packets.ErrorCode;
+2025-11-03 22:28:36,051 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.packets.PlayerAction
+2025-11-03 22:28:36,055 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.enums.TableUpdateType
+2025-11-03 22:28:36,056 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [B
+2025-11-03 22:28:36,056 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Ljava.io.ObjectStreamField;
+2025-11-03 22:28:36,056 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Ljava.lang.Object;
+2025-11-03 22:28:36,056 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: java.lang.Class
+2025-11-03 22:28:36,056 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [C
+2025-11-03 22:28:36,057 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [I
+2025-11-03 22:28:36,057 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Ljava.util.HashMap$Node;
+2025-11-03 22:28:36,058 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Lasg.games.yipee.common.packets.PlayerAction$ActionType;
+2025-11-03 22:28:36,064 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: asg.games.yipee.common.game.GamePhase
+2025-11-03 22:28:36,064 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [[I
+2025-11-03 22:28:36,064 DEBUG a.g.y.n.t.PacketRegistrar [HeadlessApplication] Auto-registered field type: [Z
+2025-11-03 22:28:36,065 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.core.objects.YipeeSeatDTO
+2025-11-03 22:28:36,066 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.core.objects.YipeeTableDTO
+2025-11-03 22:28:36,075 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.libgdx.objects.YipeeSeatDTOGDX
+2025-11-03 22:28:36,075 WARN a.g.y.n.t.PacketRegistrar [HeadlessApplication] Explicit class not found: asg.games.yipee.libgdx.objects.YipeeTableDTOGDX
+2025-11-03 22:28:36,079 DEBUG a.g.s.y.c.ServerManager [HeadlessApplication] 
+
+=== Registered Packets ======
+<-- Kryo Classes ------------>
+ID: 50     Class: RegisterTCP
+ID: 51     Class: RegisterUDP
+ID: 52     Class: KeepAlive
+ID: 53     Class: DiscoverHost
+ID: 54     Class: Ping
+<-- Registered Primitives -->
+ID: 501    Class: int[]
+ID: 502    Class: int[][]
+ID: 503    Class: float[]
+ID: 504    Class: float[][]
+ID: 505    Class: double[]
+ID: 506    Class: double[][]
+ID: 507    Class: boolean[]
+ID: 508    Class: boolean[][]
+ID: 509    Class: char[]
+ID: 510    Class: char[][]
+ID: 511    Class: byte[]
+ID: 512    Class: byte[][]
+ID: 513    Class: short[]
+ID: 514    Class: short[][]
+ID: 515    Class: long[]
+ID: 516    Class: long[][]
+ID: 517    Class: java.lang.String[]
+ID: 518    Class: java.lang.String[][]
+ID: 519    Class: java.lang.Integer[]
+ID: 520    Class: java.lang.Integer[][]
+ID: 521    Class: java.lang.Float[]
+ID: 522    Class: java.lang.Float[][]
+ID: 523    Class: java.lang.Double[]
+ID: 524    Class: java.lang.Double[][]
+ID: 525    Class: java.lang.Boolean[]
+ID: 526    Class: java.lang.Boolean[][]
+ID: 527    Class: java.lang.Character[]
+ID: 528    Class: java.lang.Character[][]
+ID: 529    Class: java.lang.Byte[]
+ID: 530    Class: java.lang.Byte[][]
+ID: 531    Class: java.lang.Short[]
+ID: 532    Class: java.lang.Short[][]
+ID: 533    Class: java.lang.Long[]
+ID: 534    Class: java.lang.Long[][]
+<-- Registered Classes ------>
+ID: 901    Class: asg.games.yipee.net.packets.AbstractClientRequest
+ID: 902    Class: asg.games.yipee.net.packets.AbstractServerResponse
+ID: 904    Class: asg.games.yipee.net.packets.ClientHandshakeRequest
+ID: 905    Class: asg.games.yipee.net.packets.ClientHandshakeResponse
+ID: 906    Class: asg.games.yipee.net.packets.DisconnectRequest
+ID: 908    Class: asg.games.yipee.net.packets.DisconnectResponse
+ID: 909    Class: asg.games.yipee.net.packets.ErrorCode
+ID: 910    Class: asg.games.yipee.net.packets.ErrorResponse
+ID: 912    Class: asg.games.yipee.net.packets.MappedKeyUpdateRequest
+ID: 913    Class: asg.games.yipee.net.packets.MappedKeyUpdateResponse
+ID: 920    Class: asg.games.yipee.net.packets.PlayerActionRequest
+ID: 921    Class: asg.games.yipee.net.packets.PlayerActionResponse
+ID: 922    Class: asg.games.yipee.net.packets.SeatSelectionRequest
+ID: 923    Class: asg.games.yipee.net.packets.SeatSelectionResponse
+ID: 924    Class: asg.games.yipee.net.packets.TableStateBroadcastResponse
+ID: 925    Class: asg.games.yipee.net.packets.TableStateUpdateRequest
+ID: 926    Class: asg.games.yipee.common.packets.YipeeSerializable
+ID: 1003   Class: java.lang.String
+ID: 1006   Class: java.util.ArrayList
+ID: 1032   Class: java.lang.Integer
+ID: 1015   Class: java.util.Set
+ID: 1016   Class: java.util.Map
+ID: 1017   Class: java.util.HashMap
+ID: 1116   Class: com.badlogic.gdx.utils.ObjectMap
+ID: 1117   Class: asg.games.yipee.common.packets.PlayerAction$ActionType
+ID: 903    Class: asg.games.yipee.core.objects.YipeeKeyMap
+ID: 1018   Class: asg.games.yipee.core.objects.YipeeBlockMove
+ID: 1019   Class: asg.games.yipee.core.objects.YipeeBlock
+ID: 1020   Class: asg.games.yipee.core.objects.YipeeGameBoardState
+ID: 1021   Class: asg.games.yipee.core.objects.YipeeClock
+ID: 1026   Class: asg.games.yipee.core.objects.YipeeBrokenBlock
+ID: 1027   Class: asg.games.yipee.core.objects.YipeeSeatDTO
+ID: 1028   Class: asg.games.yipee.core.objects.YipeeBoardPair
+ID: 1029   Class: asg.games.yipee.core.objects.YipeeTableDTO
+ID: 900    Class: asg.games.yipee.core.objects.YipeePlayer
+ID: 2011   Class: asg.games.yipee.libgdx.objects.YipeeObjectGDX
+ID: 2012   Class: asg.games.yipee.libgdx.objects.AbstractYipeeObjectGDX
+ID: 2013   Class: asg.games.yipee.libgdx.objects.YipeePieceGDX
+ID: 2014   Class: asg.games.yipee.libgdx.objects.YipeeRoomGDX
+ID: 2903   Class: asg.games.yipee.libgdx.objects.YipeeKeyMapGDX
+ID: 2018   Class: asg.games.yipee.libgdx.objects.YipeeBlockMoveGDX
+ID: 2019   Class: asg.games.yipee.libgdx.objects.YipeeBlockGDX
+ID: 2020   Class: asg.games.yipee.libgdx.objects.YipeeGameBoardStateGDX
+ID: 2021   Class: asg.games.yipee.libgdx.objects.YipeeClockGDX
+ID: 2026   Class: asg.games.yipee.libgdx.objects.YipeeBrokenBlockGDX
+ID: 2027   Class: asg.games.yipee.libgdx.objects.YipeeSeatDTOGDX
+ID: 2028   Class: asg.games.yipee.libgdx.objects.YipeeBoardPairGDX
+ID: 2029   Class: asg.games.yipee.libgdx.objects.YipeeTableDTOGDX
+ID: 2900   Class: asg.games.yipee.libgdx.objects.YipeePlayerGDX
+===========================
+
+2025-11-03 22:58:04,684 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-1] received instance of ClientHandshakeRequest...
+2025-11-03 22:58:04,699 TRACE a.g.s.y.c.ServerManager [pool-3-thread-1] Enter handleClientHandshake(Connection 1, ClientHandshakeRequest(player=YipeePlayerGDX[null,blakbro2k]))
+2025-11-03 22:58:04,717 DEBUG a.g.s.y.c.ServerManager [pool-3-thread-1] Saving [PlayerConnectionDTO[null,blakbro2k#CONNECTION]] object.
+2025-11-03 22:58:04,720 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] enter saveObject(PlayerConnectionDTO[null,blakbro2k#CONNECTION])
+2025-11-03 22:58:04,720 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] saveOrUpdateObject object=PlayerConnectionDTO[null,blakbro2k#CONNECTION]
+2025-11-03 22:58:04,720 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] Enter getObjectByName()=class asg.games.server.yipeewebserver.data.PlayerConnectionDTO, blakbro2k#CONNECTION
+2025-11-03 22:58:04,720 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] repository()=$Proxy169
+2025-11-03 22:58:04,730 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] exit getObjectByName()=Optional.empty
+2025-11-03 22:58:04,730 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] enter internalSave(PlayerConnectionDTO[null,blakbro2k#CONNECTION])
+2025-11-03 22:58:04,760 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] exit internalSave()
+2025-11-03 22:58:04,760 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] exit saveOrUpdateObject()
+2025-11-03 22:58:04,760 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-1] exit saveObject()
+2025-11-03 22:58:04,787 WARN o.h.e.j.s.SqlExceptionHelper [pool-3-thread-1] SQL Error: 23505, SQLState: 23505
+2025-11-03 22:58:04,788 ERROR o.h.e.j.s.SqlExceptionHelper [pool-3-thread-1] Unique index or primary key violation: "PUBLIC.UK_1H4BNRCU57UEOR9U63WUBH1O_INDEX_2 ON PUBLIC.YT_PLAYERS(NAME NULLS FIRST) VALUES ( /* 2 */ 'blakbro2k' )"; SQL statement:
+insert into yt_players (created,icon,modified,name,rating,serialized_key_config,id) values (?,?,?,?,?,?,?) [23505-224]
+2025-11-03 22:58:12,700 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:20,716 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:23,871 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:28,841 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:36,861 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:43,114 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:44,867 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:58:52,885 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:59:12,595 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-2] received instance of ClientHandshakeRequest...
+2025-11-03 22:59:12,596 TRACE a.g.s.y.c.ServerManager [pool-3-thread-2] Enter handleClientHandshake(Connection 2, ClientHandshakeRequest(player=YipeePlayerGDX[null,blakbro2k]))
+2025-11-03 22:59:12,597 DEBUG a.g.s.y.c.ServerManager [pool-3-thread-2] Saving [PlayerConnectionDTO[null,blakbro2k#CONNECTION]] object.
+2025-11-03 22:59:12,597 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] enter saveObject(PlayerConnectionDTO[null,blakbro2k#CONNECTION])
+2025-11-03 22:59:12,597 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] saveOrUpdateObject object=PlayerConnectionDTO[null,blakbro2k#CONNECTION]
+2025-11-03 22:59:12,598 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] Enter getObjectByName()=class asg.games.server.yipeewebserver.data.PlayerConnectionDTO, blakbro2k#CONNECTION
+2025-11-03 22:59:12,598 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] repository()=$Proxy169
+2025-11-03 22:59:12,600 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] exit getObjectByName()=Optional.empty
+2025-11-03 22:59:12,601 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] enter internalSave(PlayerConnectionDTO[null,blakbro2k#CONNECTION])
+2025-11-03 22:59:12,602 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] exit internalSave()
+2025-11-03 22:59:12,602 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] exit saveOrUpdateObject()
+2025-11-03 22:59:12,602 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-2] exit saveObject()
+2025-11-03 22:59:12,603 WARN o.h.e.j.s.SqlExceptionHelper [pool-3-thread-2] SQL Error: 23505, SQLState: 23505
+2025-11-03 22:59:12,603 ERROR o.h.e.j.s.SqlExceptionHelper [pool-3-thread-2] Unique index or primary key violation: "PUBLIC.UK_1H4BNRCU57UEOR9U63WUBH1O_INDEX_2 ON PUBLIC.YT_PLAYERS(NAME NULLS FIRST) VALUES ( /* 2 */ 'blakbro2k' )"; SQL statement:
+insert into yt_players (created,icon,modified,name,rating,serialized_key_config,id) values (?,?,?,?,?,?,?) [23505-224]
+2025-11-03 22:59:20,608 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-3] Received FrameworkMessage from client: com.esotericsoftware.kryonet.FrameworkMessage$KeepAlive
+2025-11-03 22:59:27,949 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-3] received instance of ClientHandshakeRequest...
+2025-11-03 22:59:27,950 TRACE a.g.s.y.c.ServerManager [pool-3-thread-3] Enter handleClientHandshake(Connection 3, ClientHandshakeRequest(player=YipeePlayerGDX[null,blakbro2k9]))
+2025-11-03 22:59:27,951 DEBUG a.g.s.y.c.ServerManager [pool-3-thread-3] Saving [PlayerConnectionDTO[null,blakbro2k9#CONNECTION]] object.
+2025-11-03 22:59:27,951 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] enter saveObject(PlayerConnectionDTO[null,blakbro2k9#CONNECTION])
+2025-11-03 22:59:27,951 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] saveOrUpdateObject object=PlayerConnectionDTO[null,blakbro2k9#CONNECTION]
+2025-11-03 22:59:27,952 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] Enter getObjectByName()=class asg.games.server.yipeewebserver.data.PlayerConnectionDTO, blakbro2k9#CONNECTION
+2025-11-03 22:59:27,952 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] repository()=$Proxy169
+2025-11-03 22:59:27,954 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit getObjectByName()=Optional.empty
+2025-11-03 22:59:27,954 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] enter internalSave(PlayerConnectionDTO[null,blakbro2k9#CONNECTION])
+2025-11-03 22:59:27,955 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit internalSave()
+2025-11-03 22:59:27,955 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit saveOrUpdateObject()
+2025-11-03 22:59:27,955 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit saveObject()
+2025-11-03 22:59:27,962 INFO a.g.s.y.c.ServerManager [pool-3-thread-3] Handshake complete for clientId=2e593aa4-27be-4722-a80a-35bf52969364, player=blakbro2k9
+2025-11-03 22:59:27,964 TRACE a.g.s.y.c.ServerManager [pool-3-thread-3] Exit handleClientHandshake()
+2025-11-03 22:59:36,056 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-3] received instance of ClientHandshakeRequest...
+2025-11-03 22:59:36,056 TRACE a.g.s.y.c.ServerManager [pool-3-thread-3] Enter handleClientHandshake(Connection 4, ClientHandshakeRequest(player=YipeePlayerGDX[null,blakbro2k9]))
+2025-11-03 22:59:36,056 DEBUG a.g.s.y.c.ServerManager [pool-3-thread-3] Saving [PlayerConnectionDTO[null,blakbro2k9#CONNECTION]] object.
+2025-11-03 22:59:36,057 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] enter saveObject(PlayerConnectionDTO[null,blakbro2k9#CONNECTION])
+2025-11-03 22:59:36,057 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] saveOrUpdateObject object=PlayerConnectionDTO[null,blakbro2k9#CONNECTION]
+2025-11-03 22:59:36,057 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] Enter getObjectByName()=class asg.games.server.yipeewebserver.data.PlayerConnectionDTO, blakbro2k9#CONNECTION
+2025-11-03 22:59:36,057 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] repository()=$Proxy169
+2025-11-03 22:59:36,074 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit getObjectByName()=Optional[PlayerConnectionDTO[4028814a9a4ce8a9019a4d050cd30002,blakbro2k9#CONNECTION]]
+2025-11-03 22:59:36,075 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] enter internalSave(PlayerConnectionDTO[4028814a9a4ce8a9019a4d050cd30002,blakbro2k9#CONNECTION])
+2025-11-03 22:59:36,077 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit internalSave()
+2025-11-03 22:59:36,078 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit saveOrUpdateObject()
+2025-11-03 22:59:36,078 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit saveObject()
+2025-11-03 22:59:36,079 INFO a.g.s.y.c.ServerManager [pool-3-thread-3] Handshake complete for clientId=2e593aa4-27be-4722-a80a-35bf52969364, player=blakbro2k9
+2025-11-03 22:59:36,080 TRACE a.g.s.y.c.ServerManager [pool-3-thread-3] Exit handleClientHandshake()
+2025-11-03 23:00:12,729 TRACE a.g.s.y.c.ServerManager$1 [pool-3-thread-3] received instance of ClientHandshakeRequest...
+2025-11-03 23:00:12,730 TRACE a.g.s.y.c.ServerManager [pool-3-thread-3] Enter handleClientHandshake(Connection 7, ClientHandshakeRequest(player=YipeePlayerGDX[null,blakbro2k9]))
+2025-11-03 23:00:12,730 DEBUG a.g.s.y.c.ServerManager [pool-3-thread-3] Saving [PlayerConnectionDTO[null,blakbro2k9#CONNECTION]] object.
+2025-11-03 23:00:12,731 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] enter saveObject(PlayerConnectionDTO[null,blakbro2k9#CONNECTION])
+2025-11-03 23:00:12,731 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] saveOrUpdateObject object=PlayerConnectionDTO[null,blakbro2k9#CONNECTION]
+2025-11-03 23:00:12,731 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] Enter getObjectByName()=class asg.games.server.yipeewebserver.data.PlayerConnectionDTO, blakbro2k9#CONNECTION
+2025-11-03 23:00:12,732 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] repository()=$Proxy169
+2025-11-03 23:00:12,734 TRACE a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit getObjectByName()=Optional[PlayerConnectionDTO[4028814a9a4ce8a9019a4d050cd30002,blakbro2k9#CONNECTION]]
+2025-11-03 23:00:12,735 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] enter internalSave(PlayerConnectionDTO[4028814a9a4ce8a9019a4d050cd30002,blakbro2k9#CONNECTION])
+2025-11-03 23:00:12,735 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit internalSave()
+2025-11-03 23:00:12,735 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit saveOrUpdateObject()
+2025-11-03 23:00:12,735 DEBUG a.g.s.y.s.i.YipeeGameJPAServiceImpl [pool-3-thread-3] exit saveObject()
+2025-11-03 23:00:12,737 INFO a.g.s.y.c.ServerManager [pool-3-thread-3] Handshake complete for clientId=2e593aa4-27be-4722-a80a-35bf52969364, player=blakbro2k9
+2025-11-03 23:00:12,737 TRACE a.g.s.y.c.ServerManager [pool-3-thread-3] Exit handleClientHandshake()
+2025-11-03 23:02:04,813 INFO a.g.s.y.c.ShutDownHandler [SpringApplicationShutdownHook] Application is shutting down...
+2025-11-03 23:02:04,818 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2025-11-03 23:02:04,822 INFO c.z.h.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.

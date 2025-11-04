@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class HeadlessLauncher {
 
     public static void main(String[] args) {
         logger.info("Main launcher args: {}", Arrays.toString(args));
-        createApplication(new YipeeServerApplication());
+        createApplication(new YipeeServerApplication(null));
     }
 
     /**
@@ -37,7 +38,7 @@ public class HeadlessLauncher {
      * @param tickRate Tick rate for the game loop.
      * @param yipeeGameJPAService Storage Service Object
      */
-    public void launch(int tcpPort, int udpPort, float tickRate, Storage yipeeGameJPAService) {
+    public void launch(int tcpPort, int udpPort, float tickRate, Storage yipeeGameJPAService, ApplicationContext appContext) {
         if (!started.compareAndSet(false, true)) {
             log.debug("HeadlessLauncher already started; ignoring duplicate launch.");
             return;
@@ -45,7 +46,7 @@ public class HeadlessLauncher {
         log.info("Launching headless server: tcp={} udp={} tickRate={}", tcpPort, udpPort, tickRate);
 
         // Create YipeeServerApplication and pass configuration
-        YipeeServerApplication yipeeServerApplication = new YipeeServerApplication();
+        YipeeServerApplication yipeeServerApplication = new YipeeServerApplication(appContext);
         yipeeServerApplication.setConfiguration(tcpPort, udpPort, tickRate, yipeeGameJPAService);
 
         // Start the LibGDX application with custom configuration

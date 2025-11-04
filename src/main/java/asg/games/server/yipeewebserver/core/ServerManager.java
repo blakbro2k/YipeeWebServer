@@ -2,11 +2,11 @@ package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.data.DTOObject;
 import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
-import asg.games.server.yipeewebserver.tools.NetUtil;
-import asg.games.yipee.core.net.PacketRegistrar;
+import asg.games.yipee.net.tools.PacketRegistrar;
 import asg.games.yipee.core.objects.YipeeKeyMap;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.persistence.Storage;
+import asg.games.yipee.core.tools.Util;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
 import asg.games.yipee.net.packets.DisconnectRequest;
@@ -19,20 +19,26 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static asg.games.server.yipeewebserver.tools.NetUtil.getPlayerFromNetYipeePlayer;
 
 /**
  * Manages the game server, including networking, player connections, and game state updates.
@@ -41,17 +47,22 @@ public class ServerManager implements Disposable {
     private static final Logger logger = LoggerFactory.getLogger(ServerManager.class);
     private static final String ARG_USER_CONNECT_NAME_TAG = "#CONNECTION";
     private static final String ARG_NO_PLAYER_NAME_TAG = "_no_player_name";
+    private static final String ARG_PACKETS_FILE = "libgdxPackets.xml";
+    private final AtomicBoolean ticking = new AtomicBoolean(false);
 
     // The KryoNet server instance
     Server server = new Server();
 
     // Unique identifier for the server instance
     String serverId = UUID.randomUUID().toString();
-    private int currentTick = 0;
-    private final ConcurrentHashMap<Long, Thread> gameThreads = new ConcurrentHashMap<>();
-    private final ScheduledExecutorService gameExecutor = Executors.newScheduledThreadPool(8); // Adjust thread pool size
-    private final ConcurrentHashMap<Long, ServerGameManager> gameManagers = new ConcurrentHashMap<>();
-    Map<Long, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
+    // Note: serverTick uses int because matches reset frequently.
+    // At 60 tps it overflows after ~1 year; safe for per-session lifespan.
+    private int serverTick = 0;
+    private final ConcurrentHashMap<String, Thread> gameThreads = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, ServerGameManager> gameManagers = new ConcurrentHashMap<>();
+    Map<String, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
+    private final Map<Integer, String> connectionToGameIdx = new ConcurrentHashMap<>();
+
     private Storage storageAdapter;
 
     /**
@@ -64,50 +75,48 @@ public class ServerManager implements Disposable {
      * Broadcasts the current game state to all connected clients.
      * This method should be called periodically during the game loop.
      */
-    public void broadcastGameState() {
-        for (Map.Entry<Long, ServerGameManager> entry : gameManagers.entrySet()) {
-            long gameId = entry.getKey();
-            ServerGameManager manager = entry.getValue();
-
-            int currentTick = getCurrentTick(); // Track or increment this elsewhere
-            TableStateBroadcastResponse tickPacket = new TableStateBroadcastResponse(currentTick, manager.getLatestGameBoardStates());
-
-            sendToAllPlayersInGame(gameId, tickPacket);
+    public void broadcastServerResponses(List<TableStateBroadcastResponse> responses) {
+        for (TableStateBroadcastResponse response : responses) {
+            sendTCPs(getConnectionsFromGameId(response.getGameId()), response);
         }
     }
 
-    private int getCurrentTick() {
-        return currentTick;
-    }
-
-    private void incrementCurrentTick() {
-        currentTick++;
-        if(currentTick > 60) {
-            currentTick = 0;
+    private void sendTCPs(List<Connection> connections, TableStateBroadcastResponse response) {
+        for(Connection connection : Util.safeIterable(connections)) {
+            if(connection != null && connection.isConnected()) {
+                connection.sendTCP(response);
+            }
         }
     }
 
-    private void sendToAllPlayersInGame(long gameId, TableStateBroadcastResponse packet) {
-        List<Connection> playerConnections = getConnectionsForGame(gameId);
-        for (Connection connection : playerConnections) {
-            connection.sendTCP(packet);
-        }
+    public List<Connection> getConnectionsFromGameId(String gameId) {
+        return connectionsPerGame.getOrDefault(gameId, Collections.emptyList());
     }
 
-    public long createNewGame() {
-        long gameId = generateUniqueGameId();
+    private int getServerTick() {
+        return serverTick;
+    }
+
+    private void incrementServerTick() {
+        serverTick++;
+    }
+
+    public String createNewGame() {
         ServerGameManager manager = new ServerGameManager();
+        String gameId = generateUniqueGameId();
+        manager.setGameId(gameId);
         gameManagers.put(gameId, manager);
         connectionsPerGame.put(gameId, new ArrayList<>());
-        startGameLoop(gameId, manager);
         return gameId;
     }
 
-    /**
-     * Checks whether the game end conditions are met.
-     * This can involve checking scores, timers, or other game-specific logic.
-     */
-    public void checkGameEndConditions() {
+    private String generateUniqueGameId() {
+        String id;
+        do {
+            id = UUID.randomUUID().toString().substring(0, 8);
+        }
+        while (gameManagers.containsKey(id));
+        return id;
     }
 
     /**
@@ -128,8 +137,14 @@ public class ServerManager implements Disposable {
     public void setUpServer(int tcpPort, int udpPort) throws IOException, ParserConfigurationException, SAXException {
         logger.info("Starting Kryo Server...");
         server.start(); // Start the server
+
+        File file = ResourceUtils.getFile("src/main/resources/packets.xml");
+        if(!file.exists()) {
+            throw new FileNotFoundException("Could not find a valid packet.xml file.");
+        }
+
         // Register all necessary packet classes for serialization
-        PacketRegistrar.reloadConfigurationFromResource();
+        PacketRegistrar.reloadConfiguration(file.getPath());
         PacketRegistrar.registerPackets(server.getKryo());
         logger.debug("\n" + PacketRegistrar.dumpRegisteredPackets());
 
@@ -145,21 +160,21 @@ public class ServerManager implements Disposable {
                     return;
                 }
                 if (object instanceof FrameworkMessage) {
-                    logger.debug("Received FrameworkMessage from client: {}", object.getClass().getName());
+                    logger.trace("Received FrameworkMessage from client: {}", object.getClass().getName());
                     return;
                 }
                 if (object instanceof ClientHandshakeRequest request) {
                     logger.trace("received instance of {}...", ClientHandshakeRequest.class.getSimpleName());
-                    handleClientHandshake(connection, (ClientHandshakeRequest) request);
+                    handleClientHandshake(connection, request);
                 } else if (object instanceof DisconnectRequest request) {
                     logger.trace("received instance of {}...", DisconnectRequest.class.getSimpleName());
-                    handleDisconnectRequest(connection,(DisconnectRequest) request);
+                    handleDisconnectRequest(connection, request);
                 } else if (object instanceof TableStateUpdateRequest request) {
                     logger.trace("received instance of {}...", TableStateUpdateRequest.class.getSimpleName());
-                    handleTableStateUpdateRequest(connection,(TableStateUpdateRequest) request);
+                    handleTableStateUpdateRequest(connection, request);
                 } else if (object instanceof MappedKeyUpdateRequest request) {
                     logger.trace("received instance of {}...", MappedKeyUpdateRequest.class.getSimpleName());
-                    handlePlayerMappedKeyUpdateRequest(connection,(MappedKeyUpdateRequest) request);
+                    handlePlayerMappedKeyUpdateRequest(connection, request);
                 } else {
                     logger.warn("Received unexpected object: " + object.getClass().getName());
                 }
@@ -170,7 +185,7 @@ public class ServerManager implements Disposable {
     /**
      * Saves a {@code DTOObject} to the persistence storage
      *
-     * @param object
+     * @param object object to save to database
      */
     private void persistObject(DTOObject object) {
         if(storageAdapter != null) {
@@ -181,7 +196,7 @@ public class ServerManager implements Disposable {
     /**
      * Deletes a {@code DTOObject} from the persistence storage
      *
-     * @param object
+     * @param object object to delete from database
      */
     private void dePersistObject(DTOObject object) {
         if(storageAdapter != null) {
@@ -192,7 +207,7 @@ public class ServerManager implements Disposable {
     /**
      * Gets a {@code DTOObject} from the persistence storage
      *
-     * @param object
+     * @param object to get from database
      */
     private <T extends DTOObject> T getPersistObject(Class<T> clazz, DTOObject object) {
         T obj = null;
@@ -234,27 +249,36 @@ public class ServerManager implements Disposable {
      * @param request    The connection request object.
      */
     private void handleClientHandshake(Connection connection, ClientHandshakeRequest request) {
-        YipeePlayer player = NetUtil.getPlayerFromNetYipeePlayer(request.getPlayer());
+        logger.trace("Enter handleClientHandshake({}, {})", connection, request);
+
+        //TODO: valdiate non duplicate clientID
+        //TODO: generate unique session id (clientid+server nonce)
+        //TODO: generate authToken
+
+        YipeePlayer player = getPlayerFromNetYipeePlayer(request.getPlayer());
         String sessionId = UUID.randomUUID().toString() + TimeUtils.millis();
 
-        PlayerConnectionDTO playerConnectDB = new PlayerConnectionDTO();
-        playerConnectDB.setClientId(request.getClientId());
-        playerConnectDB.setSessionId(sessionId);
-        playerConnectDB.setConnected(true);
-        playerConnectDB.setPlayer(player);
-        playerConnectDB.setTimeStamp(TimeUtils.millis());
-        playerConnectDB.setName(buildPlayerConnectionName(player));
-        persistObject(playerConnectDB);
+        PlayerConnectionDTO playerConnectDTO = new PlayerConnectionDTO();
+        playerConnectDTO.setClientId(request.getClientId());
+        playerConnectDTO.setSessionId(sessionId);
+        playerConnectDTO.setConnected(true);
+        playerConnectDTO.setPlayer(player);
+        playerConnectDTO.setTimeStamp(TimeUtils.millis());
+        playerConnectDTO.setName(buildPlayerConnectionName(player));
+
+        logger.debug("Saving [{}] object.", playerConnectDTO);
+        persistObject(playerConnectDTO);
 
         ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setSessionKey("session-xyz");
+        response.setAuthToken("");
         response.setServerId(serverId);
-        response.setTimestamp(System.currentTimeMillis());
+        response.setServerTimestamp(System.currentTimeMillis());
         response.setPlayer(player);
         response.setConnected(true);
 
         logger.info("Handshake complete for clientId={}, player={}", request.getClientId(), player.getName());
         connection.sendTCP(response);
+        logger.trace("Exit handleClientHandshake()");
     }
 
     /**
@@ -275,7 +299,7 @@ public class ServerManager implements Disposable {
             gameThreads.remove(clientId);
         }
 
-        YipeePlayer player = NetUtil.getPlayerFromNetYipeePlayer(request.getPlayer());
+        YipeePlayer player = getPlayerFromNetYipeePlayer(request.getPlayer());
         String playerName = buildPlayerConnectionName(player);
         PlayerConnectionDTO user = null;
         try {
@@ -287,9 +311,9 @@ public class ServerManager implements Disposable {
 
         // Send disconnection response
         ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setSessionKey("session-xyz");
+        response.setAuthToken("session-xyz");
         response.setServerId(serverId);
-        response.setTimestamp(System.currentTimeMillis());
+        response.setServerTimestamp(System.currentTimeMillis());
         response.setPlayer(player);
         response.setConnected(true);
     }
@@ -302,15 +326,15 @@ public class ServerManager implements Disposable {
             throw new RuntimeException(e);
         }
         YipeePlayer player = playerDTO.getPlayer();
-        YipeeKeyMap newMap = request.getKeyConfig();
+        YipeeKeyMap newMap = getPlayerFromNetYipeePlayer(request.getKeyConfig());
         player.setKeyConfig(newMap);
         logger.info("Updated key map for player {}", player.getName());
 
         // Send disconnection response
         ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setSessionKey("session-xyz");
+        response.setAuthToken("session-xyz");
         response.setServerId(serverId);
-        response.setTimestamp(System.currentTimeMillis());
+        response.setServerTimestamp(System.currentTimeMillis());
         response.setPlayer(player);
         response.setConnected(true);
     }
@@ -322,16 +346,11 @@ public class ServerManager implements Disposable {
 
         // Send disconnection response
         ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setSessionKey("session-xyz");
+        response.setAuthToken("session-xyz");
         response.setServerId(serverId);
-        response.setTimestamp(System.currentTimeMillis());
+        response.setServerTimestamp(System.currentTimeMillis());
         //response.setPlayer(player);
         response.setConnected(true);
-    }
-
-    private void startGameLoop(long clientId, ServerGameManager gameManager) {
-        Runnable gameLoopTask = () -> gameManager.update(1 / 60f);
-        gameExecutor.scheduleAtFixedRate(gameLoopTask, 0, 16, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -341,24 +360,30 @@ public class ServerManager implements Disposable {
      */
     public void update(float deltaTime) {
         // increment on every tick
-        incrementCurrentTick();
+        incrementServerTick();
 
-        for (Map.Entry<Long, ServerGameManager> entry : gameManagers.entrySet()) {
+        List<TableStateBroadcastResponse> serverResponses = new LinkedList<>();
+        for (Map.Entry<String, ServerGameManager> entry : gameManagers.entrySet()) {
             ServerGameManager gameManager = entry.getValue();
 
             // 1. Run one tick of game logic
-            gameManager.update(deltaTime);
+            try {
+                gameManager.update(deltaTime, getServerTick());
+            } catch (JsonProcessingException e) {
+                //throw new RuntimeException(e);
+            }
 
             // 2. Get per-seat game state
             TableStateBroadcastResponse tickPacket = new TableStateBroadcastResponse();
-            tickPacket.setServerTick(currentTick);
-            tickPacket.setGameBoardStates(gameManager.getAllBoardStates());
-
-            // 3. Send to only active players at this table
-            for (Connection conn : gameManager.getActiveConnections()) {
-                conn.sendTCP(tickPacket);
-            }
+            tickPacket.setServerTick(getServerTick());
+            //tickPacket.setStates(gameManager.getAllBoardStates());
+            tickPacket.setGameId(gameManager.getGameId());
+            tickPacket.setServerId(serverId);
+            serverResponses.add(tickPacket);
         }
+
+        // 3. Send to only active players at this table
+        broadcastServerResponses(serverResponses);
     }
 
     /**
@@ -368,30 +393,17 @@ public class ServerManager implements Disposable {
     public void dispose() {
         try {
             logger.trace("Entering Game Dispose");
-            server.dispose(); // Dispose of the server resources
-            logger.info("GameServerManager shutting down ...");
 
-            logger.info("Clearing threads...");
-            // Stop all active game threads
-            gameThreads.values().forEach(Thread::interrupt);
-            gameThreads.clear();
-            logger.info("threads cleared...");
+            if (server != null) server.stop();
 
-            // Stop the ScheduledExecutorService
-            gameExecutor.shutdown();
-            if (!gameExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-                gameExecutor.shutdownNow();
-            }
+            gameManagers.clear();
+            connectionsPerGame.clear();
+            connectionToGameIdx.clear();
 
-            // Dispose of the server resources
-            if (server != null) {
-                server.stop();
-            }
         } catch (Exception e) {
             logger.error("Error while shutting down GameServerManager", e);
-            throw new RuntimeException("Error while shutting down GameServerManager", e);
+            throw new RuntimeException(e);
         } finally {
-            logger.info("GameServerManager shutdown complete ...");
             logger.trace("Exit Game Dispose");
         }
     }

@@ -1,6 +1,5 @@
 package asg.games.server.yipeewebserver.config;
 
-import asg.games.server.yipeewebserver.YipeeWebserverApplication;
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
