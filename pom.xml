@@ -42,7 +42,7 @@
 		<webjars.jquery.version>3.7.1</webjars.jquery.version>
 		<webjars.webjars-locator.version>0.52</webjars.webjars-locator.version>
 		<spring.version>6.1.15</spring.version>
-		<yipee.version>0.1.8.1</yipee.version>
+		<yipee.version>0.9.1</yipee.version>
 		<libgdx-utils.version>0.13.4</libgdx-utils.version>
 		<gdx-kiwi.version>1.9.1.9.6</gdx-kiwi.version>
 		<xml.version>2.11.1</xml.version>
@@ -73,6 +73,7 @@
 			<url>https://jitpack.io</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
 		<!-- Spring Boot Child Dependencies -->
 		<dependency>
@@ -82,6 +83,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -274,10 +281,34 @@
 
 		<dependency>
 			<groupId>asg.games</groupId>
-			<artifactId>yippe</artifactId>
-			<version>1.13.0</version>
+			<artifactId>yipee-common</artifactId>
+			<version>${yipee.version}</version>
 			<scope>system</scope>
-			<systemPath>/src/main/resources/lib/yipee-1.13.0.jar</systemPath>
+			<systemPath>U:/Yipee/yipee-parent/yipee-common/target/yipee-common-${yipee.version}.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>asg.games</groupId>
+			<artifactId>yipee-core</artifactId>
+			<version>${yipee.version}</version>
+			<scope>system</scope>
+			<systemPath>U:/Yipee/yipee-parent/yipee-core/target/yipee-core-${yipee.version}.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>asg.games</groupId>
+			<artifactId>yipee-net</artifactId>
+			<version>${yipee.version}</version>
+			<scope>system</scope>
+			<systemPath>U:/Yipee/yipee-parent/yipee-net/target/yipee-net-${yipee.version}.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>asg.games</groupId>
+			<artifactId>yipee-libgdx</artifactId>
+			<version>${yipee.version}</version>
+			<scope>system</scope>
+			<systemPath>U:/Yipee/yipee-parent/yipee-libgdx/target/yipee-libgdx-${yipee.version}.jar</systemPath>
 		</dependency>
 	</dependencies>
 	<build>

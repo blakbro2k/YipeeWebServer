@@ -16,16 +16,16 @@ import asg.games.yipee.core.objects.YipeeSeat;
 import asg.games.yipee.core.objects.YipeeTable;
 import asg.games.yipee.core.persistence.AbstractStorage;
 import asg.games.yipee.core.persistence.TerminatorJPAVisitor;
+import asg.games.yipee.core.persistence.Updatable;
 import asg.games.yipee.core.persistence.YipeeObjectJPAVisitor;
-import asg.games.yipee.core.tools.TimeUtils;
 import asg.games.yipee.core.tools.Util;
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +34,8 @@ import java.util.Optional;
 
 @Service
 public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGameServices, YipeeTerminateServices {
-    @Transient
     private static final Logger logger = LoggerFactory.getLogger(YipeeGameJPAServiceImpl.class);
-    private final Map<Class<?>, JpaRepository<?, String>> repoMap = new HashMap<>();
+    private final Map<Class<? extends YipeeObject>, YipeeRepository<? extends YipeeObject, String>> repoMap = new HashMap<>();
 
     @Autowired
     YipeeRoomRepository yipeeRoomRepository;
@@ -53,30 +52,48 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGam
     @Autowired
     YipeeClientConnectionRepository yipeeClientConnectionRepository;
 
+    @PostConstruct
+    public void init() {
+        // Register concrete entity types to their repos
+        register(YipeeRoom.class, yipeeRoomRepository);
+        register(YipeeTable.class, yipeeTableRepository);
+        register(YipeeSeat.class, yipeeSeatRepository);
+        register(YipeePlayer.class, yipeePlayerRepository);
+
+        // Only include DTOs here if they really are JPA entities extending YipeeObject.
+        // If PlayerConnectionDTO is a real @Entity extending YipeeObject, keep it:
+        register(PlayerConnectionDTO.class, yipeeClientConnectionRepository);
+    }
+
+    private <T extends YipeeObject> void register(Class<T> type, YipeeRepository<T, String> repo) {
+        repoMap.put(type, repo);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends YipeeObject> YipeeRepository<T, String> getRepository(Class<T> clazz) {
+        // Exact match first
+        YipeeRepository<? extends YipeeObject, String> repo = repoMap.get(clazz);
+        if (repo != null) return (YipeeRepository<T, String>) repo;
+
+        // Walk up type hierarchy as a fallback (in case you registered a superclass)
+        Class<?> c = clazz.getSuperclass();
+        while (c != null && YipeeObject.class.isAssignableFrom(c)) {
+            repo = repoMap.get(c);
+            if (repo != null) return (YipeeRepository<T, String>) repo;
+            c = c.getSuperclass();
+        }
+        throw new IllegalStateException("No repository found for class: " + clazz.getName());
+    }
+
     @Override
     public void dispose() {
         //Spring takes care of destroying repository
     }
 
-    @PostConstruct
-    public void init() {
-        repoMap.put(YipeeRoom.class, yipeeRoomRepository);
-        repoMap.put(YipeeTable.class, yipeeTableRepository);
-        repoMap.put(YipeeSeat.class, yipeeSeatRepository);
-        repoMap.put(YipeePlayer.class, yipeePlayerRepository);
-        repoMap.put(PlayerConnectionDTO.class, yipeeClientConnectionRepository);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends YipeeObject> YipeeRepository<T, String> getRepository(Class<T> clazz) {
-        YipeeRepository<?, String> repository = (YipeeRepository<?, String>) repoMap.get(clazz);
-        if (repository == null) {
-            throw new IllegalStateException("No repository found for class: " + clazz.getSimpleName());
-        }
-        return (YipeeRepository<T, String>) repository;
-    }
+    // ---------- Reads ----------
 
     @Override
+    @Transactional(readOnly = true)
     public <T extends YipeeObject> T getObjectByName(Class<T> clazz, String name) {
         logger.trace("Enter getObjectByName()={}, {}", clazz, name);
         if (clazz == null || name == null || name.isEmpty()) {
@@ -91,22 +108,33 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGam
     }
 
     @Override
+    @Transactional(readOnly = true)
     public <T extends YipeeObject> T getObjectById(Class<T> clazz, String id)  {
         JpaRepository<T, String> repository = getRepository(clazz);
         return repository.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public <T extends YipeeObject> List<T> getAllObjects(Class<T> clazz) {
         JpaRepository<T, String> repository = getRepository(clazz);
         return repository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public <T extends YipeeObject> long countAllObjectsLong(Class<T> clazz) {
+        // Prefer returning long; keep a legacy int wrapper if needed
+        return getRepository(clazz).count();
+    }
+
     @Override
-    public <T extends YipeeObject> int countAllObjects(Class<T> clazz) {
+    @Transactional(readOnly = true)
+    public <T extends YipeeObject> int  countAllObjects(Class<T> clazz) {
         JpaRepository<T, String> repository = getRepository(clazz);
         return Util.otoi(repository.count());
     }
+
+    // ---------- Writes ----------
 
     @SuppressWarnings("unchecked")
     private <T extends YipeeObject> void internalSave(T object) {
@@ -116,21 +144,20 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGam
         }
 
         JpaRepository<T, String> repository = getRepository((Class<T>) object.getClass());
-
-        logger.debug("exit internalSave()");
         repository.save(object);
+        logger.debug("exit internalSave()");
     }
 
     @SuppressWarnings("unchecked")
     private <T extends YipeeObject> boolean internalDelete(T object) {
         logger.debug("enter internalDelete({})", object);
         if (object == null) {
-            throw new IllegalArgumentException("Cannot save a null object.");
+            throw new IllegalArgumentException("Cannot delete a null object.");
         }
 
         JpaRepository<T, String> repository = getRepository((Class<T>) object.getClass());
-
         repository.delete(object);
+        logger.debug("exit internalDelete()");
         return true;
     }
 
@@ -152,44 +179,53 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGam
         }
 
         if (existing != null) {
-            logger.debug("Found existing object: {}", existing);
-            // Copy ID to update same record
-            object.setId(existing.getId());
-            object.setModified(TimeUtils.millis());
+            // Merge incoming fields into the managed entity (avoid copying id/created)
+            copyMutableFields(object, existing);
+            // timestamps handled by @PreUpdate; no need to touch created/modified here
+            internalSave(existing);
         } else {
-            // Let DB generate ID naturally (leave it null)
-            object.setCreated(TimeUtils.millis());
-            object.setModified(TimeUtils.millis());
+            // New row
+            internalSave(object);
         }
-        internalSave(object);
         logger.debug("exit saveOrUpdateObject()");
     }
 
+    @SuppressWarnings("unchecked")
+    private <T extends YipeeObject> void copyMutableFields(T src, T managed) {
+        if (managed instanceof Updatable) {
+            ((Updatable<T>) managed).updateFrom(src);
+        } else {
+            // minimal default for rare cases
+            managed.setName(src.getName());
+        }
+    }
+
     @Override
+    @Transactional
     public void saveObject(YipeeObject object) {
-        logger.debug("enter saveObject()");
+        logger.debug("enter saveObject({})", object);
         // Save parent object first
         saveOrUpdateObject(object);
 
         // Attempt to save child objects
-        if (object instanceof YipeeObjectJPAVisitor) {
-            ((YipeeObjectJPAVisitor) object).visitSave(this);
+        if (object instanceof YipeeObjectJPAVisitor visitor) {
+            visitor.visitSave(this);
         }
         logger.debug("exit saveObject()");
     }
 
     @Override
+    @Transactional
     public boolean deleteObject(YipeeObject object) {
-        logger.debug("enter internalDelete()");
+        logger.debug("enter internalDelete({})", object);
         boolean successful = true;
         try {
             // Attempt to delete child objects first
-            if(object instanceof TerminatorJPAVisitor) {
-                ((TerminatorJPAVisitor) object).visitDelete(this);
+            if(object instanceof TerminatorJPAVisitor visitor) {
+                visitor.visitDelete(this);
             }
         } catch (Exception e) {
             logger.error("There was an exception while deleting child objects for object: {}", object, e);
-            successful = false;
         }
 
         try {
@@ -199,7 +235,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGam
             logger.error("There was an exception while deleting object: {}", object, e);
             successful = false;
         }
-        logger.debug("exit internalDelete()");
+        logger.debug("exit internalDelete()={}", successful);
         return successful;
     }
 
@@ -212,6 +248,8 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage implements YipeeGam
     public void rollBackTransactions() {
 
     }
+
+    // ---------- Visitor callbacks ----------
 
     @Override
     public void visitSaveYipeeRoom(YipeeRoom room) {

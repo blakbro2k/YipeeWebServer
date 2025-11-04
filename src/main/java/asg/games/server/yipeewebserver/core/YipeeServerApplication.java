@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,6 +21,8 @@ import java.io.IOException;
  */
 public class YipeeServerApplication extends ApplicationAdapter {
     private static final Logger logger = LoggerFactory.getLogger(YipeeServerApplication.class);
+
+    private ApplicationContext appContext;
 
     // Game server manager instance
     ServerManager daemon = new ServerManager();
@@ -34,7 +38,9 @@ public class YipeeServerApplication extends ApplicationAdapter {
     /**
      * Constructor for YipeeServerApplication.
      */
-    public YipeeServerApplication() {}
+    public YipeeServerApplication(ApplicationContext appContext) {
+        this.appContext = appContext;
+    }
 
     /**
      * Sets up the TCP Port, the UDP Port and the TickRate
@@ -72,10 +78,11 @@ public class YipeeServerApplication extends ApplicationAdapter {
             logger.info("Setting server...");
             daemon.setUpServer(tcpPort, udpPort);
         } catch (IOException e) {
-            logger.error("Error creating server thread.", e);
-            throw new GdxRuntimeException("Error creating server thread.", e);
+            logger.error("Error creating server thread. Cannot proceed with server set up.", e);
+            appShutDown(-10);
         } catch (ParserConfigurationException | SAXException e) {
             logger.error("There was an issue creating the server daemon.",e);
+            appShutDown(-11);
         }
     }
 
@@ -120,5 +127,9 @@ public class YipeeServerApplication extends ApplicationAdapter {
     @Override
     public void pause() {
         logger.trace("enter pause(), currently not supported");
+    }
+
+    private void appShutDown(int returnCode) {
+        SpringApplication.exit(appContext, () -> returnCode);
     }
 }
