@@ -2,8 +2,7 @@ package asg.games.server.yipeewebserver;
 
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -13,15 +12,15 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-//@EnableTransactionManagement(proxyTargetClass = true)
+@Slf4j
+@EnableScheduling
 @EnableJpaRepositories({"asg.games.server.yipeewebserver.persistence"})
 @ComponentScan(basePackages = {"asg.games.server","asg.games.yipee"})
 @EntityScan({"asg.games.yipee.core.objects","asg.games.server.yipeewebserver.data"})
 @SpringBootApplication()
 public class YipeeWebserverApplication extends ServletInitializer implements CommandLineRunner {
-	private static final Logger logger = LoggerFactory.getLogger(YipeeWebserverApplication.class);
-
 	@Autowired
 	private YipeeGameJPAServiceImpl yipeeGameService;
 
@@ -30,7 +29,6 @@ public class YipeeWebserverApplication extends ServletInitializer implements Com
 
 	@Value("${gameserver.port}")
 	private int tcpPort;
-
 
 	@Value("${gameserver.udp.port}")
 	private int udpPort;
@@ -46,7 +44,7 @@ public class YipeeWebserverApplication extends ServletInitializer implements Com
 	public void run(String... args) {
 		// Launch HeadlessLauncher and pass configuration
 		HeadlessLauncher launcher = new HeadlessLauncher();
-		logger.info("Starting Web Server, launching {}", launcher.getClass().getSimpleName());
+		log.info("Starting Web Server, launching {}", launcher.getClass().getSimpleName());
 		launcher.launch(tcpPort, udpPort, tickRate, yipeeGameService, appContext);
 	}
 }

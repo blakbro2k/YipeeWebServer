@@ -16,10 +16,10 @@
 package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.Version;
+import asg.games.server.yipeewebserver.net.TickedPlayerActionData;
+import asg.games.yipee.common.enums.YipeeSerializable;
 import asg.games.yipee.common.game.GameBoardState;
-import asg.games.yipee.common.packets.PlayerAction;
-import asg.games.yipee.common.packets.TickedPlayerActionData;
-import asg.games.yipee.common.packets.YipeeSerializable;
+import asg.games.yipee.common.game.PlayerAction;
 import asg.games.yipee.core.game.YipeeGameBoard;
 import asg.games.yipee.core.objects.YipeeGameBoardState;
 import asg.games.yipee.core.objects.YipeePlayer;
@@ -27,8 +27,7 @@ import asg.games.yipee.core.tools.TimeUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -50,8 +49,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * - Uses thread-safe data structures such as ConcurrentHashMap and ConcurrentLinkedQueue.
  * - Employs executors for managing game loop and player action processing.
  */
+@Slf4j
 public class ServerGameManager {
-    private static final Logger logger = LoggerFactory.getLogger(ServerGameManager.class);
     private static final String CONST_TITLE = "Yipee! Game Manager";
     private static final int MAX_TICK_HISTORY = 1024;
     private final Queue<PlayerAction> pendingActions = new ConcurrentLinkedQueue<>(); // Stores pending player actions
@@ -69,11 +68,11 @@ public class ServerGameManager {
      * Constructor initializes game boards, executors, and logging for game session setup.
      */
     public ServerGameManager() {
-        logger.info("{} Build {}", CONST_TITLE, Version.printVersion());
-        logger.info("Initializing Gamestates...");
-        logger.info("Initializing Game loop...");
-        logger.info("Initializing Actions...");
-        logger.info("Initializing Seats...");
+        log.info("{} Build {}", CONST_TITLE, Version.printVersion());
+        log.info("Initializing Gamestates...");
+        log.info("Initializing Game loop...");
+        log.info("Initializing Actions...");
+        log.info("Initializing Seats...");
 
         //local seat is ignored, setting to -1
         initialize(TimeUtils.millis());
@@ -89,10 +88,10 @@ public class ServerGameManager {
     public void startGameLoop() {
         // Set same seeded game for 8 game boards (1 for each seat)
         long seed = TimeUtils.millis();
-        logger.info("Starting game with seed={}", seed);
+        log.info("Starting game with seed={}", seed);
         for (int seatId = 0; seatId < 8; seatId++) {
             ServerPlayerGameBoard board = getGameBoard(seatId);
-            if (!isPlayerEmpty(seatId)) {
+            if (isPlayerEmpty(seatId)) {
                 board.startBoard();
             }
         }
@@ -100,10 +99,10 @@ public class ServerGameManager {
 
     public void endGameLoop() {
         // Set same seeded game for 8 game boards (1 for each seat)
-        logger.info("Ending Game Loop.");
+        log.info("Ending Game Loop.");
         for (int seatId = 0; seatId < 8; seatId++) {
             ServerPlayerGameBoard board = getGameBoard(seatId);
-            if (!isPlayerEmpty(seatId)) {
+            if (isPlayerEmpty(seatId)) {
                 board.stopBoard();
             }
         }
@@ -147,7 +146,7 @@ public class ServerGameManager {
      */
     private boolean isPlayerEmpty(int seatId) {
         validateSeat(seatId);
-        return getGameBoardPlayer(seatId) == null;
+        return getGameBoardPlayer(seatId) != null;
     }
 
     /**
@@ -159,7 +158,7 @@ public class ServerGameManager {
      */
     private void validateSeat(int seatId) {
         if (seatId < 0 || seatId > 7) {
-            logger.error("Seat ID [{}] is out of bounds. Valid range is 0-7.", seatId);
+            log.error("Seat ID [{}] is out of bounds. Valid range is 0-7.", seatId);
             throw new IllegalArgumentException("Seat ID must be between 0 and 7.");
         }
     }
@@ -411,7 +410,7 @@ public class ServerGameManager {
         }
 
         // 3. Check Win/Loss Conditions
-        logger.debug("Checking Game End conditions");
+        log.debug("Checking Game End conditions");
         checkGameEndConditions();
     }
 
@@ -436,15 +435,15 @@ public class ServerGameManager {
         PlayerAction.ActionType actionType = action.getActionType();
         
         ServerPlayerGameBoard board = getGameBoard(targetSeatId);
-        logger.info("Initial boardSeat: {} is taking action: {} on target boardSeat: {}.",
+        log.info("Initial boardSeat: {} is taking action: {} on target boardSeat: {}.",
                 sourceSeatId, actionType, targetSeatId);
 
         if (board == null) {
-            logger.warn("No game board found for seat [{}]. Skipping action [{}].", targetSeatId, actionType);
+            log.warn("No game board found for seat [{}]. Skipping action [{}].", targetSeatId, actionType);
             return;
         }
 
-        logger.debug("Processing action [{}] for seat [{}]", actionType, targetSeatId);
+        log.debug("Processing action [{}] for seat [{}]", actionType, targetSeatId);
 
         // Submit the player action to the executor service for async processing.
         // Synchronize on the target board to ensure thread-safe updates.
@@ -454,7 +453,7 @@ public class ServerGameManager {
                 applyPlayerActionToBoard(action, board, serverTick);
                 //setGameBoard(targetSeatId, board);
             } catch (Exception e) {
-                logger.error("Error processing player action", e);
+                log.error("Error processing player action", e);
             }
         //}
     }
@@ -484,7 +483,7 @@ public class ServerGameManager {
             Object actionDataObj = action.getActionData();
             if(actionDataObj instanceof TickedPlayerActionData) {
                 TickedPlayerActionData actionData = (TickedPlayerActionData) actionDataObj;
-                timeStamp = actionData.getTimestamp();
+                timeStamp = actionData.getTimeStamp();
             }
         }
         return timeStamp;
@@ -498,7 +497,7 @@ public class ServerGameManager {
      * before forcing termination.
      */
     public void shutDownServer() {
-        logger.info("Attempting to shutdown GameServer...");
+        log.info("Attempting to shutdown GameServer...");
         pendingActions.clear();
         gameBoardMap.clear();
     }

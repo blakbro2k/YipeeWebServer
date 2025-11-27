@@ -1,9 +1,9 @@
 package asg.games.server.yipeewebserver.controllers;
 
-
 import asg.games.server.yipeewebserver.data.WebPlayerDTO;
 import asg.games.server.yipeewebserver.data.WebTableDTO;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
+import asg.games.yipee.common.enums.Constants;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
 import asg.games.yipee.core.objects.YipeeTable;
@@ -96,7 +96,7 @@ public class YipeeWebController {
             //dbPlayer.setIcon(webPlayer.getIcon());
             //dbPlayer.setRating(webPlayer.getRating());
 
-            System.out.println("Creating: " + dbPlayer);
+            log.trace("Creating: " + dbPlayer);
             yipeeGameService.saveObject(dbPlayer);
         }
 
@@ -109,7 +109,7 @@ public class YipeeWebController {
         if(room != null) {
             model.addAttribute("roomTitle", room.getName());
             model.addAttribute("roomId", id);
-            System.out.println("room model: " + model);
+            log.trace("room model: " + model);
         }
         return "room";
     }
@@ -121,7 +121,7 @@ public class YipeeWebController {
 
     @GetMapping(value = "/createTable")
     public String createTable(@RequestParam(name = "roomId", required = false) String roomId, Model model) {
-        List<String> types = Arrays.asList(YipeeTable.ENUM_VALUE_PUBLIC, YipeeTable.ENUM_VALUE_PROTECTED, YipeeTable.ENUM_VALUE_PRIVATE);
+        List<String> types = Arrays.asList(Constants.ENUM_VALUE_PUBLIC, Constants.ENUM_VALUE_PROTECTED, Constants.ENUM_VALUE_PRIVATE);
         model.addAttribute("webTableDTO", new WebTableDTO());
         model.addAttribute("tableTypes", types);
         model.addAttribute("roomId", roomId);
@@ -131,26 +131,25 @@ public class YipeeWebController {
     @PostMapping("/doCreateTable")
     public String doCreateTable(@RequestParam(name = "roomId", required = false) String roomId, @ModelAttribute WebTableDTO webTableDTO, Model model) {
         if(webTableDTO != null) {
-            System.out.println("create table model: " + model);
-            System.out.println("create table roomId: " + roomId);
+            log.trace("create table model: " + model);
+            log.trace("create table roomId: " + roomId);
             boolean isRated = webTableDTO.getRated();
             boolean isSoundOn = webTableDTO.getSound();
             String accessType = webTableDTO.getAccessType();
-            System.out.println("isRated: " + isRated);
-            System.out.println("isSoundOn: " + isSoundOn);
-            System.out.println("accessType: " + accessType);
+            log.trace("isRated: " + isRated);
+            log.trace("isSoundOn: " + isSoundOn);
+            log.trace("accessType: " + accessType);
 
             YipeeRoom dbRoom = yipeeGameService.getObjectById(YipeeRoom.class, roomId);
-            System.out.println("dbRoom: " + dbRoom);
+            log.trace("dbRoom: " + dbRoom);
 
             Map<String, Object> arguments = new HashMap<>();
             arguments.put(YipeeTable.ARG_TYPE, accessType);
             arguments.put(YipeeTable.ARG_RATED, isRated);
             //arguments.put(YipeeTable.ARG_SOUND, isSoundOn);
             YipeeTable dbTable = new YipeeTable( 2, arguments);
-            dbTable.setSound(isSoundOn);
-            System.out.println("Creating: " + dbTable);
-            System.out.println("Creating: " + dbTable.getSeats());
+            dbTable.setSoundOn(isSoundOn);
+            log.trace("Creating: " + dbTable.getSeats());
 
             yipeeGameService.saveObject(dbTable);
         }

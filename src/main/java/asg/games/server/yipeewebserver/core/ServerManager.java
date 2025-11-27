@@ -1,27 +1,27 @@
 package asg.games.server.yipeewebserver.core;
 
-import asg.games.server.yipeewebserver.data.DTOObject;
-import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
-import asg.games.yipee.net.tools.PacketRegistrar;
-import asg.games.yipee.core.objects.YipeeKeyMap;
+import asg.games.server.yipeewebserver.net.ConnectionContext;
+import asg.games.server.yipeewebserver.net.YipeePacketHandler;
+import asg.games.yipee.common.enums.YipeeObject;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.persistence.Storage;
 import asg.games.yipee.core.tools.Util;
+import asg.games.yipee.net.errors.YipeeBadRequestException;
+import asg.games.yipee.net.errors.YipeeException;
+import asg.games.yipee.net.packets.AbstractClientRequest;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
-import asg.games.yipee.net.packets.ClientHandshakeResponse;
 import asg.games.yipee.net.packets.DisconnectRequest;
 import asg.games.yipee.net.packets.MappedKeyUpdateRequest;
 import asg.games.yipee.net.packets.TableStateBroadcastResponse;
 import asg.games.yipee.net.packets.TableStateUpdateRequest;
+import asg.games.yipee.net.tools.PacketRegistrar;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.TimeUtils;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ResourceUtils;
 import org.xml.sax.SAXException;
 
@@ -38,17 +38,17 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static asg.games.server.yipeewebserver.tools.NetUtil.getPlayerFromNetYipeePlayer;
-
 /**
  * Manages the game server, including networking, player connections, and game state updates.
  */
+@Slf4j
 public class ServerManager implements Disposable {
-    private static final Logger logger = LoggerFactory.getLogger(ServerManager.class);
     private static final String ARG_USER_CONNECT_NAME_TAG = "#CONNECTION";
     private static final String ARG_NO_PLAYER_NAME_TAG = "_no_player_name";
     private static final String ARG_PACKETS_FILE = "libgdxPackets.xml";
     private final AtomicBoolean ticking = new AtomicBoolean(false);
+    public static final String SERVER_STATUS_UP = "UP";
+    public static final String SERVER_STATUS_DOWN = "DOWN";
 
     // The KryoNet server instance
     Server server = new Server();
@@ -62,14 +62,17 @@ public class ServerManager implements Disposable {
     private final ConcurrentHashMap<String, ServerGameManager> gameManagers = new ConcurrentHashMap<>();
     Map<String, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
     private final Map<Integer, String> connectionToGameIdx = new ConcurrentHashMap<>();
+    private final Map<Integer, ConnectionContext> connectionContexts = new ConcurrentHashMap<>();
+    private final Map<String, String> sessionToGameId = new ConcurrentHashMap<>();
 
     private Storage storageAdapter;
+
+    private YipeePacketHandler yipeePacketHandler;
 
     /**
      * Constructor for GameServerManager.
      */
-    public ServerManager() {
-    }
+    public ServerManager() {}
 
     /**
      * Broadcasts the current game state to all connected clients.
@@ -120,11 +123,17 @@ public class ServerManager implements Disposable {
     }
 
     /**
-     *
-     * @param yipeeGameServices
+     * Initializes the Database Persistence Object
      */
     public void setDBService(Storage yipeeGameServices) {
         storageAdapter = yipeeGameServices;
+    }
+
+    /**
+     * Initializes the Network Package Handler Object
+     */
+    public void setNetworkHandlerService(YipeePacketHandler yipeePacketHandler) {
+        this.yipeePacketHandler = yipeePacketHandler;
     }
 
     /**
@@ -135,7 +144,7 @@ public class ServerManager implements Disposable {
      * @throws IOException if there is an error during server binding.
      */
     public void setUpServer(int tcpPort, int udpPort) throws IOException, ParserConfigurationException, SAXException {
-        logger.info("Starting Kryo Server...");
+        log.info("Starting Kryo Server...");
         server.start(); // Start the server
 
         File file = ResourceUtils.getFile("src/main/resources/packets.xml");
@@ -146,7 +155,7 @@ public class ServerManager implements Disposable {
         // Register all necessary packet classes for serialization
         PacketRegistrar.reloadConfiguration(file.getPath());
         PacketRegistrar.registerPackets(server.getKryo());
-        logger.debug("\n" + PacketRegistrar.dumpRegisteredPackets());
+        log.debug("\n" + PacketRegistrar.dumpRegisteredPackets());
 
         //LocalReg.registerPackets(server.getKryo());
         server.bind(tcpPort, udpPort); // Bind the server to the given ports
@@ -155,61 +164,101 @@ public class ServerManager implements Disposable {
         server.addListener(new Listener.ThreadedListener(new Listener() {
             @Override
             public void received(Connection connection, Object object) {
-                if (connection.getRemoteAddressTCP() == null) {
-                    logger.debug("Received unknown object from {}: {}; Ignoring", connection.getRemoteAddressTCP(), object.getClass().getName());
-                    return;
+                try {
+                    updateConnectionContext(connection, object);
+
+                    if (connection.getRemoteAddressTCP() == null) {
+                        log.debug("Received unknown object from {}: {}; Ignoring", connection.getRemoteAddressTCP(), object.getClass().getName());
+                        return;
+                    }
+                    if (object instanceof FrameworkMessage) {
+                        log.trace("Received FrameworkMessage from client: {}", object.getClass().getName());
+                        return;
+                    }
+                    if (object instanceof ClientHandshakeRequest request) {
+                        log.trace("received instance of {}...", ClientHandshakeRequest.class.getSimpleName());
+                        yipeePacketHandler.handleClientHandshake(connection, request);
+                        return;
+                    }
+                    if (object instanceof DisconnectRequest request) {
+                        log.trace("received instance of {}...", DisconnectRequest.class.getSimpleName());
+                        yipeePacketHandler.handleDisconnectRequest(connection, request);
+                        return;
+                    }
+                    if (object instanceof TableStateUpdateRequest request) {
+                        log.trace("received instance of {}...", TableStateUpdateRequest.class.getSimpleName());
+                        yipeePacketHandler.handleTableStateUpdateRequest(connection, request);
+                        return;
+                    }
+                    if (object instanceof MappedKeyUpdateRequest request) {
+                        log.trace("received instance of {}...", MappedKeyUpdateRequest.class.getSimpleName());
+                        yipeePacketHandler.handlePlayerMappedKeyUpdateRequest(connection, request);
+                        return;
+                    }
+                    throw new YipeeBadRequestException("Received unexpected object: " + object.getClass().getName());
+
+                } catch (YipeeException ye) {
+                    // Custom expected game/network error
+                    log.warn("Yipee error: {}", ye.getMessage());
+                    yipeePacketHandler.handleNetError(connection, ye);
+                } catch (Exception e) {
+                    // Unexpected internal crash
+                    log.error("Unhandled server error", e);
+                    yipeePacketHandler.handleNetError(connection, e);
                 }
-                if (object instanceof FrameworkMessage) {
-                    logger.trace("Received FrameworkMessage from client: {}", object.getClass().getName());
-                    return;
-                }
-                if (object instanceof ClientHandshakeRequest request) {
-                    logger.trace("received instance of {}...", ClientHandshakeRequest.class.getSimpleName());
-                    handleClientHandshake(connection, request);
-                } else if (object instanceof DisconnectRequest request) {
-                    logger.trace("received instance of {}...", DisconnectRequest.class.getSimpleName());
-                    handleDisconnectRequest(connection, request);
-                } else if (object instanceof TableStateUpdateRequest request) {
-                    logger.trace("received instance of {}...", TableStateUpdateRequest.class.getSimpleName());
-                    handleTableStateUpdateRequest(connection, request);
-                } else if (object instanceof MappedKeyUpdateRequest request) {
-                    logger.trace("received instance of {}...", MappedKeyUpdateRequest.class.getSimpleName());
-                    handlePlayerMappedKeyUpdateRequest(connection, request);
-                } else {
-                    logger.warn("Received unexpected object: " + object.getClass().getName());
-                }
+
             }
         }));
     }
 
+    private void updateConnectionContext(Connection connection, Object object) {
+        if (!(object instanceof AbstractClientRequest req)) return;
+
+        ConnectionContext connectionContext = connectionContexts.computeIfAbsent(
+                connection.getID(),
+                id -> new ConnectionContext()
+        );
+
+        connectionContext.clientId = req.getClientId();
+        connectionContext.sessionId = req.getSessionId();
+        // gameId will be resolved by server after lookup:
+        connectionContext.gameId = findGameIdForSession(req.getSessionId());
+    }
+
+    private String findGameIdForSession(String sessionId) {
+        if (sessionId == null) return null;
+        return sessionToGameId.get(sessionId);
+    }
+
+
     /**
-     * Saves a {@code DTOObject} to the persistence storage
+     * Saves a {@code YipeeObject} to the persistence storage
      *
      * @param object object to save to database
      */
-    private void persistObject(DTOObject object) {
+    private void persistObject(YipeeObject object) {
         if(storageAdapter != null) {
             storageAdapter.saveObject(object);
         }
     }
 
     /**
-     * Deletes a {@code DTOObject} from the persistence storage
+     * Deletes a {@code YipeeObject} from the persistence storage
      *
      * @param object object to delete from database
      */
-    private void dePersistObject(DTOObject object) {
+    private void dePersistObject(YipeeObject object) {
         if(storageAdapter != null) {
             storageAdapter.deleteObject(object);
         }
     }
 
     /**
-     * Gets a {@code DTOObject} from the persistence storage
+     * Gets a {@code YipeeObject} from the persistence storage
      *
      * @param object to get from database
      */
-    private <T extends DTOObject> T getPersistObject(Class<T> clazz, DTOObject object) {
+    private <T extends YipeeObject> T getPersistObject(Class<T> clazz, YipeeObject object) {
         T obj = null;
         if(storageAdapter != null) {
             try {
@@ -218,17 +267,17 @@ public class ServerManager implements Disposable {
                     obj = getObjectById(clazz, object.getId());
                 }
             } catch (Exception e) {
-                logger.error("Failed to getPersistObject Object:[{}] from database.", obj);
+                log.error("Failed to getPersistObject Object:[{}] from database.", obj);
             }
         }
         return obj;
     }
 
-    private <T extends DTOObject> T getObjectByName(Class<T> clazz, String name) throws Exception {
+    private <T extends YipeeObject> T getObjectByName(Class<T> clazz, String name) throws Exception {
         return storageAdapter.getObjectByName(clazz, name);
     }
 
-    private <T extends DTOObject> T getObjectById(Class<T> clazz, String id) throws Exception {
+    private <T extends YipeeObject> T getObjectById(Class<T> clazz, String id) throws Exception {
         return storageAdapter.getObjectById(clazz, id);
     }
 
@@ -240,117 +289,6 @@ public class ServerManager implements Disposable {
             name = ARG_NO_PLAYER_NAME_TAG;
         }
         return name + ARG_USER_CONNECT_NAME_TAG;
-    }
-
-    /**
-     * Handles a connection request from a client.
-     *
-     * @param connection The client connection.
-     * @param request    The connection request object.
-     */
-    private void handleClientHandshake(Connection connection, ClientHandshakeRequest request) {
-        logger.trace("Enter handleClientHandshake({}, {})", connection, request);
-
-        //TODO: valdiate non duplicate clientID
-        //TODO: generate unique session id (clientid+server nonce)
-        //TODO: generate authToken
-
-        YipeePlayer player = getPlayerFromNetYipeePlayer(request.getPlayer());
-        String sessionId = UUID.randomUUID().toString() + TimeUtils.millis();
-
-        PlayerConnectionDTO playerConnectDTO = new PlayerConnectionDTO();
-        playerConnectDTO.setClientId(request.getClientId());
-        playerConnectDTO.setSessionId(sessionId);
-        playerConnectDTO.setConnected(true);
-        playerConnectDTO.setPlayer(player);
-        playerConnectDTO.setTimeStamp(TimeUtils.millis());
-        playerConnectDTO.setName(buildPlayerConnectionName(player));
-
-        logger.debug("Saving [{}] object.", playerConnectDTO);
-        persistObject(playerConnectDTO);
-
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setAuthToken("");
-        response.setServerId(serverId);
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setPlayer(player);
-        response.setConnected(true);
-
-        logger.info("Handshake complete for clientId={}, player={}", request.getClientId(), player.getName());
-        connection.sendTCP(response);
-        logger.trace("Exit handleClientHandshake()");
-    }
-
-    /**
-     * Handles a disconnect request from a client.
-     *
-     * @param connection The client connection.
-     * @param request    The disconnect request object.
-     */
-    private void handleDisconnectRequest(Connection connection, DisconnectRequest request) {
-        String clientId = request.getClientId();
-        if (gameManagers.remove(clientId) != null) {
-            logger.debug("Stopped GameManager for clientId={}", clientId);
-        }
-
-        if (gameThreads.containsKey(clientId)) {
-            // Remove the GameManager for the client
-            gameThreads.get(clientId).interrupt();
-            gameThreads.remove(clientId);
-        }
-
-        YipeePlayer player = getPlayerFromNetYipeePlayer(request.getPlayer());
-        String playerName = buildPlayerConnectionName(player);
-        PlayerConnectionDTO user = null;
-        try {
-            user = getObjectByName(PlayerConnectionDTO.class, playerName);
-            dePersistObject(user);
-        } catch (Exception e) {
-            logger.error("Failed to get Object:[{}] from database.", playerName);
-        }
-
-        // Send disconnection response
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setAuthToken("session-xyz");
-        response.setServerId(serverId);
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setPlayer(player);
-        response.setConnected(true);
-    }
-
-    private void handlePlayerMappedKeyUpdateRequest(Connection connection, MappedKeyUpdateRequest request) {
-        PlayerConnectionDTO playerDTO = null;
-        try {
-            playerDTO = getObjectByName(PlayerConnectionDTO.class, request.getClientId());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        YipeePlayer player = playerDTO.getPlayer();
-        YipeeKeyMap newMap = getPlayerFromNetYipeePlayer(request.getKeyConfig());
-        player.setKeyConfig(newMap);
-        logger.info("Updated key map for player {}", player.getName());
-
-        // Send disconnection response
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setAuthToken("session-xyz");
-        response.setServerId(serverId);
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setPlayer(player);
-        response.setConnected(true);
-    }
-
-    private void handleTableStateUpdateRequest(Connection connection, TableStateUpdateRequest request) {
-        // TODO: Fetch table by ID, validate player, apply partial update
-        // Then broadcast new TableStateBroadcast
-        logger.debug("Received TableStateUpdateRequest: {}", request);
-
-        // Send disconnection response
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setAuthToken("session-xyz");
-        response.setServerId(serverId);
-        response.setServerTimestamp(System.currentTimeMillis());
-        //response.setPlayer(player);
-        response.setConnected(true);
     }
 
     /**
@@ -392,7 +330,7 @@ public class ServerManager implements Disposable {
     @Override
     public void dispose() {
         try {
-            logger.trace("Entering Game Dispose");
+            log.trace("Entering Game Dispose");
 
             if (server != null) server.stop();
 
@@ -401,10 +339,11 @@ public class ServerManager implements Disposable {
             connectionToGameIdx.clear();
 
         } catch (Exception e) {
-            logger.error("Error while shutting down GameServerManager", e);
+            log.error("Error while shutting down GameServerManager", e);
             throw new RuntimeException(e);
         } finally {
-            logger.trace("Exit Game Dispose");
+            log.trace("Exit Game Dispose");
         }
     }
+
 }

@@ -3,16 +3,16 @@ package asg.games.server.yipeewebserver.data;
 import asg.games.yipee.core.objects.YipeeRoom;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
+@Slf4j
 @Setter
 @Getter
 public class WebTableDTO implements Serializable {
-    private static final Logger logger = LoggerFactory.getLogger(WebTableDTO.class);
-
     private String accessType;
     private YipeeRoom parentRoom;
     private boolean rated;

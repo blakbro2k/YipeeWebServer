@@ -1,15 +1,15 @@
 package asg.games.server.yipeewebserver.core;
 
+import asg.games.yipee.common.enums.Disposable;
 import asg.games.yipee.common.game.GameBoardState;
-import asg.games.yipee.common.packets.PlayerAction;
+import asg.games.yipee.common.game.PlayerAction;
 import asg.games.yipee.core.game.YipeeGameBoard;
-import asg.games.yipee.core.objects.Disposable;
-import asg.games.yipee.core.objects.YipeeGameBoardState;
 import asg.games.yipee.core.objects.YipeePlayer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Queue;
@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 /**
  * Holds the player, their assigned board (if server-side), and a timeline of board states.
  */
+@Slf4j
 @Getter
 @Setter
 public class ServerPlayerGameBoard implements Disposable {

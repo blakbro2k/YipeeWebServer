@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Component
 /** Launches the headless application. Can be converted into a utilities project or a server application. */
 public class HeadlessLauncher {
-    private static final Logger logger = LoggerFactory.getLogger(HeadlessLauncher.class);
     private static volatile HeadlessApplication app;
     private final AtomicBoolean started = new AtomicBoolean(false);
 
@@ -27,8 +26,8 @@ public class HeadlessLauncher {
     private static int serverLogLevel;
 
     public static void main(String[] args) {
-        logger.info("Main launcher args: {}", Arrays.toString(args));
-        createApplication(new YipeeServerApplication(null));
+        log.info("Main launcher args: {}", Arrays.toString(args));
+        //createApplication(new YipeeServerApplication(null));
     }
 
     /**

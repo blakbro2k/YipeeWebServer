@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 public interface YipeeRepository<T, ID> extends JpaRepository<T, ID> {
     T findByName(ID name);
 
+    boolean existsById(ID id);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select e from #{#entityName} e where e.name = :name")
     T findByNameForUpdate(@Param("name") String name);

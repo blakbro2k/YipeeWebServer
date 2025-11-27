@@ -39,12 +39,12 @@
     </root>
 
     <!-- LOG "com.baeldung*" at TRACE level -->
-    <logger name="com.baeldung" level="info" additivity="false">
+    <logger name="com.baeldung" level="warn" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="com.fasterxml" level="info" additivity="false">
+    <logger name="com.fasterxml" level="warn" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
@@ -54,7 +54,7 @@
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="org.springframework.orm.jpa" level="warn" additivity="false">
+    <logger name="org.springframework" level="warn" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
@@ -64,28 +64,34 @@
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="asg.games.server" level="debug" additivity="false">
+    <logger name="asg.games.server" level="info" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="asg.games.yipee" level="debug" additivity="false">
+    <logger name="asg.games.yipee" level="info" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="asg.games.server.yipeewebserver" level="trace" additivity="false">
+    <logger name="asg.games.server.yipeewebserver" level="debug" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="asg.games.server.yipeewebserver.core.YipeeServerApplication" level="debug" additivity="false">
-        <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
-    </logger>
-
-    <logger name="com.esotericsoftware.kryonet" level="trace" additivity="false">
+    <logger name="com.esotericsoftware.kryonet" level="warn" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
 </configuration>
+<!--
+        # Keep your own stuff at INFO
+        logging.level.asg.games=INFO
+
+        # Turn Spring framework down to WARN
+        logging.level.org.springframework=WARN
+
+        # (Optional) Hibernate and friends too)
+        logging.level.org.hibernate=WARN
+        logging.level.org.apache.catalina=WARN
+-->
