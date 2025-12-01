@@ -1,9 +1,11 @@
 package asg.games.server.yipeewebserver;
 
+import asg.games.server.yipeewebserver.core.GameContextFactory;
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
+import asg.games.server.yipeewebserver.net.YipeePacketHandler;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,16 +18,16 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Slf4j
 @EnableScheduling
+@RequiredArgsConstructor
 @EnableJpaRepositories({"asg.games.server.yipeewebserver.persistence"})
 @ComponentScan(basePackages = {"asg.games.server","asg.games.yipee"})
 @EntityScan({"asg.games.yipee.core.objects","asg.games.server.yipeewebserver.data"})
 @SpringBootApplication()
 public class YipeeWebserverApplication extends ServletInitializer implements CommandLineRunner {
-	@Autowired
-	private YipeeGameJPAServiceImpl yipeeGameService;
-
-	@Autowired
-	private ApplicationContext appContext;
+	private final YipeePacketHandler yipeePacketHandler;
+	private final GameContextFactory gameContextFactory;
+	private final ApplicationContext appContext;
+	private final YipeeGameJPAServiceImpl yipeeGameJPAService;
 
 	@Value("${gameserver.port}")
 	private int tcpPort;
@@ -43,8 +45,8 @@ public class YipeeWebserverApplication extends ServletInitializer implements Com
 	@Override
 	public void run(String... args) {
 		// Launch HeadlessLauncher and pass configuration
-		HeadlessLauncher launcher = new HeadlessLauncher();
+		HeadlessLauncher launcher = new HeadlessLauncher(yipeePacketHandler, gameContextFactory, appContext, yipeeGameJPAService);
 		log.info("Starting Web Server, launching {}", launcher.getClass().getSimpleName());
-		launcher.launch(tcpPort, udpPort, tickRate, yipeeGameService, appContext);
+		launcher.launch(tcpPort, udpPort, tickRate);
 	}
 }

@@ -1,27 +1,21 @@
 package asg.games.server.yipeewebserver.core;
 
-import asg.games.server.yipeewebserver.net.ConnectionContext;
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
+import asg.games.server.yipeewebserver.net.listeners.YipeeKryoListener;
 import asg.games.yipee.common.enums.YipeeObject;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.persistence.Storage;
 import asg.games.yipee.core.tools.Util;
-import asg.games.yipee.net.errors.YipeeBadRequestException;
-import asg.games.yipee.net.errors.YipeeException;
-import asg.games.yipee.net.packets.AbstractClientRequest;
-import asg.games.yipee.net.packets.ClientHandshakeRequest;
-import asg.games.yipee.net.packets.DisconnectRequest;
-import asg.games.yipee.net.packets.MappedKeyUpdateRequest;
-import asg.games.yipee.net.packets.TableStateBroadcastResponse;
-import asg.games.yipee.net.packets.TableStateUpdateRequest;
+import asg.games.yipee.net.packets.TableStateUpdateResponse;
 import asg.games.yipee.net.tools.PacketRegistrar;
 import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.xml.sax.SAXException;
 
@@ -42,6 +36,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Manages the game server, including networking, player connections, and game state updates.
  */
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class ServerManager implements Disposable {
     private static final String ARG_USER_CONNECT_NAME_TAG = "#CONNECTION";
     private static final String ARG_NO_PLAYER_NAME_TAG = "_no_player_name";
@@ -50,41 +46,30 @@ public class ServerManager implements Disposable {
     public static final String SERVER_STATUS_UP = "UP";
     public static final String SERVER_STATUS_DOWN = "DOWN";
 
+    private final YipeePacketHandler yipeePacketHandler;
+    private final GameContextFactory gameContextFactory;
+
     // The KryoNet server instance
     Server server = new Server();
 
     // Unique identifier for the server instance
     String serverId = UUID.randomUUID().toString();
-    // Note: serverTick uses int because matches reset frequently.
-    // At 60 tps it overflows after ~1 year; safe for per-session lifespan.
-    private int serverTick = 0;
-    private final ConcurrentHashMap<String, Thread> gameThreads = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, ServerGameManager> gameManagers = new ConcurrentHashMap<>();
+
     Map<String, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
-    private final Map<Integer, String> connectionToGameIdx = new ConcurrentHashMap<>();
-    private final Map<Integer, ConnectionContext> connectionContexts = new ConcurrentHashMap<>();
-    private final Map<String, String> sessionToGameId = new ConcurrentHashMap<>();
 
     private Storage storageAdapter;
-
-    private YipeePacketHandler yipeePacketHandler;
-
-    /**
-     * Constructor for GameServerManager.
-     */
-    public ServerManager() {}
 
     /**
      * Broadcasts the current game state to all connected clients.
      * This method should be called periodically during the game loop.
      */
-    public void broadcastServerResponses(List<TableStateBroadcastResponse> responses) {
-        for (TableStateBroadcastResponse response : responses) {
+    public void broadcastServerResponses(List<TableStateUpdateResponse> responses) {
+        for (TableStateUpdateResponse response : responses) {
             sendTCPs(getConnectionsFromGameId(response.getGameId()), response);
         }
     }
 
-    private void sendTCPs(List<Connection> connections, TableStateBroadcastResponse response) {
+    private void sendTCPs(List<Connection> connections, TableStateUpdateResponse response) {
         for(Connection connection : Util.safeIterable(connections)) {
             if(connection != null && connection.isConnected()) {
                 connection.sendTCP(response);
@@ -96,30 +81,14 @@ public class ServerManager implements Disposable {
         return connectionsPerGame.getOrDefault(gameId, Collections.emptyList());
     }
 
-    private int getServerTick() {
-        return serverTick;
-    }
-
-    private void incrementServerTick() {
-        serverTick++;
-    }
-
     public String createNewGame() {
-        ServerGameManager manager = new ServerGameManager();
-        String gameId = generateUniqueGameId();
-        manager.setGameId(gameId);
-        gameManagers.put(gameId, manager);
+        String gameId = gameContextFactory.newGame();
         connectionsPerGame.put(gameId, new ArrayList<>());
         return gameId;
     }
 
-    private String generateUniqueGameId() {
-        String id;
-        do {
-            id = UUID.randomUUID().toString().substring(0, 8);
-        }
-        while (gameManagers.containsKey(id));
-        return id;
+    public ServerGameManager getGame(String gameId) {
+        return gameContextFactory.getGame(gameId);
     }
 
     /**
@@ -130,20 +99,13 @@ public class ServerManager implements Disposable {
     }
 
     /**
-     * Initializes the Network Package Handler Object
-     */
-    public void setNetworkHandlerService(YipeePacketHandler yipeePacketHandler) {
-        this.yipeePacketHandler = yipeePacketHandler;
-    }
-
-    /**
-     * Sets up and starts the game server, binding to the specified TCP and UDP ports.
+     * Sets up and starts the Kryo server, binding to the specified TCP and UDP ports.
      *
      * @param tcpPort The port for TCP connections.
      * @param udpPort The port for UDP connections.
      * @throws IOException if there is an error during server binding.
      */
-    public void setUpServer(int tcpPort, int udpPort) throws IOException, ParserConfigurationException, SAXException {
+    public void setUpKryoServer(int tcpPort, int udpPort) throws IOException, ParserConfigurationException, SAXException {
         log.info("Starting Kryo Server...");
         server.start(); // Start the server
 
@@ -161,75 +123,8 @@ public class ServerManager implements Disposable {
         server.bind(tcpPort, udpPort); // Bind the server to the given ports
 
         // Add a listener to handle incoming requests
-        server.addListener(new Listener.ThreadedListener(new Listener() {
-            @Override
-            public void received(Connection connection, Object object) {
-                try {
-                    updateConnectionContext(connection, object);
-
-                    if (connection.getRemoteAddressTCP() == null) {
-                        log.debug("Received unknown object from {}: {}; Ignoring", connection.getRemoteAddressTCP(), object.getClass().getName());
-                        return;
-                    }
-                    if (object instanceof FrameworkMessage) {
-                        log.trace("Received FrameworkMessage from client: {}", object.getClass().getName());
-                        return;
-                    }
-                    if (object instanceof ClientHandshakeRequest request) {
-                        log.trace("received instance of {}...", ClientHandshakeRequest.class.getSimpleName());
-                        yipeePacketHandler.handleClientHandshake(connection, request);
-                        return;
-                    }
-                    if (object instanceof DisconnectRequest request) {
-                        log.trace("received instance of {}...", DisconnectRequest.class.getSimpleName());
-                        yipeePacketHandler.handleDisconnectRequest(connection, request);
-                        return;
-                    }
-                    if (object instanceof TableStateUpdateRequest request) {
-                        log.trace("received instance of {}...", TableStateUpdateRequest.class.getSimpleName());
-                        yipeePacketHandler.handleTableStateUpdateRequest(connection, request);
-                        return;
-                    }
-                    if (object instanceof MappedKeyUpdateRequest request) {
-                        log.trace("received instance of {}...", MappedKeyUpdateRequest.class.getSimpleName());
-                        yipeePacketHandler.handlePlayerMappedKeyUpdateRequest(connection, request);
-                        return;
-                    }
-                    throw new YipeeBadRequestException("Received unexpected object: " + object.getClass().getName());
-
-                } catch (YipeeException ye) {
-                    // Custom expected game/network error
-                    log.warn("Yipee error: {}", ye.getMessage());
-                    yipeePacketHandler.handleNetError(connection, ye);
-                } catch (Exception e) {
-                    // Unexpected internal crash
-                    log.error("Unhandled server error", e);
-                    yipeePacketHandler.handleNetError(connection, e);
-                }
-
-            }
-        }));
+        server.addListener(new Listener.ThreadedListener(new YipeeKryoListener(yipeePacketHandler, gameContextFactory)));
     }
-
-    private void updateConnectionContext(Connection connection, Object object) {
-        if (!(object instanceof AbstractClientRequest req)) return;
-
-        ConnectionContext connectionContext = connectionContexts.computeIfAbsent(
-                connection.getID(),
-                id -> new ConnectionContext()
-        );
-
-        connectionContext.clientId = req.getClientId();
-        connectionContext.sessionId = req.getSessionId();
-        // gameId will be resolved by server after lookup:
-        connectionContext.gameId = findGameIdForSession(req.getSessionId());
-    }
-
-    private String findGameIdForSession(String sessionId) {
-        if (sessionId == null) return null;
-        return sessionToGameId.get(sessionId);
-    }
-
 
     /**
      * Saves a {@code YipeeObject} to the persistence storage
@@ -297,24 +192,20 @@ public class ServerManager implements Disposable {
      * @param deltaTime The time since the last update.
      */
     public void update(float deltaTime) {
-        // increment on every tick
-        incrementServerTick();
+        List<TableStateUpdateResponse> serverResponses = new LinkedList<>();
 
-        List<TableStateBroadcastResponse> serverResponses = new LinkedList<>();
-        for (Map.Entry<String, ServerGameManager> entry : gameManagers.entrySet()) {
-            ServerGameManager gameManager = entry.getValue();
+        for (ServerGameManager gameManager : gameContextFactory.getAllGames()) {
 
-            // 1. Run one tick of game logic
+            // 1. Run one tick of THIS game's logic
             try {
-                gameManager.update(deltaTime, getServerTick());
+                gameManager.update(deltaTime);   // serverTick++ happens inside
             } catch (JsonProcessingException e) {
-                //throw new RuntimeException(e);
+                log.error("Error updating game {}", gameManager.getGameId(), e);
             }
 
-            // 2. Get per-seat game state
-            TableStateBroadcastResponse tickPacket = new TableStateBroadcastResponse();
-            tickPacket.setServerTick(getServerTick());
-            //tickPacket.setStates(gameManager.getAllBoardStates());
+            // 2. Build a per-game tick packet
+            TableStateUpdateResponse tickPacket = new TableStateUpdateResponse();
+            tickPacket.setServerTick(gameManager.getServerTick());  // per-game tick
             tickPacket.setGameId(gameManager.getGameId());
             tickPacket.setServerId(serverId);
             serverResponses.add(tickPacket);
@@ -323,6 +214,7 @@ public class ServerManager implements Disposable {
         // 3. Send to only active players at this table
         broadcastServerResponses(serverResponses);
     }
+
 
     /**
      * Disposes of server resources gracefully.
@@ -333,11 +225,7 @@ public class ServerManager implements Disposable {
             log.trace("Entering Game Dispose");
 
             if (server != null) server.stop();
-
-            gameManagers.clear();
             connectionsPerGame.clear();
-            connectionToGameIdx.clear();
-
         } catch (Exception e) {
             log.error("Error while shutting down GameServerManager", e);
             throw new RuntimeException(e);
@@ -345,5 +233,4 @@ public class ServerManager implements Disposable {
             log.trace("Exit Game Dispose");
         }
     }
-
 }

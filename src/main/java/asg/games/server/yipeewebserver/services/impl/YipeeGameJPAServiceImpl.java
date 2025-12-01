@@ -17,6 +17,7 @@ import asg.games.yipee.core.persistence.Updatable;
 import asg.games.yipee.core.tools.Util;
 import ch.qos.logback.core.util.StringUtil;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,23 +32,15 @@ import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class YipeeGameJPAServiceImpl extends AbstractStorage {
     private final Map<Class<? extends YipeeObject>, YipeeRepository<? extends YipeeObject, String>> repoMap = new HashMap<>();
 
-    @Autowired
-    YipeeRoomRepository yipeeRoomRepository;
-
-    @Autowired
-    YipeeTableRepository yipeeTableRepository;
-
-    @Autowired
-    YipeePlayerRepository yipeePlayerRepository;
-
-    @Autowired
-    YipeeSeatRepository yipeeSeatRepository;
-
-    @Autowired
-    YipeeClientConnectionRepository yipeeClientConnectionRepository;
+    private final YipeeRoomRepository yipeeRoomRepository;
+    private final YipeeTableRepository yipeeTableRepository;
+    private final YipeePlayerRepository yipeePlayerRepository;
+    private final YipeeSeatRepository yipeeSeatRepository;
+    private final YipeeClientConnectionRepository yipeeClientConnectionRepository;
 
     @PostConstruct
     public void init() {

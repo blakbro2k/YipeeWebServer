@@ -4,8 +4,8 @@ import asg.games.server.yipeewebserver.data.RoomConfigDTO;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
 import asg.games.yipee.core.objects.YipeeRoom;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,16 +22,13 @@ import java.io.InputStreamReader;
 @Slf4j
 @Configuration
 @ImportResource("classpath:rooms.xml")
+@RequiredArgsConstructor
 public class TableConfig {
-    @Autowired
-    YipeeGameJPAServiceImpl yipeeGameJPAService;
+    private final YipeeGameJPAServiceImpl yipeeGameJPAService;
 
     //private @Value("#{Lounge}") Object rooms;
     @Value("classpath:rooms.xml")
     private Resource resource;
-
-    public TableConfig()  {
-    }
 
     @Bean
     public boolean loadRooms() throws IOException {

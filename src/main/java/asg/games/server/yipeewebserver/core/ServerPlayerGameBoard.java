@@ -49,7 +49,7 @@ public class ServerPlayerGameBoard implements Disposable {
     private boolean isRunning = false;
 
     /** Map of tick → game state, allows timeline reconstruction. */
-    private final ConcurrentSkipListMap<Integer, GameBoardState> gameBoardStates = new ConcurrentSkipListMap<>();
+    private final ConcurrentSkipListMap<Long, GameBoardState> gameBoardStates = new ConcurrentSkipListMap<>();
 
     //History of every action that built the current states
     private final TreeMap<Integer, Queue<PlayerAction>> gameBoardActionHistory = new TreeMap<>();
@@ -65,11 +65,11 @@ public class ServerPlayerGameBoard implements Disposable {
         this.maxHistoryTicks = maxHistoryTicks;
     }
 
-    public Map<Integer, GameBoardState> getAllGameBoardMap() {
+    public Map<Long, GameBoardState> getAllGameBoardMap() {
         return gameBoardStates;
     }
 
-    public void applyAction(int tick, long timeStamp, PlayerAction action) throws JsonProcessingException {
+    public void applyAction(long tick, long timeStamp, PlayerAction action) throws JsonProcessingException {
         if (action == null) return;
         synchronized (lock) {
             board.applyPlayerAction(action);
@@ -77,7 +77,7 @@ public class ServerPlayerGameBoard implements Disposable {
         }
     }
 
-    public void tick(int tick, float delta, GameBoardState playerState, GameBoardState partnerState) throws JsonProcessingException {
+    public void tick(long tick, float delta, GameBoardState playerState, GameBoardState partnerState) throws JsonProcessingException {
         if (!isRunning || board == null) return;
         synchronized (lock) {
             // NOTE: partner state is injected by ServerGameManager before this tick.
@@ -86,12 +86,12 @@ public class ServerPlayerGameBoard implements Disposable {
         }
     }
 
-    private void putStateWithEviction(int tick, GameBoardState state) {
+    private void putStateWithEviction(long tick, GameBoardState state) {
         if (state == null) return;
         gameBoardStates.put(tick, state);
         if (maxHistoryTicks > 0) {
             while (gameBoardStates.size() > maxHistoryTicks) {
-                Integer oldest = gameBoardStates.firstKey();
+                long oldest = gameBoardStates.firstKey();
                 gameBoardStates.remove(oldest);
             }
         }
@@ -102,7 +102,7 @@ public class ServerPlayerGameBoard implements Disposable {
      * @param tick the tick number
      * @param state the game board state
      */
-    private void addStateAtTick(int tick, GameBoardState state) {
+    private void addStateAtTick(long tick, GameBoardState state) {
         gameBoardStates.put(tick, state);
     }
 
@@ -111,7 +111,7 @@ public class ServerPlayerGameBoard implements Disposable {
      */
     public GameBoardState getLatestGameState() {
         return gameBoardStates.keySet().stream()
-                .max(Integer::compareTo)
+                .max(Long::compareTo)
                 .map(gameBoardStates::get)
                 .orElse(null);
     }
@@ -119,7 +119,7 @@ public class ServerPlayerGameBoard implements Disposable {
     /**
      * Returns the state for a specific tick.
      */
-    public GameBoardState getStateAtTick(int tick) {
+    public GameBoardState getStateAtTick(long tick) {
         return gameBoardStates.get(tick);
     }
 

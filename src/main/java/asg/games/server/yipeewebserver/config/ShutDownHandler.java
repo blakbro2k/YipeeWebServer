@@ -1,25 +1,22 @@
 package asg.games.server.yipeewebserver.config;
 
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
-import asg.games.server.yipeewebserver.services.PlayerConnectionCleanupService;
+import asg.games.server.yipeewebserver.services.YipeeCleanupService;
 import jakarta.annotation.PreDestroy;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ShutDownHandler {
-    @Autowired
-    private HeadlessLauncher launcher;
 
-    @Autowired
-    private ApplicationContext appContext;
-
-    @Autowired
-    PlayerConnectionCleanupService yipeeCleanUpService;
+    private final HeadlessLauncher launcher;
+    private final ApplicationContext appContext;
+    private final YipeeCleanupService yipeeCleanUpService;
 
     @PreDestroy
     public void onShutdown() {

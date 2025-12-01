@@ -2,6 +2,7 @@ package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.Version;
 import asg.games.server.yipeewebserver.aspects.Untraced;
+import asg.games.server.yipeewebserver.net.YipeePacketHandler;
 import asg.games.yipee.core.persistence.Storage;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -21,9 +22,10 @@ import java.io.IOException;
 @Slf4j
 public class YipeeServerApplication extends ApplicationAdapter {
     private final ApplicationContext appContext;
+    public static final String CONST_SERVICE_NAME = "YipeeGameServer";
 
     // Game server manager instance
-    ServerManager daemon = new ServerManager();
+    ServerManager daemon;
     private static final String CONST_TITLE = "Yipee! Game Server";
     private static final int CONST_SRV_FPS = 60;
     private static final float CONST_SRV_TICK_INTERVAL = 1.0f / 20; // Default tick interval
@@ -36,8 +38,11 @@ public class YipeeServerApplication extends ApplicationAdapter {
     /**
      * Constructor for YipeeServerApplication.
      */
-    public YipeeServerApplication(ApplicationContext appContext) {
+    public YipeeServerApplication(ApplicationContext appContext,
+                                  YipeePacketHandler yipeePacketHandler,
+                                  GameContextFactory gameContextFactory) {
         this.appContext = appContext;
+        daemon = new ServerManager(yipeePacketHandler, gameContextFactory);
     }
 
     /**
@@ -74,7 +79,7 @@ public class YipeeServerApplication extends ApplicationAdapter {
         log.info("Starting server on tcp port [{}] and udp port [{}], with tick rate [{} ticks/sec]...", tcpPort, udpPort, tickRate);
         try {
             log.info("Setting server...");
-            daemon.setUpServer(tcpPort, udpPort);
+            daemon.setUpKryoServer(tcpPort, udpPort);
         } catch (IOException e) {
             log.error("Error creating server thread. Cannot proceed with server set up.", e);
             appShutDown(-10);

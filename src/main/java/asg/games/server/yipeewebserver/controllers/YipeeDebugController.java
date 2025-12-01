@@ -1,19 +1,16 @@
 package asg.games.server.yipeewebserver.controllers;
 
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/debug/yipee")
+@RequiredArgsConstructor
 public class YipeeDebugController {
-
     private final YipeePacketHandler packetHandler;
-
-    public YipeeDebugController(YipeePacketHandler packetHandler) {
-        this.packetHandler = packetHandler;
-    }
 
     @GetMapping("/ws-test")
     public String wsTestPage() {

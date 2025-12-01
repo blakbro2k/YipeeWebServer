@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ConnectionCleanupJob {
+public class TableCleanupJob {
 
     private final YipeeCleanupService cleanupService;
 

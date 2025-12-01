@@ -14,7 +14,11 @@ public class ServerIdentity {
     @Value("${gameserver.server.id}")
     private String serverId;
 
+    @Value("${gameserver.server.serviceName}")
+    private String serviceName;
+
     private String instanceId;
+
     private String fullId;
 
     @PostConstruct

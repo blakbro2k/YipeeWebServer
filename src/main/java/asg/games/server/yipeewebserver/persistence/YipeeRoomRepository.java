@@ -12,4 +12,6 @@ import java.util.List;
 public interface YipeeRoomRepository extends YipeeRepository<YipeeRoom, String> {
     // All rooms that currently contain this player
     List<YipeeRoom> findByPlayers_Id(String playerId);
+
+    YipeeRoom findRoomById(String roomId);
 }

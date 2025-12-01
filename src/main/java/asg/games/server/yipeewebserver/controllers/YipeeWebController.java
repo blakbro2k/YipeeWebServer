@@ -8,8 +8,8 @@ import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
 import asg.games.yipee.core.objects.YipeeTable;
 import asg.games.yipee.core.tools.Util;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,16 +28,12 @@ import java.util.Map;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class YipeeWebController {
-    @Autowired
-    private YipeeGameJPAServiceImpl yipeeGameService;
+    private final YipeeGameJPAServiceImpl yipeeGameService;
 
-    private final Map<String, List<YipeeRoom>> roomMap;
+    private final Map<String, List<YipeeRoom>> roomMap = new HashMap<>();;
     private boolean runOnce = false;
-
-    public YipeeWebController(){
-        roomMap = new HashMap<>();
-    }
 
     private void buildRoomMap (){
         if(!runOnce) {

@@ -1,4 +1,4 @@
-package asg.games.server.yipeewebserver.net;
+package asg.games.server.yipeewebserver.net.api;
 
 import asg.games.yipee.common.game.PlayerAction;
 import lombok.Getter;

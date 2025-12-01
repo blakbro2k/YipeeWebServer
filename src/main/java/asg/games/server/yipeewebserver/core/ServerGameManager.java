@@ -16,8 +16,7 @@
 package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.Version;
-import asg.games.server.yipeewebserver.net.TickedPlayerActionData;
-import asg.games.yipee.common.enums.YipeeSerializable;
+import asg.games.server.yipeewebserver.net.api.TickedPlayerActionData;
 import asg.games.yipee.common.game.GameBoardState;
 import asg.games.yipee.common.game.PlayerAction;
 import asg.games.yipee.core.game.YipeeGameBoard;
@@ -36,85 +35,132 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * The GameManager class serves as the backbone for managing a Yipee game session.
- * It handles the game loop, player actions, and the state of each game board for up to 8 players.
+ * Server-side manager for a single Yipee game session (one match).
  * <p>
- * Key Responsibilities:
- * - Initializes game boards and players for each seat.
- * - Manages a fixed-timestep game loop and player actions.
- * - Synchronizes game states and broadcasts updates to clients.
- * - Provides hooks for game-specific logic like state broadcasting and win/loss conditions.
- * <p>
- * Thread Safety:
- * - Uses thread-safe data structures such as ConcurrentHashMap and ConcurrentLinkedQueue.
- * - Employs executors for managing game loop and player action processing.
+ * Responsibilities:
+ * <ul>
+ *     <li>Owns up to 8 {@link ServerPlayerGameBoard} instances, one per seat.</li>
+ *     <li>Maintains a monotonically increasing {@code serverTick} for this match.</li>
+ *     <li>Drains and applies queued {@link PlayerAction}s to the appropriate boards.</li>
+ *     <li>Ticks all partner pairs (0–1, 2–3, 4–5, 6–7) in a deterministic order.</li>
+ *     <li>Exposes helpers for partner/enemy lookups and state export.</li>
+ * </ul>
+ *
+ * Threading assumptions:
+ * <ul>
+ *     <li>The main game loop calls {@link #update(float)} on a single thread.</li>
+ *     <li>Networking threads enqueue actions via {@link #addPlayerAction(PlayerAction)}.</li>
+ *     <li>Per-seat board updates are guarded by {@link ServerPlayerGameBoard}'s internal lock.</li>
+ * </ul>
  */
 @Slf4j
 public class ServerGameManager {
     private static final String CONST_TITLE = "Yipee! Game Manager";
-    private static final int MAX_TICK_HISTORY = 1024;
-    private final Queue<PlayerAction> pendingActions = new ConcurrentLinkedQueue<>(); // Stores pending player actions
-    private final Map<Integer, ServerPlayerGameBoard> gameBoardMap = new ConcurrentHashMap<>(); // Maps seat IDs to game boards
 
+    /** Offset value for partner blocks **/
+    private static final int PARTNER_BOARD_OFFSET = 23;
+
+    /** Maximum number of tick snapshots stored per seat (passed down to {@link ServerPlayerGameBoard}). */
+    public static final int MAX_TICK_HISTORY = 1024;
+
+    /** Queue of pending player actions to be drained on the next tick. */
+    private final Queue<PlayerAction> pendingActions = new ConcurrentLinkedQueue<>();
+
+    /** SeatId → {@link ServerPlayerGameBoard}. */
+    private final Map<Integer, ServerPlayerGameBoard> gameBoardMap = new ConcurrentHashMap<>();
+
+    /** Seed used to (re)initialize all boards in this game session. */
     @Getter
     @Setter
     private long gameSeed;
 
+    /** Unique identifier for this game session (e.g., shared with clients). */
     @Getter
     @Setter
     private String gameId;
 
     /**
-     * Constructor initializes game boards, executors, and logging for game session setup.
+     * Monotonically increasing tick counter for this game session.
+     * <p>
+     * Measured in "simulation steps" (e.g., 60 ticks per second). This is the canonical
+     * {@code tick} that gets attached to:
+     * <ul>
+     *     <li>Board state snapshots.</li>
+     *     <li>Applied actions on {@link ServerPlayerGameBoard}.</li>
+     * </ul>
      */
-    public ServerGameManager() {
-        log.info("{} Build {}", CONST_TITLE, Version.printVersion());
-        log.info("Initializing Gamestates...");
-        log.info("Initializing Game loop...");
-        log.info("Initializing Actions...");
-        log.info("Initializing Seats...");
+    @Getter
+    private long serverTick = 0L;
 
-        //local seat is ignored, setting to -1
+    /**
+     * Constructs a new {@code ServerGameManager} and seeds all boards.
+     *
+     * @param maxTick currently unused; kept for API compatibility.
+     *                Previously used for tick wrap-around; now {@link #serverTick} is effectively unbounded.
+     */
+    public ServerGameManager(int maxTick) {
+        log.info("{} Build {}", CONST_TITLE, Version.printVersion());
+        log.debug("Initializing Gamestates...");
+        log.debug("Initializing Game loop...");
+        log.debug("Initializing Actions...");
+        log.debug("Initializing Seats...");
+
+        // Local seat was historically -1; we now just seed all boards based on time.
         initialize(TimeUtils.millis());
     }
 
+    /**
+     * Initializes the game session with the given seed.
+     * <p>
+     * This will reset all boards and rewire partner pairs.
+     *
+     * @param seed random seed used to initialize the game
+     */
     public void initialize(long seed) {
         reset(seed);
     }
 
     /**
-     * Starts the game loop.
+     * Starts the game loop for all occupied seats.
+     * <p>
+     * For each seat that currently has a {@link YipeePlayer}, the underlying
+     * {@link ServerPlayerGameBoard} is set to running and its {@link YipeeGameBoard#begin()}
+     * is invoked.
      */
     public void startGameLoop() {
-        // Set same seeded game for 8 game boards (1 for each seat)
-        long seed = TimeUtils.millis();
-        log.info("Starting game with seed={}", seed);
         for (int seatId = 0; seatId < 8; seatId++) {
             ServerPlayerGameBoard board = getGameBoard(seatId);
-            if (isPlayerEmpty(seatId)) {
+            if (hasPlayer(seatId)) {
                 board.startBoard();
             }
         }
     }
 
+    /**
+     * Stops the game loop for all occupied seats.
+     * <p>
+     * For each seat that currently has a {@link YipeePlayer}, the underlying
+     * {@link ServerPlayerGameBoard} is stopped and its {@link YipeeGameBoard#end()}
+     * is invoked.
+     */
     public void endGameLoop() {
         // Set same seeded game for 8 game boards (1 for each seat)
         log.info("Ending Game Loop.");
         for (int seatId = 0; seatId < 8; seatId++) {
             ServerPlayerGameBoard board = getGameBoard(seatId);
-            if (isPlayerEmpty(seatId)) {
+            if (hasPlayer(seatId)) {
                 board.stopBoard();
             }
         }
     }
 
     /**
-     * Checks if the game session has ended.
+     * Checks whether the game session has ended for all active players.
      * <p>
-     * Returns true if all active player boards are either unstarted
-     * or have reached a dead state.
+     * Returns {@code true} iff every allocated board that has started is now in
+     * a "dead" state (or no active boards exist).
      *
-     * @return true if the game is over for all players
+     * @return {@code true} if there are no surviving active boards
      */
     public boolean checkGameEndConditions() {
         boolean isGameOver = true;
@@ -127,6 +173,11 @@ public class ServerGameManager {
         return isGameOver;
     }
 
+    /**
+     * Returns whether any seat is currently running.
+     *
+     * @return {@code true} if at least one {@link ServerPlayerGameBoard#isRunning()} is true
+     */
     public boolean isRunning() {
         boolean isRunning = false;
         for (ServerPlayerGameBoard serverPlayerGameBoard : gameBoardMap.values()) {
@@ -139,19 +190,18 @@ public class ServerGameManager {
     }
 
     /**
-     * Checks if the board has a player set.  This means a player has sat down.
+     * Checks if the board has a player set. This means a player has sat down.
      *
      * @param seatId the seat ID
-     * @return true if {@link YipeePlayer} player is not null
+     * @return {@code true} if a {@link YipeePlayer} is assigned
      */
-    private boolean isPlayerEmpty(int seatId) {
+    private boolean hasPlayer(int seatId) {
         validateSeat(seatId);
         return getGameBoardPlayer(seatId) != null;
     }
 
     /**
-     * Validates that the seat ID is within acceptable bounds (0-7).
-     * Adjust this if using 1-based indexing for seats externally.
+     * Validates that the seat ID is within acceptable bounds (0–7).
      *
      * @param seatId the seat ID to validate
      * @throws IllegalArgumentException if the seat ID is out of bounds
@@ -164,21 +214,33 @@ public class ServerGameManager {
     }
 
     /**
-     * Retrieves the {@link YipeeGameBoard} game board associated with a specific seat ID.
+     * Retrieves the {@link ServerPlayerGameBoard} associated with a specific seat ID.
      *
-     * @param seatId the ID of the seat (1-8)
-     * @return the {@link YipeeGameBoard} instance or null if none exists
+     * @param seatId the ID of the seat (0–7)
+     * @return the {@link ServerPlayerGameBoard} instance or {@code null} if none exists
      */
     public ServerPlayerGameBoard getGameBoard(int seatId) {
         validateSeat(seatId);
         return gameBoardMap.get(seatId);
     }
 
+    /**
+     * Associates a {@link ServerPlayerGameBoard} with the given seat.
+     *
+     * @param seatId   seat index (0–7)
+     * @param gameBoard non-null board wrapper to assign
+     */
     public void setGameBoard(int seatId, ServerPlayerGameBoard gameBoard) {
         validateSeat(seatId);
         if (gameBoard != null) gameBoardMap.put(seatId, gameBoard);
     }
 
+    /**
+     * Returns the raw {@link YipeeGameBoard} for the given seat.
+     *
+     * @param seatId seat index (0–7)
+     * @return the {@link YipeeGameBoard} or {@code null} if none exists
+     */
     public YipeeGameBoard getYipeeGameBoard(int seatId) {
         validateSeat(seatId);
         ServerPlayerGameBoard gameBoardObj = getGameBoard(seatId);
@@ -189,6 +251,12 @@ public class ServerGameManager {
         return board;
     }
 
+    /**
+     * Replaces the {@link YipeeGameBoard} for the given seat, if the wrapper exists.
+     *
+     * @param seatId   seat index (0–7)
+     * @param gameBoard new board to set
+     */
     public void setYipeeGameBoard(int seatId, YipeeGameBoard gameBoard) {
         validateSeat(seatId);
         ServerPlayerGameBoard gameBoardObj = getGameBoard(seatId);
@@ -198,10 +266,10 @@ public class ServerGameManager {
     }
 
     /**
-     * Retrieves a {@link YipeePlayer} player associated with a specific seat ID.
+     * Retrieves the {@link YipeePlayer} for a specific seat.
      *
-     * @param seatId the ID of the seat (1-8)
-     * @return the {@link YipeePlayer} player or null if none exists
+     * @param seatId the ID of the seat (0–7)
+     * @return the {@link YipeePlayer} or {@code null} if none exists
      */
     public YipeePlayer getGameBoardPlayer(int seatId) {
         validateSeat(seatId);
@@ -214,15 +282,15 @@ public class ServerGameManager {
     }
 
     /**
-     * Retrieves the {@link YipeeGameBoardState} Game States associated with a specific seat ID.
+     * Retrieves the full tick→state history map for a specific seat.
      *
-     * @param seatId the ID of the seat (1-8)
-     * @return the YipeeGameBoard instance or null if none exists
+     * @param seatId the ID of the seat (0–7)
+     * @return map of {@code tick → GameBoardState}, or {@code null} if not allocated
      */
-    public Map<Integer, GameBoardState> getGameBoardStatesMap(int seatId) {
+    public Map<Long, GameBoardState> getGameBoardStatesMap(int seatId) {
         validateSeat(seatId);
         ServerPlayerGameBoard gameBoardObj = getGameBoard(seatId);
-        Map<Integer, GameBoardState> statesMap = null;
+        Map<Long, GameBoardState> statesMap = null;
         if (gameBoardObj != null) {
             statesMap = gameBoardObj.getAllGameBoardMap();
         }
@@ -230,27 +298,36 @@ public class ServerGameManager {
     }
 
     /**
-     * Advances the game loop by the given delta time.
+     * Advances the entire game session by one fixed timestep.
      * <p>
-     * This method processes all queued player actions and updates
-     * the internal state of all game boards accordingly.
-     * </p>
+     * This method:
+     * <ol>
+     *     <li>Increments {@link #serverTick}.</li>
+     *     <li>Drains and applies all queued {@link PlayerAction}s.</li>
+     *     <li>Ticks all partner pairs, updating each board's state history.</li>
+     * </ol>
      *
-     * @param delta the time step for the game loop in seconds
+     * @param delta fixed timestep (in seconds) for this update
+     * @throws JsonProcessingException if any board export fails
      */
-    public void update(float delta, int serverTick) throws JsonProcessingException {
-        gameLoopTick(delta, serverTick);
+    public void update(float delta) throws JsonProcessingException {
+        incrementTick();
+        gameLoopTick(delta);
     }
 
     /**
+     * Increments the authoritative tick counter for this match.
+     */
+    private void incrementTick() {
+        serverTick++;
+    }
+
+
+    /**
      * Retrieves the latest single game board state for a given seat.
-     * <p>
-     * Typically used to serialize and broadcast the most recent state
-     * to connected clients.h                                                                                                                                
-     * </p>
      *
-     * @param seatId the seat ID (0-7)
-     * @return the latest GameBoardState for that seat, or {@code null} if none exists
+     * @param seatId the seat ID (0–7)
+     * @return latest {@link GameBoardState} for that seat, or {@code null} if none exists
      */
     public GameBoardState getBoardState(int seatId) {
         return getLatestGameBoardState(seatId);
@@ -259,12 +336,11 @@ public class ServerGameManager {
     /**
      * Retrieves all stored game board states for a given seat.
      * <p>
-     * This method returns an Iterable over the queue of states,
-     * which may be used for debugging, resyncing, or visualization.
-     * </p>
+     * This returns a live view of the underlying history map values; callers should
+     * treat it as read-only.
      *
-     * @param seatId the seat ID (0-7)
-     * @return an Iterable of all YipeeGameBoardState objects for the seat
+     * @param seatId the seat ID (0–7)
+     * @return iterable of all {@link GameBoardState} objects for the seat
      */
     public Iterable<GameBoardState> getBoardStates(int seatId) {
         validateSeat(seatId);
@@ -273,13 +349,10 @@ public class ServerGameManager {
     }
 
     /**
-     * Sets the {@link YipeePlayer} object in the given seat ID.
-     * <p>
-     * Associates a player with a ServerPlayerGameBoard for tracking actions
-     * and states for that seat.
+     * Associates a {@link YipeePlayer} with the given seat wrapper.
      *
-     * @param seatId the seat ID (0-7) to assign the player to
-     * @param player the player object to set
+     * @param seatId seat index (0–7)
+     * @param player player to assign (may be {@code null} to clear)
      */
     public void setGameBoardObjectPlayer(int seatId, YipeePlayer player) {
         validateSeat(seatId);
@@ -289,11 +362,16 @@ public class ServerGameManager {
         }
     }
 
+
     /**
      * Resets the entire game state for all seats to the given seed.
      * <p>
-     * Clears all existing player states and reinitializes boards with
-     * the specified seed for deterministic gameplay.
+     * This will:
+     * <ul>
+     *     <li>Store {@code seed} in {@link #gameSeed}.</li>
+     *     <li>Reset or create each {@link ServerPlayerGameBoard} using the seed.</li>
+     *     <li>Rewire partner references (0–1, 2–3, 4–5, 6–7).</li>
+     * </ul>
      *
      * @param seed the random seed to initialize the game with
      */
@@ -304,22 +382,17 @@ public class ServerGameManager {
 
     /**
      * Determines if the player's board in the given seat is in a dead state.
-     * <p>
-     * Used to check win/loss conditions per player.
      *
      * @param gameSeat the seat ID to check
-     * @return true if the player's board is dead or not initialized
+     * @return {@code true} if the board does not exist or is dead
      */
-        public boolean isPlayerDead(int gameSeat) {
+    public boolean isPlayerDead(int gameSeat) {
         ServerPlayerGameBoard gameBoard = getGameBoard(gameSeat);
-        if (gameBoard == null) {
-            return true;
-        }
-        return gameBoard.isBoardDead();
+        return gameBoard == null || gameBoard.isBoardDead();
     }
 
     /**
-     * Resets all game boards and clears associated states.
+     * Resets all game boards and clears associated states, then wires partner pairs.
      */
     public void resetGameBoards() {
         for (int seatId = 0; seatId < 8; seatId++) {
@@ -328,6 +401,9 @@ public class ServerGameManager {
         wireSeatPairs();
     }
 
+    /**
+     * Wires partner references for seats (0–1, 2–3, 4–5, 6–7).
+     */
     private void wireSeatPairs() { 
         for (int seatIndex = 0; seatIndex < 8; seatIndex += 2) {
             ServerPlayerGameBoard leftSeat = gameBoardMap.get(seatIndex);
@@ -339,23 +415,21 @@ public class ServerGameManager {
         }
     }
 
+
     /**
-     * Resets the given board.
+     * Ensures a {@link ServerPlayerGameBoard} exists for the given seat and resets it.
+     * <p>
+     * Partner seats are offset by a constant so they share similar but not identical
+     * block sequences while still being deterministic.
      *
-     * If the board does not exist in the gameBoardMap, it creates it
-     * and puts it in the map. This ensures all 8 seats have initialized
-     * ServerPlayerGameBoard objects after reset.
-     *
-     * @param seed the gameseed
-     * @param seatId the seat ID
+     * @param seed   base game seed
+     * @param seatId seat index (0–7)
      */
     private void resetGameBoard(long seed, int seatId) {
         ServerPlayerGameBoard gameBoard = getGameBoard(seatId);
 
         //Set partner seats to a different seed
-        int offSet = 23 * (seatId % 2);
-
-        //Set seed
+        int offSet = PARTNER_BOARD_OFFSET * (seatId % 2);
         long seeded = seed + offSet;
 
         if (gameBoard == null) {
@@ -366,12 +440,19 @@ public class ServerGameManager {
         }
     }
 
+
     /**
-     * Processes player actions in the queue and updates game boards.
+     * Core game loop step:
+     * <ol>
+     *     <li>Drain and apply all pending {@link PlayerAction}s.</li>
+     *     <li>For each partner pair, inject partner state and tick the boards.</li>
+     *     <li>Check win/loss conditions across all seats.</li>
+     * </ol>
      *
-     * @param delta the time step for the game loop
+     * @param delta fixed timestep duration in seconds
+     * @throws JsonProcessingException if any board export fails
      */
-    public void gameLoopTick(float delta, int serverTick) throws JsonProcessingException {
+    public void gameLoopTick(float delta) throws JsonProcessingException {
         // 1) Drain and apply actions (unchanged)
         PlayerAction action;
         while ((action = pendingActions.poll()) != null) {
@@ -388,25 +469,25 @@ public class ServerGameManager {
             GameBoardState rightBoardState = right.getLatestGameState();
             // Only tick active boards; but always inject partner view for those that are running
             if (left.isRunning() || right.isRunning()) {
-                // Export *pre-tick* snapshots to inject as partner view
                 YipeeGameBoard aBoard = left.getBoard();
                 YipeeGameBoard bBoard = right.getBoard();
-                if (aBoard != null && bBoard != null) {
-                    // Inject partner state & relative side
+                if (aBoard != null && bBoard != null &&
+                        leftBoardState != null && rightBoardState != null) {
+
                     aBoard.setPartnerBoardState(
                             (YipeeGameBoardState) bBoard.exportGameState(),
-                            /* isRight= */ leftBoardState.isPartnerRight()
+                            leftBoardState.isPartnerRight()
                     );
                     bBoard.setPartnerBoardState(
                             (YipeeGameBoardState) aBoard.exportGameState(),
-                            /* isRight= */ rightBoardState.isPartnerRight()
+                            rightBoardState.isPartnerRight()
                     );
                 }
 
-                // Tick each board after partner view is injected
-                if (left.isRunning()) left.tick(serverTick, delta, leftBoardState, rightBoardState);
+                if (left.isRunning())  left.tick(serverTick, delta, leftBoardState,  rightBoardState);
                 if (right.isRunning()) right.tick(serverTick, delta, rightBoardState, leftBoardState);
             }
+
         }
 
         // 3. Check Win/Loss Conditions
@@ -415,16 +496,16 @@ public class ServerGameManager {
     }
 
     /**
-     * Processes an incoming YipeeSerializable action for the game loop.
+     * Processes an incoming {@link PlayerAction} for the game loop.
      * <p>
-     * This method validates the action type and applies it to the target game board
-     * if it's a supported PlayerAction. Invalid or unexpected types are logged and ignored.
-     * </p>
+     * Validates the target seat and applies the action to that board at the given server tick.
+     * {@code delta} is currently unused but kept for potential time-based action logic.
      *
-     * @param action the action or message received
-     * @param delta the time step for the game loop
+     * @param action     the action received from a client
+     * @param delta      fixed timestep duration in seconds (currently unused)
+     * @param serverTick authoritative tick at which this action is applied
      */
-    public void processPlayerAction(PlayerAction action, float delta, int serverTick) {
+    public void processPlayerAction(PlayerAction action, float delta, long serverTick) {
         if (action == null) {
             // Invalid or unsupported type; safely ignore.
             return;
@@ -458,31 +539,52 @@ public class ServerGameManager {
         //}
     }
 
-    private void applyPlayerActionToBoard(PlayerAction action, ServerPlayerGameBoard board, int serverTick) throws JsonProcessingException {
+    /**
+     * Applies a single {@link PlayerAction} to a specific seat wrapper.
+     *
+     * @param action     action to apply
+     * @param board      target {@link ServerPlayerGameBoard}
+     * @param serverTick authoritative tick at which the action is applied
+     * @throws JsonProcessingException if exporting the new state fails
+     */
+    private void applyPlayerActionToBoard(PlayerAction action, ServerPlayerGameBoard board, long serverTick) throws JsonProcessingException {
         if(action != null && board != null) {
             long timeStamp = getTimeStampFromAction(action);
             board.applyAction(serverTick, timeStamp, action);
         }
     }
 
-    private int getTickFromAction(PlayerAction action) {
-        int tick = -1;
+    /**
+     * Extracts the client-provided tick from action data, if present.
+     * <p>
+     * Currently not used for authority (we rely on {@link #serverTick}), but can be useful
+     * for debugging or latency analysis.
+     *
+     * @param action player action
+     * @return extracted tick, or {@code -1L} if not provided
+     */
+    private long getTickFromAction(PlayerAction action) {
+        long tick = -1L;
         if(action != null) {
             Object actionDataObj = action.getActionData();
-            if(actionDataObj instanceof TickedPlayerActionData) {
-                TickedPlayerActionData actionData = (TickedPlayerActionData) actionDataObj;
+            if(actionDataObj instanceof TickedPlayerActionData actionData) {
                 tick = actionData.getTick();
             }
         }
         return tick;
     }
 
+    /**
+     * Extracts a timestamp from {@link TickedPlayerActionData}, if present.
+     *
+     * @param action player action
+     * @return timestamp, or {@code -1L} if not provided
+     */
     private long getTimeStampFromAction(PlayerAction action) {
         long timeStamp = -1;
         if(action != null) {
             Object actionDataObj = action.getActionData();
-            if(actionDataObj instanceof TickedPlayerActionData) {
-                TickedPlayerActionData actionData = (TickedPlayerActionData) actionDataObj;
+            if(actionDataObj instanceof TickedPlayerActionData actionData) {
                 timeStamp = actionData.getTimeStamp();
             }
         }
@@ -490,11 +592,10 @@ public class ServerGameManager {
     }
 
     /**
-     * Gracefully shuts down the game server by terminating executor services
-     * and cleaning up all associated resources.
+     * Gracefully shuts down this game manager by clearing queued actions and seats.
      * <p>
-     * Waits up to 5 seconds for all threads to finish processing queued tasks
-     * before forcing termination.
+     * Note: this does not stop any outer server threads; it only clears in-memory
+     * state for the match.
      */
     public void shutDownServer() {
         log.info("Attempting to shutdown GameServer...");
@@ -503,27 +604,22 @@ public class ServerGameManager {
     }
 
     /**
-     * Queues an incoming player action or other serializable message.
+     * Queues an incoming {@link PlayerAction} for processing on a future tick.
      * <p>
-     * This method simply enqueues the item to be processed on a future game loop tick.
-     * It is used by networking code to push client actions to the server.
-     * </p>
+     * Networking layers should call this to push client actions into the simulation.
      *
-     * @param action the incoming {@link YipeeSerializable} action or message
+     * @param action the incoming {@link PlayerAction} (null-safe no-op)
      */
     public void addPlayerAction(PlayerAction action) {
         pendingActions.offer(action);
     }
 
+
     /**
      * Retrieves the latest game board state snapshot for a given seat.
-     * <p>
-     * This is typically used to get the most recent authoritative state
-     * to broadcast to clients.
-     * </p>
      *
-     * @param seatId the seat ID (0-7)
-     * @return the latest {@link YipeeGameBoardState} or {@code null} if none exists
+     * @param seatId the seat ID (0–7)
+     * @return latest {@link YipeeGameBoardState} or {@code null} if none exists
      */
     public GameBoardState getLatestGameBoardState(int seatId) {
         validateSeat(seatId);
@@ -536,7 +632,7 @@ public class ServerGameManager {
      * Finds the seat ID for the given player.
      *
      * @param player the player to look for
-     * @return the seat ID or -1 if not found
+     * @return the seat ID or {@code -1} if not found
      */
     public int getSeatForPlayer(YipeePlayer player) {
         for (Map.Entry<Integer, ServerPlayerGameBoard> entry : gameBoardMap.entrySet()) {
@@ -551,8 +647,11 @@ public class ServerGameManager {
     /**
      * Returns the partner's full {@link ServerPlayerGameBoard} wrapper for the given player.
      * <p>
-     * Calculates the partner seat based on even/odd pairing logic.
-     * </p>
+     * Partner is determined by even/odd seating:
+     * <ul>
+     *     <li>Even seat → partner is {@code seat + 1}</li>
+     *     <li>Odd seat → partner is {@code seat - 1}</li>
+     * </ul>
      *
      * @param player the player whose partner board to retrieve
      * @return the partner's {@link ServerPlayerGameBoard}, or {@code null} if unavailable
@@ -566,9 +665,6 @@ public class ServerGameManager {
 
     /**
      * Returns the partner's raw {@link YipeeGameBoard} for the given player.
-     * <p>
-     * This is a convenience method for rendering or network serialization.
-     * </p>
      *
      * @param player the player whose partner board to retrieve
      * @return the partner's {@link YipeeGameBoard}, or {@code null} if unavailable
@@ -579,12 +675,12 @@ public class ServerGameManager {
     }
 
     /**
-     * Returns a map of seat IDs to the full {@link ServerPlayerGameBoard} wrappers for all enemies.
+     * Returns a map of seat IDs to {@link ServerPlayerGameBoard} wrappers for all enemies.
      * <p>
      * Excludes the given player and their partner from the result.
      *
      * @param player the player whose enemies to retrieve
-     * @return map of seat IDs to enemy GamePlayerBoards
+     * @return map of seat IDs to enemy boards (may be empty but never {@code null})
      */
     public Map<Integer, ServerPlayerGameBoard> getEnemyBoards(YipeePlayer player) {
         Map<Integer, ServerPlayerGameBoard> enemies = new ConcurrentHashMap<>();
@@ -605,7 +701,10 @@ public class ServerGameManager {
     }
 
     /**
-     * Returns a map of seat ID to raw YipeeGameBoard for all enemies.
+     * Returns a map of seat ID to raw {@link YipeeGameBoard} for all enemies.
+     *
+     * @param player the player whose enemies to retrieve
+     * @return map of seat IDs to enemy {@link YipeeGameBoard}s
      */
     public Map<Integer, YipeeGameBoard> getEnemyGameBoards(YipeePlayer player) {
         Map<Integer, YipeeGameBoard> enemyBoards = new ConcurrentHashMap<>();
@@ -615,6 +714,11 @@ public class ServerGameManager {
         return enemyBoards;
     }
 
+    /**
+     * Exports the latest state per occupied seat (player != null).
+     *
+     * @return immutable map of {@code seatId → latest GameBoardState}
+     */
     public Map<Integer, GameBoardState> exportLatestPerSeat() {
         Map<Integer, GameBoardState> out = new ConcurrentHashMap<>(8);
         for (int seatId = 0; seatId < 8; seatId++) {

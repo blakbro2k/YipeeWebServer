@@ -1,189 +1,270 @@
 package asg.games.server.yipeewebserver.net;
 
 import asg.games.server.yipeewebserver.config.ServerIdentity;
-import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
-import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
-import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
-import asg.games.yipee.common.enums.YipeeObject;
-import asg.games.yipee.core.objects.YipeeKeyMap;
-import asg.games.yipee.core.objects.YipeePlayer;
+import asg.games.server.yipeewebserver.core.GameContext;
+import asg.games.server.yipeewebserver.core.ServerManager;
+import asg.games.server.yipeewebserver.tools.NetUtil;
+import asg.games.yipee.net.errors.ErrorCode;
 import asg.games.yipee.net.errors.ErrorMapper;
 import asg.games.yipee.net.errors.YipeeException;
-import asg.games.yipee.net.packets.ClientHandshakeRequest;
-import asg.games.yipee.net.packets.ClientHandshakeResponse;
-import asg.games.yipee.net.packets.DisconnectRequest;
+import asg.games.yipee.net.packets.AbstractClientRequest;
+import asg.games.yipee.net.packets.AbstractServerResponse;
 import asg.games.yipee.net.packets.ErrorResponse;
+import asg.games.yipee.net.packets.GameStartRequest;
+import asg.games.yipee.net.packets.GameStartResponse;
 import asg.games.yipee.net.packets.MappedKeyUpdateRequest;
+import asg.games.yipee.net.packets.MappedKeyUpdateResponse;
+import asg.games.yipee.net.packets.PlayerActionRequest;
+import asg.games.yipee.net.packets.PlayerActionResponse;
+import asg.games.yipee.net.packets.SeatStateUpdateRequest;
+import asg.games.yipee.net.packets.SeatStateUpdateResponse;
+import asg.games.yipee.net.packets.TableActionsBroadcastResponse;
 import asg.games.yipee.net.packets.TableStateUpdateRequest;
-import com.badlogic.gdx.utils.TimeUtils;
+import asg.games.yipee.net.packets.TableStateUpdateResponse;
 import com.esotericsoftware.kryonet.Connection;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
-import static asg.games.server.yipeewebserver.tools.NetUtil.getPlayerFromNetYipeePlayer;
-
+/**
+ * YipeePacketHandler is now responsible ONLY for in-game messages:
+ *
+ *   - GameStartRequest / GameStartResponse
+ *   - PlayerActionRequest / PlayerActionResponse
+ *   - MappedKeyUpdateRequest / MappedKeyUpdateResponse
+ *   - TableStateUpdateRequest
+ *   - Broadcast packets (TableStateBroadcastResponse, TableActionsBroadcastResponse, AllStatesBroadcastResponse)
+ *   - ErrorResponse (via ErrorMapper)
+ *
+ * It NO LONGER:
+ *
+ *   - performs handshake / session creation
+ *   - touches JPA repositories
+ *   - manages lobby (rooms / tables / players) – that's all HTTP + JPA now.
+ */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class YipeePacketHandler {
+    private final ServerIdentity serverIdentity;
+    private final ConnectionContextFactory connectionContextFactory;
     public static final String IDENTITY_PROVIDER_WORDPRESS = "WORDPRESS";
-    public static final String IDENTITY_PROVIDER_KRYO = "KRYO";
 
-    @Autowired
-    private YipeeGameJPAServiceImpl yipeeGameService;
+    // ========================================================================
+    //  Core transport-agnostic handler
+    // ========================================================================
 
-    @Autowired
-    private YipeeClientConnectionRepository yipeeClientConnectionRepository;
-
-    @Autowired
-    private ServerIdentity serverIdentity;
-
-    // These were implied in your snippet
-    private final Map<Integer, ConnectionContext> connectionContexts = new ConcurrentHashMap<>();
-
-    // === Transport-agnostic CORE methods =====================================
-
-    @Transactional
-    public ClientHandshakeResponse processClientHandshake(ClientHandshakeRequest request,
-                                                          String ipAddress,
-                                                          String userAgent,
-                                                          String provider) {
-        log.trace("Enter processClientHandshake({})", request);
-
-        // 1) Look up the player
-        YipeePlayer player = yipeeGameService.getObjectById(YipeePlayer.class, request.getPlayerId());
-        if (player == null) {
-            throw new IllegalStateException("Player not found for id=" + request.getPlayerId());
+    /**
+     * Central dispatcher for all in-game client requests.
+     * Called by whichever transport (Kryo, WebSocket, etc.) is receiving packets.
+     */
+    public AbstractServerResponse handle(GameContext gameContext, AbstractClientRequest request) {
+        try {
+            if (request instanceof GameStartRequest r) {
+                return handleGameStart(gameContext, r);
+            } else if (request instanceof MappedKeyUpdateRequest r) {
+                return handleMappedKeyUpdate(gameContext, r);
+            } else if (request instanceof PlayerActionRequest r) {
+                return handlePlayerAction(gameContext, r);
+            } else if (request instanceof TableStateUpdateRequest r) {
+                return handleTableStateUpdate(gameContext, r);
+            } else if (request instanceof SeatStateUpdateRequest r) {
+                return handleSeatStateUpdate(gameContext, r);
+            } else {
+                log.warn("Unsupported in-game packet type: {}", request.getClass().getName());
+                return errorResponse(request, ErrorCode.UNSUPPORTED_OPERATION, "Unsupported in-game packet type");
+            }
+        } catch (YipeeException ex) {
+            log.warn("YipeeException while handling {}: {}", request, ex.getMessage());
+            return errorResponse(request, ErrorMapper.toCode(ex), ex.getMessage());
+        } catch (Exception ex) {
+            log.error("Unhandled exception while handling {}: {}", request, ex.getMessage(), ex);
+            return errorResponse(request, ErrorCode.INTERNAL_ERROR, ex.getMessage());
         }
-
-        String clientId = request.getClientId();
-        if (clientId == null) {
-            throw new IllegalStateException("ClientId not found for id=" + request.getPlayerId() + ". Please call /api/player/register.");
-        }
-
-        String connectionName = buildPlayerConnectionName(player);
-        // e.g. "PLAYER-" + player.getName() + "-" + player.getId()
-
-        // 2) Try to find an existing connection row
-        PlayerConnectionDTO conn = yipeeClientConnectionRepository.findByClientId(request.getClientId());
-        if (conn == null) {
-            conn = yipeeClientConnectionRepository.findOptionalByName(connectionName).orElse(null);
-        }
-        if (conn == null) {
-            conn = yipeeClientConnectionRepository.findByPlayer_Id(player.getId());
-        }
-
-        // 3) If still null => first time, create it
-        if (conn == null) {
-            conn = new PlayerConnectionDTO();
-            // let AbstractDTO / @PrePersist create ID, or set it here:
-            // conn.setId(UUID.randomUUID().toString().replace("-", ""));
-            conn.setName(connectionName);
-        }
-
-        // 4) Update fields on the existing/created entity
-        String sessionId = UUID.randomUUID().toString() + TimeUtils.millis();
-
-        conn.setClientId(clientId);
-        conn.setPlayer(player);
-        conn.setSessionId(sessionId);
-        conn.setConnected(true);
-        conn.setProvider(provider);
-        conn.setIpAddress(ipAddress);
-        conn.setUserAgent(userAgent);
-
-        // 5) Save (insert or update depending on whether it has an ID)
-        yipeeClientConnectionRepository.save(conn);
-
-        // 6) Build response
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setServerId(serverIdentity.getFullId());
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setPlayerId(player.getId());
-        response.setConnected(true);
-        response.setSessionId(sessionId);
-
-        log.info("Handshake complete for clientId={}, player={}", request.getClientId(), player.getName());
-        log.trace("Exit processClientHandshake()");
-        return response;
     }
 
-    public ClientHandshakeResponse processDisconnect(DisconnectRequest request) throws Exception {
-        String clientId = request.getClientId();
+    // ========================================================================
+    //  Specific packet handlers
+    // ========================================================================
 
-        YipeePlayer player = getYipeePlayerFromGivenId(request.getPlayerId());
+    private GameStartResponse handleGameStart(GameContext gameContext, GameStartRequest req) {
+        log.debug("Handling GameStartRequest: {}", req);
 
-        // Mark connection as disconnected instead of deleting
-        PlayerConnectionDTO conn = yipeeClientConnectionRepository.findByClientId(clientId);
-        if (conn != null) {
-            conn.setConnected(false);
-            conn.setDisconnectedAt(Instant.now());
-            yipeeClientConnectionRepository.save(conn);
-        } else {
-            log.warn("No PlayerConnectionDTO found for clientId={} on disconnect", clientId);
-        }
+        GameStartResponse resp = new GameStartResponse();
+        NetUtil.copyEnvelope(req, resp);
 
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setServerId(serverIdentity.getFullId());
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setPlayerId(player.getId());
-        response.setConnected(false);
-        return response;
+        // TODO: plug into your GameServerManager / GameManager
+        // var result = gameServerManager.startGame(req.getTableId(), req.getPlayerId(), ...);
+        // resp.setGameId(result.getGameId());
+        // resp.setAccepted(result.isAccepted());
+
+        resp.setGameId(req.getGameId()); // temporary echo-back behavior
+        resp.setAccepted(true);
+
+        NetUtil.stampServerMeta(resp, serverIdentity);
+        return resp;
     }
 
+    private MappedKeyUpdateResponse handleMappedKeyUpdate(GameContext gameContext, MappedKeyUpdateRequest req) {
+        log.debug("Handling MappedKeyUpdateRequest: {}", req);
 
-    public ClientHandshakeResponse processMappedKeyUpdate(MappedKeyUpdateRequest request) throws Exception {
-        PlayerConnectionDTO playerDTO = yipeeClientConnectionRepository.findByClientId(request.getClientId());
-        if(playerDTO == null) throw new Exception("Cannot Process handshake. Cannot find clientId");
+        // TODO: apply to your player input configuration:
+        // mappedKeyService.updateKeyMap(req.getPlayerId(), req.getKeyConfig());
 
-        YipeePlayer player = playerDTO.getPlayer();
-        YipeeKeyMap newMap = getPlayerFromNetYipeePlayer(request.getKeyConfig());
-        player.setKeyConfig(newMap);
-        log.info("Updated key map for player {}", player.getName());
+        MappedKeyUpdateResponse resp = new MappedKeyUpdateResponse();
+        NetUtil.copyEnvelope(req, resp);
+        resp.setSuccess(true);
 
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setServerId(serverIdentity.getFullId());
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setPlayerId(player.getId());
-        response.setConnected(true);
-        return response;
+        NetUtil.stampServerMeta(resp, serverIdentity);
+        return resp;
     }
 
-    public ClientHandshakeResponse processTableStateUpdate(TableStateUpdateRequest request) {
-        log.debug("Received TableStateUpdateRequest: {}", request);
+    private PlayerActionResponse handlePlayerAction(GameContext gameContext, PlayerActionRequest req) {
+        log.trace("Handling PlayerActionRequest: {}", req);
 
-        // TODO: apply update to table(s) and maybe broadcast
-        ClientHandshakeResponse response = new ClientHandshakeResponse();
-        response.setServerId(serverIdentity.getFullId());
-        response.setServerTimestamp(System.currentTimeMillis());
-        response.setConnected(true);
-        return response;
+        // TODO: enqueue into your game loop:
+        // gameServerManager.enqueuePlayerAction(
+        //     req.getGameId(),
+        //     req.getPlayerId(),
+        //     req.getClientTick(),
+        //     req.getAction()
+        // );
+
+        PlayerActionResponse resp = new PlayerActionResponse();
+        NetUtil.copyEnvelope(req, resp);
+        resp.setAccepted(true);
+        // For now, just echo the client tick; later you can set the authoritative tick.
+        resp.setServerTick(req.getClientTick());
+
+        NetUtil.stampServerMeta(resp, serverIdentity);
+        return resp;
     }
 
+    /**
+     * TableStateUpdateRequest might be admin/host-only. Typically you either:
+     *  - apply a state patch and then broadcast, or
+     *  - reject it as invalid.
+     *
+     * For now, we accept and echo via a TableStateBroadcastResponse.
+     */
+    private AbstractServerResponse handleTableStateUpdate(GameContext gameContext, TableStateUpdateRequest req) {
+        log.debug("Handling TableStateUpdateRequest: {}", req);
+
+        // TODO: apply patch into your GameManager and then broadcast.
+        // TODO: Get table information by getTableId()
+        // TODO: Record user requesting update
+        // TODO: generate SeatStateUpdate request from list of gamestates for each seat
+        TableStateUpdateResponse tableUpdateRes = new TableStateUpdateResponse();
+        NetUtil.copyEnvelope(req, tableUpdateRes);
+        tableUpdateRes.setGameId(gameContext.gameId());
+        tableUpdateRes.setSeatState1(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState2(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState3(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState4(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState5(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState6(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState7(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState8(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+
+        NetUtil.stampServerMeta(tableUpdateRes, serverIdentity);
+        return tableUpdateRes;
+    }
+
+    /**
+     * TableStateUpdateRequest might be admin/host-only. Typically you either:
+     *  - apply a state patch and then broadcast, or
+     *  - reject it as invalid.
+     *
+     * For now, we accept and echo via a TableStateBroadcastResponse.
+     */
+    private AbstractServerResponse handleSeatStateUpdate(GameContext gameContext, SeatStateUpdateRequest req) {
+        log.debug("Handling TableStateUpdateRequest: {}", req);
+
+        // TODO: apply patch into your GameManager and then broadcast.
+        SeatStateUpdateResponse broadcast = new SeatStateUpdateResponse();
+        NetUtil.copyEnvelope(req, broadcast);
+        broadcast.setGameId(req.getGameId());
+        broadcast.setTableId(req.getTableId());
+        broadcast.setStates(new ArrayList<>());
+
+        NetUtil.stampServerMeta(broadcast, serverIdentity);
+        return broadcast;
+    }
+
+    // ========================================================================
+    //  Broadcast builders (for GameManager to call)
+    // ========================================================================
+
+    public TableActionsBroadcastResponse buildActionsBroadcast(
+            String gameId,
+            String tableId,
+            int serverTick,
+            Object actionsPayload
+    ) {
+        TableActionsBroadcastResponse resp = new TableActionsBroadcastResponse();
+        resp.setGameId(gameId);
+        resp.setTableId(tableId);
+        resp.setActions(null);
+        resp.setServerTick(serverTick);
+        NetUtil.stampServerMeta(resp, serverIdentity);
+        return resp;
+    }
+
+    public SeatStateUpdateResponse buildSeatStateUpdateResponse(
+            String gameId,
+            long serverTick,
+            GameContext gameContext,
+            Object allStatesPayload
+    ) {
+        SeatStateUpdateResponse resp = new SeatStateUpdateResponse();
+        resp.setGameId(gameId);
+        resp.setStates(new ArrayList<>());
+        resp.setServerTick(gameContext.serverTick());
+        NetUtil.stampServerMeta(resp, serverIdentity);
+        return resp;
+    }
+
+    // ========================================================================
+    //  Error handling
+    // ========================================================================
+
+    private ErrorResponse errorResponse(AbstractClientRequest req,
+                                        ErrorCode code,
+                                        String message) {
+        ErrorResponse err = new ErrorResponse();
+        NetUtil.copyEnvelope(req, err);
+        err.setCode(code);
+        err.setMessage(message);
+        err.setDetails(req.getClass().getSimpleName());
+        NetUtil.stampServerMeta(err, serverIdentity);
+        return err;
+    }
+
+    /**
+     * For errors thrown somewhere else in the Kryo pipeline, where we only have
+     * a Connection and a Throwable.
+     */
     public ErrorResponse processNetError(Connection connection, Throwable t) {
         ErrorResponse err = new ErrorResponse();
         err.setServerId(serverIdentity.getFullId());
+        err.setServerTimestamp(System.currentTimeMillis());
 
-        ConnectionContext ctx = connection != null ? connectionContexts.get(connection.getID()) : null;
+        ConnectionContext ctx = connectionContextFactory.getConnectionContextByConnectionId(connection.getID());
+
         if (ctx != null) {
-            if (ctx.sessionId != null) {
-                err.setSessionId(ctx.sessionId);
+            if (ctx.getSessionId() != null) {
+                err.setSessionId(ctx.getSessionId());
             }
-            if (ctx.gameId != null) {
-                err.setGameId(ctx.gameId);
+            if (ctx.getGameId() != null) {
+                err.setGameId(ctx.getGameId());
             }
         }
 
         err.setCode(ErrorMapper.toCode(t));
         err.setMessage(t.getMessage());
         err.setDetails(t.getClass().getSimpleName());
-        err.setServerTimestamp(System.currentTimeMillis());
 
         if (!(t instanceof YipeeException)) {
             log.error("Unhandled internal exception", t);
@@ -193,58 +274,31 @@ public class YipeePacketHandler {
         return err;
     }
 
-    // === KryoNet wrappers =====================================================
-
-    public void handleClientHandshake(Connection connection, ClientHandshakeRequest request) throws Exception {
-        // For KryoNet, we may not have real IP/UA. Use minimal markers.
-        ClientHandshakeResponse response = processClientHandshake(request, "KRYONET", "KRYONET-CLIENT", IDENTITY_PROVIDER_KRYO);
-        if (connection != null && connection.isConnected()) {
-            connection.sendTCP(response);
-        }
-    }
-
-    public void handleDisconnectRequest(Connection connection, DisconnectRequest request) throws Exception {
-        ClientHandshakeResponse response = processDisconnect(request);
-        if (connection != null && connection.isConnected()) {
-            connection.sendTCP(response);
-        }
-    }
-
-    public void handlePlayerMappedKeyUpdateRequest(Connection connection, MappedKeyUpdateRequest request) throws Exception {
-        ClientHandshakeResponse response = processMappedKeyUpdate(request);
-        if (connection != null && connection.isConnected()) {
-            connection.sendTCP(response);
-        }
-    }
-
-    public void handleTableStateUpdateRequest(Connection connection, TableStateUpdateRequest request) {
-        ClientHandshakeResponse response = processTableStateUpdate(request);
-        if (connection != null && connection.isConnected()) {
-            connection.sendTCP(response);
-        }
-    }
-
     public void handleNetError(Connection connection, Throwable t) {
         ErrorResponse err = processNetError(connection, t);
-        if (connection != null && connection.isConnected()) {
+        if (connection.isConnected()) {
             connection.sendTCP(err);
         }
     }
 
-    // === Helpers ==============================================================
-    private String buildPlayerConnectionName(YipeePlayer player) {
-        return "PLAYER-" + player.getName() + "-" + player.getId();
-    }
+    // ========================================================================
+    //  KryoNet wrapper
+    // ========================================================================
 
-    private YipeePlayer getYipeePlayerFromGivenId(String playerId) throws Exception {
-        return getObjectById(YipeePlayer.class, playerId);
-    }
-
-    private <T extends YipeeObject> T getObjectByName(Class<T> clazz, String name) throws Exception {
-        return yipeeGameService.getObjectByName(clazz, name);
-    }
-
-    private <T extends YipeeObject> T getObjectById(Class<T> clazz, String id) throws Exception {
-        return yipeeGameService.getObjectById(clazz, id);
+    /**
+     * Single entrypoint from your KryoNet Listener.
+     * Example usage in your Listener:
+     *
+     *   public void received(Connection c, Object o) {
+     *       if (o instanceof AbstractClientRequest req) {
+     *           packetHandler.handleKryoRequest(c, req);
+     *       }
+     *   }
+     */
+    public void handleKryoRequest(Connection connection, AbstractClientRequest request, GameContext gameContext) {
+        AbstractServerResponse resp = handle(gameContext, request);
+        if (resp != null && connection != null && connection.isConnected()) {
+            connection.sendTCP(resp);
+        }
     }
 }

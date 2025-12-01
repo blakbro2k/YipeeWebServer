@@ -3,31 +3,36 @@ package asg.games.server.yipeewebserver.controllers;
 import asg.games.server.yipeewebserver.Version;
 import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
-import asg.games.server.yipeewebserver.net.JoinOrCreateTableRequest;
-import asg.games.server.yipeewebserver.net.JoinOrCreateTableResponse;
-import asg.games.server.yipeewebserver.net.JoinRoomRequest;
-import asg.games.server.yipeewebserver.net.JoinRoomResponse;
-import asg.games.server.yipeewebserver.net.LeaveRoomRequest;
-import asg.games.server.yipeewebserver.net.LeaveRoomResponse;
-import asg.games.server.yipeewebserver.net.LeaveTableRequest;
-import asg.games.server.yipeewebserver.net.LeaveTableResponse;
-import asg.games.server.yipeewebserver.net.PlayerProfileResponse;
-import asg.games.server.yipeewebserver.net.PlayerSummary;
-import asg.games.server.yipeewebserver.net.RegisterPlayerRequest;
-import asg.games.server.yipeewebserver.net.RoomPlayersResponse;
-import asg.games.server.yipeewebserver.net.RoomSummary;
-import asg.games.server.yipeewebserver.net.SeatSummary;
-import asg.games.server.yipeewebserver.net.ServerStatusResponse;
-import asg.games.server.yipeewebserver.net.SitDownRequest;
-import asg.games.server.yipeewebserver.net.SitDownResponse;
-import asg.games.server.yipeewebserver.net.StandUpRequest;
-import asg.games.server.yipeewebserver.net.StandUpResponse;
-import asg.games.server.yipeewebserver.net.TableSummary;
-import asg.games.server.yipeewebserver.net.TableWatchersResponse;
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
+import asg.games.server.yipeewebserver.net.api.JoinOrCreateTableRequest;
+import asg.games.server.yipeewebserver.net.api.JoinOrCreateTableResponse;
+import asg.games.server.yipeewebserver.net.api.JoinRoomRequest;
+import asg.games.server.yipeewebserver.net.api.JoinRoomResponse;
+import asg.games.server.yipeewebserver.net.api.LeaveRoomRequest;
+import asg.games.server.yipeewebserver.net.api.LeaveRoomResponse;
+import asg.games.server.yipeewebserver.net.api.LeaveTableRequest;
+import asg.games.server.yipeewebserver.net.api.LeaveTableResponse;
+import asg.games.server.yipeewebserver.net.api.PlayerProfileResponse;
+import asg.games.server.yipeewebserver.net.api.PlayerSummary;
+import asg.games.server.yipeewebserver.net.api.RegisterPlayerRequest;
+import asg.games.server.yipeewebserver.net.api.RoomPlayersResponse;
+import asg.games.server.yipeewebserver.net.api.RoomSummary;
+import asg.games.server.yipeewebserver.net.api.SeatDetailSummary;
+import asg.games.server.yipeewebserver.net.api.SeatSummary;
+import asg.games.server.yipeewebserver.net.api.ServerStatusResponse;
+import asg.games.server.yipeewebserver.net.api.SitDownRequest;
+import asg.games.server.yipeewebserver.net.api.SitDownResponse;
+import asg.games.server.yipeewebserver.net.api.StandUpRequest;
+import asg.games.server.yipeewebserver.net.api.StandUpResponse;
+import asg.games.server.yipeewebserver.net.api.TableDetailResponse;
+import asg.games.server.yipeewebserver.net.api.TableDetailsSummary;
+import asg.games.server.yipeewebserver.net.api.TableSummary;
+import asg.games.server.yipeewebserver.net.api.TableWatchersResponse;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
+import asg.games.server.yipeewebserver.services.SessionService;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
@@ -38,7 +43,6 @@ import asg.games.yipee.net.packets.ClientHandshakeResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,35 +55,31 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
+
 
 @Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class YipeeAPIController {
-    @Value("${gameserver.motd}")
+    @Value("${gameserver.server.motd}")
     private String motd;
 
-    @Autowired
-    private ServerIdentity serverIdentity;
+    @Value("${gameserver.server.serviceName}")
+    private String serviceName;
 
-    @Autowired
+    private final ServerIdentity serverIdentity;
     private final YipeeGameJPAServiceImpl yipeeGameService;
-
-    @Autowired
-    YipeeTableRepository yipeeTableRepository;
-
-    @Autowired
-    YipeePlayerRepository yipeePlayerRepository;
-
-    @Autowired
+    private final YipeeTableRepository yipeeTableRepository;
+    private final YipeePlayerRepository yipeePlayerRepository;
+    private final YipeeRoomRepository yipeeRoomRepository;
     private final YipeeClientConnectionRepository yipeeClientConnectionRepository;
-
-    @Autowired
     private final YipeePacketHandler packetHandler;
+    private final SessionService sessionService;
 
     // -------------------------------------------------------
     // 1. Server status
@@ -88,7 +88,7 @@ public class YipeeAPIController {
     public ResponseEntity<ServerStatusResponse> getStatus() {
         ServerStatusResponse status = new ServerStatusResponse(
                 getServerStatus(),
-                "YipeeWebServer",
+                serviceName,
                 serverIdentity.getFullId(),
                 Instant.now().toString(),
                 Version.printVersion(),
@@ -181,14 +181,17 @@ public class YipeeAPIController {
         if (userAgent == null) {
             userAgent = "UNKNOWN";
         }
-        ClientHandshakeResponse response = packetHandler.processClientHandshake(request, ip, userAgent, YipeePacketHandler.IDENTITY_PROVIDER_WORDPRESS);
+        ClientHandshakeResponse response = sessionService.processClientHandshake(request,
+                ip,
+                userAgent,
+                YipeePacketHandler.IDENTITY_PROVIDER_WORDPRESS);
         return ResponseEntity.ok(response);
     }
 
     /**
      *
-     * @param sessionId
-     * @return
+     * @param sessionId the session id
+     * @return ResponseEntity
      */
     @PostMapping("/session/ping")
     public ResponseEntity<Void> ping(@RequestHeader("X-Session-Id") String sessionId) {
@@ -341,6 +344,105 @@ public class YipeeAPIController {
                 ))
                 .toList();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/table/getTableDetailed")
+    public ResponseEntity<TableDetailResponse> getTableDetailed(
+            @RequestParam("tableId") String tableId
+    ) {
+        // Load the table
+        YipeeTable table = yipeeTableRepository.findById(tableId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Table not found: " + tableId
+                ));
+
+        YipeeRoom room = table.getRoom();
+
+        // Build seat details
+        var seats = table.getSeats().stream()
+                .map(seat -> {
+                    YipeePlayer p = seat.getSeatedPlayer();
+                    return new SeatDetailSummary(
+                            seat.getId(),
+                            seat.getSeatNumber(),
+                            seat.isSeatReady(),
+                            seat.isOccupied(),
+                            p != null ? p.getId() : null,
+                            p != null ? p.getName() : null,
+                            p != null ? p.getIcon() : null,
+                            p != null ? p.getRating() : null
+                    );
+                })
+                .toList();
+
+        // Build watcher summaries
+        var watchers = table.getWatchers().stream()
+                .map(p -> new PlayerSummary(
+                        p.getId(),
+                        p.getName(),
+                        p.getIcon(),
+                        p.getRating()
+                ))
+                .toList();
+
+        TableDetailResponse response = new TableDetailResponse(
+                room.getId(),
+                room.getName(),
+                table.getId(),
+                table.getTableNumber(),
+                table.isRated(),
+                table.isSoundOn(),
+                seats,
+                watchers
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/table/getTablesDetailed")
+    public ResponseEntity<java.util.List<TableDetailsSummary>> getTablesDetailed(
+            @RequestParam("roomId") String roomId
+    ) {
+        // Reuse your service-level guard to load the room or fail
+        YipeeRoom room = yipeeGameService.getRoomById(roomId);
+
+        var details = room.getTableIndexMap().values().stream()
+                .sorted(java.util.Comparator.comparingInt(YipeeTable::getTableNumber))
+                .map(table -> {
+                    // 1) Build the TableSummary (same shape as /getTables)
+                    TableSummary tableSummary = new TableSummary(
+                            table.getId(),
+                            table.getTableNumber(),
+                            table.isRated(),
+                            table.isSoundOn(),
+                            table.getWatchers().size()
+                    );
+
+                    // 2) Build SeatSummary list
+                    var seats = table.getSeats().stream()
+                            .map(seat -> new SeatSummary(
+                                    seat.getId(),
+                                    seat.getSeatNumber(),
+                                    seat.isSeatReady(),
+                                    seat.isOccupied()
+                            ))
+                            .toList();
+
+                    // 3) Build watcher names list
+                    var watcherNames = table.getWatchers().stream()
+                            .map(YipeePlayer::getName)
+                            .toList();
+
+                    return new TableDetailsSummary(
+                            tableSummary,
+                            seats,
+                            watcherNames
+                    );
+                })
+                .toList();
+
+        return ResponseEntity.ok(details);
     }
 
     @PostMapping("/table/sitDown")

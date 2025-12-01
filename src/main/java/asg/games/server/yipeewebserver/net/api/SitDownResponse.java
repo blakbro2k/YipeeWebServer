@@ -1,11 +1,12 @@
-package asg.games.server.yipeewebserver.net;
+package asg.games.server.yipeewebserver.net.api;
 
-public record StandUpResponse(
+public record SitDownResponse(
         String roomId,
         String roomName,
         String tableId,
         int tableNumber,
         String seatId,
         int seatNumber,
-        boolean success
+        boolean seatReady,
+        boolean occupied
 ) {}
