@@ -4,7 +4,7 @@ import asg.games.yipee.common.game.GameBoardState;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class GameTickState {
-    private final int tick;
+    private final long tick;
     private final ObjectMap<Integer, GameBoardState> seatStates = new ObjectMap<>();
 
     public GameTickState(int tick) {
@@ -23,7 +23,7 @@ public class GameTickState {
         return seatStates;
     }
 
-    public int getTick() {
+    public long getTick() {
         return tick;
     }
 }

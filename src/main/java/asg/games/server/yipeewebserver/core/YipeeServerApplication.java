@@ -1,13 +1,13 @@
 package asg.games.server.yipeewebserver.core;
 
-import asg.games.server.yipeewebserver.aspects.Untraced;
 import asg.games.server.yipeewebserver.Version;
+import asg.games.server.yipeewebserver.aspects.Untraced;
+import asg.games.server.yipeewebserver.net.YipeePacketHandler;
 import asg.games.yipee.core.persistence.Storage;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.xml.sax.SAXException;
@@ -19,13 +19,13 @@ import java.io.IOException;
  * {@link com.badlogic.gdx.ApplicationListener} implementation for the Yipee game server.
  * Manages the server lifecycle, including startup, fixed-timestep updates, and cleanup.
  */
+@Slf4j
 public class YipeeServerApplication extends ApplicationAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(YipeeServerApplication.class);
-
-    private ApplicationContext appContext;
+    private final ApplicationContext appContext;
+    public static final String CONST_SERVICE_NAME = "YipeeGameServer";
 
     // Game server manager instance
-    ServerManager daemon = new ServerManager();
+    ServerManager daemon;
     private static final String CONST_TITLE = "Yipee! Game Server";
     private static final int CONST_SRV_FPS = 60;
     private static final float CONST_SRV_TICK_INTERVAL = 1.0f / 20; // Default tick interval
@@ -38,8 +38,11 @@ public class YipeeServerApplication extends ApplicationAdapter {
     /**
      * Constructor for YipeeServerApplication.
      */
-    public YipeeServerApplication(ApplicationContext appContext) {
+    public YipeeServerApplication(ApplicationContext appContext,
+                                  YipeePacketHandler yipeePacketHandler,
+                                  GameContextFactory gameContextFactory) {
         this.appContext = appContext;
+        daemon = new ServerManager(yipeePacketHandler, gameContextFactory);
     }
 
     /**
@@ -50,16 +53,16 @@ public class YipeeServerApplication extends ApplicationAdapter {
      * @param yipeeGameJPAService
      */
     public void setConfiguration(int tcpPort, int udpPort, float tickRate, Storage yipeeGameJPAService) {
-        logger.info("{} Build {}", CONST_TITLE, Version.printVersion());
-        logger.info("Setting up server to listen on the following ports: TCP[{}], UDP[{}], TICKRATE[{}]", tcpPort, udpPort, tickRate);
+        log.info("{} Build {}", CONST_TITLE, Version.printVersion());
+        log.info("Setting up server to listen on the following ports: TCP[{}], UDP[{}], TICKRATE[{}]", tcpPort, udpPort, tickRate);
         this.tcpPort = tcpPort;
         this.udpPort = udpPort;
         this.tickRate = tickRate;
         this.tickInterval = 1.0f / tickRate;
 
-        logger.info("Setting up Database Services....");
+        log.info("Setting up Database Services....");
         daemon.setDBService(yipeeGameJPAService);
-        logger.debug("tick rate interval = {}.", tickInterval);
+        log.debug("tick rate interval = {}.", tickInterval);
     }
 
     public void setForgroundFPS(int fps) {
@@ -71,17 +74,17 @@ public class YipeeServerApplication extends ApplicationAdapter {
      * Logs any startup errors and rethrows them as GdxRuntimeException.
      */
     public void create() {
-        logger.info("Setting FPS to {}", CONST_SRV_FPS);
+        log.info("Setting FPS to {}", CONST_SRV_FPS);
         setForgroundFPS(CONST_SRV_FPS);
-        logger.info("Starting server on tcp port [{}] and udp port [{}], with tick rate [{} ticks/sec]...", tcpPort, udpPort, tickRate);
+        log.info("Starting server on tcp port [{}] and udp port [{}], with tick rate [{} ticks/sec]...", tcpPort, udpPort, tickRate);
         try {
-            logger.info("Setting server...");
-            daemon.setUpServer(tcpPort, udpPort);
+            log.info("Setting server...");
+            daemon.setUpKryoServer(tcpPort, udpPort);
         } catch (IOException e) {
-            logger.error("Error creating server thread. Cannot proceed with server set up.", e);
+            log.error("Error creating server thread. Cannot proceed with server set up.", e);
             appShutDown(-10);
         } catch (ParserConfigurationException | SAXException e) {
-            logger.error("There was an issue creating the server daemon.",e);
+            log.error("There was an issue creating the server daemon.",e);
             appShutDown(-11);
         }
     }
@@ -93,25 +96,23 @@ public class YipeeServerApplication extends ApplicationAdapter {
     @Override
     @Untraced
     public void render() {
-        logger.trace("Enter render()");
         try {
             float delta = Gdx.graphics.getDeltaTime();
             accumulator += delta;
-            logger.trace("delta={}", delta);
-            logger.trace("accumulator={}", accumulator);
-            logger.trace("tickInterval={}", tickInterval);
+            log.trace("delta={}", delta);
+            log.trace("accumulator={}", accumulator);
+            log.trace("tickInterval={}", tickInterval);
 
             // Run game logic in fixed tick intervals
             while (accumulator >= tickInterval) {
                 daemon.update(tickInterval);
                 accumulator -= tickInterval;
-                logger.trace("accumulator={}", accumulator);
+                log.trace("accumulator={}", accumulator);
             }
         } catch (Exception e) {
-            logger.error("Error updating server thread.", e);
+            log.error("Error updating server thread.", e);
             throw new GdxRuntimeException("Error updating server thread.", e);
         }
-        logger.trace("Exit render()");
     }
 
     /**
@@ -119,14 +120,12 @@ public class YipeeServerApplication extends ApplicationAdapter {
      */
     @Override
     public void dispose() {
-        logger.trace("enter dispose()");
         daemon.dispose();
-        logger.trace("exit dispose()");
     }
 
     @Override
     public void pause() {
-        logger.trace("enter pause(), currently not supported");
+        log.warn("enter pause(), currently not supported");
     }
 
     private void appShutDown(int returnCode) {

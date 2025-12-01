@@ -1,6 +1,6 @@
 package asg.games.server.yipeewebserver.data;
 
-import asg.games.yipee.core.objects.Copyable;
+import asg.games.yipee.common.enums.Copyable;
 import asg.games.yipee.core.tools.TimeUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
@@ -9,19 +9,18 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.GenericGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+@Slf4j
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class AbstractDTO implements DTOObject, Copyable<DTOObject> {
-    @Transient
-    private static final Logger logger = LoggerFactory.getLogger(AbstractDTO.class);
-
+public abstract class AbstractDTO implements DTOObject {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid",strategy = "uuid")
@@ -58,15 +57,5 @@ public abstract class AbstractDTO implements DTOObject, Copyable<DTOObject> {
     public String toString() {
         String clazz = this.getClass().getSimpleName();
         return clazz + "[" + this.getId() + "," + this.getName() + "]";
-    }
-
-    protected void copyParent(DTOObject o) {
-        if (o != null) {
-            logger.debug("Copying parent attributes to: " + o);
-            o.setId((String)null);
-            o.setName(this.getName());
-            o.setCreated(TimeUtils.millis());
-            o.setModified(TimeUtils.millis());
-        }
     }
 }

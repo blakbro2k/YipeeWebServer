@@ -1,13 +1,11 @@
 package asg.games.server.yipeewebserver.data;
 
-import asg.games.yipee.core.objects.YipeeObject;
-
 /**
  * The {@code DTOObject} interface defines a standard structure for Data Transfer Objects (DTOs)
- * in the Yipee Webserver project. It extends {@link YipeeObject} and enforces common properties
+ * in the Yipee Webserver project. It enforces common properties
  * such as ID, name, creation timestamp, and modification timestamp.
  */
-public interface DTOObject extends YipeeObject {
+public interface DTOObject {
 
     /**
      * Sets the unique identifier for this object.

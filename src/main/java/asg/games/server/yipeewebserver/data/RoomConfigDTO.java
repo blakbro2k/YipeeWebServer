@@ -7,11 +7,13 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+@Slf4j
 @JacksonXmlRootElement(localName = "RoomConfigDTO")
 public class RoomConfigDTO {
     private static final Logger logger = LoggerFactory.getLogger(RoomConfigDTO.class);

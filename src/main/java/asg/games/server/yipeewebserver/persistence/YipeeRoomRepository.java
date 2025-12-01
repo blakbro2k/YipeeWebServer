@@ -6,6 +6,12 @@ package asg.games.server.yipeewebserver.persistence;
 import asg.games.yipee.core.objects.YipeeRoom;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface YipeeRoomRepository extends YipeeRepository<YipeeRoom, String> {
+    // All rooms that currently contain this player
+    List<YipeeRoom> findByPlayers_Id(String playerId);
+
+    YipeeRoom findRoomById(String roomId);
 }

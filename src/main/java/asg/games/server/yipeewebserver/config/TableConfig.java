@@ -1,13 +1,11 @@
 package asg.games.server.yipeewebserver.config;
 
-import asg.games.server.yipeewebserver.YipeeWebserverApplication;
 import asg.games.server.yipeewebserver.data.RoomConfigDTO;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import asg.games.yipee.core.objects.YipeeRoom;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,24 +19,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+@Slf4j
 @Configuration
 @ImportResource("classpath:rooms.xml")
+@RequiredArgsConstructor
 public class TableConfig {
-    private static final Logger logger = LoggerFactory.getLogger(YipeeWebserverApplication.class);
-
-    @Autowired
-    YipeeGameJPAServiceImpl yokelGameServiceImpl;
+    private final YipeeGameJPAServiceImpl yipeeGameJPAService;
 
     //private @Value("#{Lounge}") Object rooms;
     @Value("classpath:rooms.xml")
     private Resource resource;
 
-    public TableConfig()  {
-    }
-
     @Bean
     public boolean loadRooms() throws IOException {
-        logger.trace("start loadRooms()");
+        log.trace("start loadRooms()");
         boolean success = false;
         try {
             File file = resource.getFile();
@@ -48,9 +42,9 @@ public class TableConfig {
             createDatabaseLounges(value);
             success = true;
         } catch (Exception e) {
-            logger.error("Error attempting to load rooms",e);
+            log.error("Error attempting to load rooms",e);
         }
-        logger.trace("exit loadRooms()={}", success);
+        log.trace("exit loadRooms()={}", success);
         return success;
     }
 
@@ -66,7 +60,7 @@ public class TableConfig {
     }
 
     public void createDatabaseLounges(RoomConfigDTO roomConfig) {
-        logger.trace("start createDatabaseLounges()");
+        log.trace("start createDatabaseLounges()");
 
         if (roomConfig != null) {
             RoomConfigDTO.LoungeDTO[] dto = roomConfig.getLoungeDTO();
@@ -84,8 +78,8 @@ public class TableConfig {
                                         if (!roomDTO.getDisabled()) {
                                             String roomName = roomDTO.getName();
 
-                                            if(yokelGameServiceImpl.getObjectByName(YipeeRoom.class, roomName) == null) {
-                                                yokelGameServiceImpl.saveObject(new YipeeRoom(roomName, loungeName));
+                                            if(yipeeGameJPAService.getObjectByName(YipeeRoom.class, roomName) == null) {
+                                                yipeeGameJPAService.saveObject(new YipeeRoom(roomName, loungeName));
                                             }
                                         }
                                     }
@@ -96,6 +90,6 @@ public class TableConfig {
                 }
             }
         }
-        logger.trace("exit createDatabaseLounges()");
+        log.trace("exit createDatabaseLounges()");
     }
 }

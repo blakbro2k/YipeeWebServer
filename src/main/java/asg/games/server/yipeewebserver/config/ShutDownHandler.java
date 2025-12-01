@@ -1,28 +1,40 @@
 package asg.games.server.yipeewebserver.config;
 
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
+import asg.games.server.yipeewebserver.services.YipeeCleanupService;
 import jakarta.annotation.PreDestroy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class ShutDownHandler {
-    private static final Logger logger = LoggerFactory.getLogger(ShutDownHandler.class);
-    @Autowired
-    private HeadlessLauncher launcher;
 
-    @Autowired
-    private ApplicationContext appContext;
+    private final HeadlessLauncher launcher;
+    private final ApplicationContext appContext;
+    private final YipeeCleanupService yipeeCleanUpService;
 
     @PreDestroy
     public void onShutdown() {
-        // Your shutdown logic here
-        logger.info("Application is shutting down...");
-        launcher.shutDown();
+        log.info("Server is shutting down...");
+        try {
+            log.info("clearing connection sessions...");
+            // Only clear ephemeral connection/session rows
+            yipeeCleanUpService.deleteAllConnections();
+
+            // If you REALLY want to clear identities too, uncomment this:
+            // yipeeGameService.clearAllPlayerIdentities();
+            log.info("cleanup complete.");
+
+            // Your shutdown logic here
+            launcher.shutDown();
+        } catch (Exception e) {
+            log.error("YipeeShutdownCleanup: error while cleaning up session data", e);
+        }
     }
 
     /*
