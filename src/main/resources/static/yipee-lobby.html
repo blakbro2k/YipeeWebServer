@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Yipee Lobby</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h1 { margin-bottom: 0.5rem; }
+    .step {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    input, select, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    button { cursor: pointer; }
+    .muted { color: #666; font-size: 0.9rem; }
+    #log {
+      background: #111;
+      color: #0f0;
+      padding: 0.5rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      max-height: 250px;
+      overflow: auto;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+<h1>Yipee Lobby</h1>
+<p class="muted">
+  Flow: register (username + rating + icon) → JWT (sub = playerId, claims carry player data)
+  → whoami → rooms → join room → join/create table.
+</p>
+
+<!-- Identity / registration -->
+<div class="step">
+  <h2>Player Identity</h2>
+
+  <label for="username-input">Username</label>
+  <input id="username-input" type="text" placeholder="e.g. enoch" />
+
+  <label for="rating-input">Rating</label>
+  <input id="rating-input" type="number" min="0" max="4000" step="10" placeholder="e.g. 1200" />
+
+  <label for="icon-input">Icon</label>
+  <input id="icon-input" type="number" min="0" step="1" placeholder="e.g. 3" />
+
+  <br />
+  <button id="register-btn">Register Player</button>
+  <div id="register-status" class="muted"></div>
+</div>
+
+<div class="step">
+  <h2>Player</h2>
+  <button id="whoami-btn">Check whoami</button>
+  <span id="whoami-label" class="muted"></span>
+</div>
+
+<div class="step">
+  <h2>1. Choose a Room</h2>
+  <label for="room-select">Room</label>
+  <select id="room-select">
+    <option value="">Loading rooms…</option>
+  </select>
+  <br />
+  <button id="join-room-btn" disabled>Join Room</button>
+  <span id="room-status" class="muted"></span>
+</div>
+
+<div class="step">
+  <h2>2. Tables in Room</h2>
+  <button id="load-tables-btn" disabled>Load Tables</button>
+  <ul id="tables-list"></ul>
+</div>
+
+<div class="step">
+  <h2>3. Quick Join/Create Table</h2>
+  <button id="join-or-create-btn" disabled>Join or Create Table</button>
+  <div id="join-result" class="muted"></div>
+</div>
+
+<div class="step">
+  <h2>Debug Log</h2>
+  <pre id="log"></pre>
+</div>
+
+<script>
+  // Same-origin API (this file served by the same Spring Boot app).
+  const API_BASE = '';
+
+  // Elements
+  const usernameInput    = document.getElementById('username-input');
+  const ratingInput      = document.getElementById('rating-input');
+  const iconInput        = document.getElementById('icon-input');
+  const registerBtn      = document.getElementById('register-btn');
+  const registerStatus   = document.getElementById('register-status');
+
+  const whoamiBtn        = document.getElementById('whoami-btn');
+  const whoamiLabel      = document.getElementById('whoami-label');
+
+  const roomSelect       = document.getElementById('room-select');
+  const joinRoomBtn      = document.getElementById('join-room-btn');
+  const roomStatus       = document.getElementById('room-status');
+
+  const loadTablesBtn    = document.getElementById('load-tables-btn');
+  const tablesList       = document.getElementById('tables-list');
+
+  const joinOrCreateBtn  = document.getElementById('join-or-create-btn');
+  const joinResult       = document.getElementById('join-result');
+
+  const logEl            = document.getElementById('log');
+
+  // State
+  let currentRoomId = null;
+  let authToken = null; // proper mock JWT
+
+  function log(msg, obj) {
+    const t = new Date().toISOString();
+    logEl.textContent += `[${t}] ${msg}\n`;
+    if (obj !== undefined) {
+      try {
+        logEl.textContent += JSON.stringify(obj, null, 2) + "\n";
+      } catch {
+        logEl.textContent += String(obj) + "\n";
+      }
+    }
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  // --- JWT helpers: sub = playerId, claims carry username/rating/icon ---
+  function base64UrlEncode(obj) {
+    const json = typeof obj === 'string' ? obj : JSON.stringify(obj);
+    return btoa(json)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/g, '');
+  }
+
+  /**
+   * Build a dev JWT that looks like a real player token:
+   *  sub      = DB playerId (UUID string)
+   *  username = chosen username
+   *  rating   = numeric rating
+   *  icon     = icon key or URL
+   */
+  function createMockJwt(playerId, username, rating, icon) {
+    const header = { alg: "none", typ: "JWT" };
+    const nowSec = Math.floor(Date.now() / 1000);
+    const payload = {
+      sub: playerId,          // internal playerId
+      username: username,     // display username
+      rating: rating,         // game rating (number or string)
+      icon: icon,             // icon identifier / URL
+      iat: nowSec,
+      exp: nowSec + 3600      // 1 hour
+    };
+    return base64UrlEncode(header) + "." +
+           base64UrlEncode(payload) + ".devsig";
+  }
+
+  // Generic API helper
+  async function api(path, options = {}) {
+    const headers = options.headers || {};
+    if ((options.method || 'GET').toUpperCase() === 'POST') {
+      headers['Content-Type'] = 'application/json';
+    }
+    if (authToken) {
+      headers['Authorization'] = 'Bearer ' + authToken;
+    }
+
+    const res = await fetch(API_BASE + path, {
+      ...options,
+      headers
+    });
+
+    const text = await res.text();
+    let json = null;
+    try { json = text ? JSON.parse(text) : null; } catch {}
+
+    log(`${options.method || 'GET'} ${path} → ${res.status}`, json ?? text);
+
+    if (!res.ok) throw new Error(text || res.statusText);
+    return json;
+  }
+
+  // Register Player → send username/rating/icon → get playerId → build JWT
+  registerBtn.addEventListener('click', async () => {
+    const username = usernameInput.value.trim();
+    const ratingRaw = ratingInput.value.trim();
+    const iconRaw = iconInput.value.trim();
+    const clientId = "client:localhost:123456789";
+
+    if (!username) {
+      registerStatus.textContent = 'Enter a username first.';
+      return;
+    }
+
+    // Rating: allow empty (null) or numeric
+    const rating = ratingRaw === '' ? null : Number(ratingRaw);
+    const icon   = iconRaw === '' ? null : Number(iconRaw);
+
+    try {
+      registerStatus.textContent = 'Registering…';
+
+      // Body shape: align this with your /api/player/register DTO
+      const body = {
+        playerName: username,
+        rating: rating,
+        icon: icon,
+        clientId: clientId
+      };
+
+      const result = await api('/api/player/register', {
+        method: 'POST',
+        body: JSON.stringify(body)
+      });
+
+      const playerId = result.playerId || result.id;
+      if (!playerId) {
+        registerStatus.textContent = 'No playerId returned (see log).';
+        log('Register missing playerId', result);
+        return;
+      }
+
+      authToken = createMockJwt(playerId, username, rating, icon);
+      registerStatus.textContent =
+        `Registered as ${username} (id: ${playerId}, rating: ${rating ?? 'n/a'}, icon: ${icon || 'n/a'}). JWT set.`;
+
+      log('Registered player & created JWT', {
+        playerId,
+        username,
+        rating,
+        icon,
+        token: authToken
+      });
+
+    } catch (err) {
+      registerStatus.textContent = 'Registration failed (see log).';
+      log('Register error', err);
+    }
+  });
+
+  // whoami → should reflect JWT identity / DB lookup
+  whoamiBtn.addEventListener('click', async () => {
+    try {
+      whoamiLabel.textContent = 'Loading…';
+      const data = await api('/api/player/whoami');
+
+      // Adjust these field names to match your DTO
+      const name   = data.username ?? data.name ?? data.playerName ?? 'Unknown';
+      const id     = data.playerId ?? data.id ?? 'unknown-id';
+      const rating = data.rating ?? 'n/a';
+      const icon   = data.icon ?? 'n/a';
+
+      whoamiLabel.textContent =
+        `You are: ${name} (${id}), rating: ${rating}, icon: ${icon}`;
+    } catch (err) {
+      whoamiLabel.textContent = 'whoami failed (see log)';
+      log('whoami error', err);
+    }
+  });
+
+  // Load rooms on boot
+  async function loadRooms() {
+    try {
+      roomSelect.innerHTML = '<option value="">Loading…</option>';
+      const rooms = await api('/api/room/getRooms');
+      roomSelect.innerHTML = '<option value="">Select…</option>';
+      (rooms || []).forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r.roomId ?? r.id;
+        opt.textContent = r.roomName ?? r.name ?? (`Room ${opt.value}`);
+        roomSelect.appendChild(opt);
+      });
+    } catch (err) {
+      roomSelect.innerHTML = '<option value="">Error loading rooms</option>';
+      log('getRooms error', err);
+    }
+  }
+  loadRooms();
+
+  // Room selection
+  roomSelect.addEventListener('change', () => {
+    currentRoomId = null;
+    joinRoomBtn.disabled = !roomSelect.value;
+    loadTablesBtn.disabled = true;
+    joinOrCreateBtn.disabled = true;
+    tablesList.innerHTML = '';
+    roomStatus.textContent = '';
+    joinResult.textContent = '';
+  });
+
+  // Join room
+  joinRoomBtn.addEventListener('click', async () => {
+    const roomId = roomSelect.value;
+    if (!roomId) return;
+
+    try {
+      roomStatus.textContent = 'Joining…';
+      await api('/api/room/join', {
+        method: 'POST',
+        body: JSON.stringify({ roomId })
+      });
+      currentRoomId = roomId;
+      roomStatus.textContent = 'Joined.';
+      loadTablesBtn.disabled = false;
+      joinOrCreateBtn.disabled = false;
+    } catch (err) {
+      roomStatus.textContent = 'Join failed (see log).';
+      log('join room error', err);
+    }
+  });
+
+  // Load tables
+  loadTablesBtn.addEventListener('click', async () => {
+    if (!currentRoomId) return;
+    try {
+      tablesList.innerHTML = '';
+      const tables = await api(`/api/table/getTablesDetailed?roomId=${encodeURIComponent(currentRoomId)}`);
+      (tables || []).forEach(t => {
+        const li = document.createElement('li');
+        const id   = t.tableId ?? t.id;
+        const seated = t.seatedCount ?? t.currentPlayers ?? '?';
+        const max    = t.maxSeats ?? t.capacity ?? '?';
+        li.textContent = `Table ${id} (${seated}/${max} seated)`;
+        tablesList.appendChild(li);
+      });
+      if (!tables || tables.length === 0) {
+        tablesList.innerHTML = '<li>No tables in this room yet.</li>';
+      }
+    } catch (err) {
+      tablesList.innerHTML = '<li>Error loading tables (see log).</li>';
+      log('getTablesDetailed error', err);
+    }
+  });
+
+  // Join or create table
+  joinOrCreateBtn.addEventListener('click', async () => {
+    if (!currentRoomId) return;
+    try {
+      joinResult.textContent = 'Joining/creating…';
+      const res = await api('/api/table/joinOrCreate', {
+        method: 'POST',
+        body: JSON.stringify({ roomId: currentRoomId })
+      });
+      joinResult.textContent = 'Joined table (see log for details).';
+      log('joinOrCreate result', res);
+
+      // Later: redirect into game UI using gameId/seatId from res
+    } catch (err) {
+      joinResult.textContent = 'Join/create failed (see log).';
+      log('joinOrCreate error', err);
+    }
+  });
+</script>
+</body>
+</html>

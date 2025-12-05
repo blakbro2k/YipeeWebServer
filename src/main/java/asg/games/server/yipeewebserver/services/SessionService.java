@@ -1,8 +1,7 @@
 package asg.games.server.yipeewebserver.services;
 
-
 import asg.games.server.yipeewebserver.config.ServerIdentity;
-import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
+import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.tools.NetUtil;
@@ -58,20 +57,20 @@ public class SessionService {
         Instant now = Instant.now();
         String newSessionId = createSession(request.getClientId());
 
-        PlayerConnectionDTO newPlayerConnection = new PlayerConnectionDTO();
-        newPlayerConnection.setName(player.getName());
-        newPlayerConnection.setClientId(request.getClientId());
-        newPlayerConnection.setSessionId(newSessionId);
-        newPlayerConnection.setProvider(provider);
-        newPlayerConnection.setExternalUserId(request.getAuthToken());
-        newPlayerConnection.setPlayer(player);
-        newPlayerConnection.setConnected(true);
-        newPlayerConnection.setIpAddress(ip);
-        newPlayerConnection.setUserAgent(userAgent);
-        newPlayerConnection.setLastActivity(now);
-        newPlayerConnection.setConnectedAt(now);
-        newPlayerConnection.setDisconnectedAt(null);
-        yipeeClientConnectionRepository.save(newPlayerConnection);
+        PlayerConnectionEntity newPlayerConnectionEntity = new PlayerConnectionEntity();
+        newPlayerConnectionEntity.setName(player.getName());
+        newPlayerConnectionEntity.setClientId(request.getClientId());
+        newPlayerConnectionEntity.setSessionId(newSessionId);
+        newPlayerConnectionEntity.setProvider(provider);
+        newPlayerConnectionEntity.setExternalUserId(request.getAuthToken());
+        newPlayerConnectionEntity.setPlayer(player);
+        newPlayerConnectionEntity.setConnected(true);
+        newPlayerConnectionEntity.setIpAddress(ip);
+        newPlayerConnectionEntity.setUserAgent(userAgent);
+        newPlayerConnectionEntity.setLastActivity(now);
+        newPlayerConnectionEntity.setConnectedAt(now);
+        newPlayerConnectionEntity.setDisconnectedAt(null);
+        yipeeClientConnectionRepository.save(newPlayerConnectionEntity);
 
         resp.setConnected(true);
         resp.setServerTick(0); // or whatever initial tick makes sense

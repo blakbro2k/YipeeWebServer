@@ -1,6 +1,6 @@
 package asg.games.server.yipeewebserver.services.impl;
 
-import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
+import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRepository;
@@ -19,7 +19,6 @@ import ch.qos.logback.core.util.StringUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +50,8 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         register(YipeePlayer.class, yipeePlayerRepository);
 
         // Only include DTOs here if they really are JPA entities extending YipeeObject.
-        // If PlayerConnectionDTO is a real @Entity extending YipeeObject, keep it:
-        //register(PlayerConnectionDTO.class, yipeeClientConnectionRepository);
+        // If PlayerConnectionEntity is a real @Entity extending YipeeObject, keep it:
+        //register(PlayerConnectionEntity.class, yipeeClientConnectionRepository);
     }
 
     private <T extends YipeeObject> void register(Class<T> type, YipeeRepository<T, String> repo) {
@@ -234,7 +233,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
     @Transactional(readOnly = true)
     public YipeePlayer findPlayerByExternalIdentity(String provider, String externalUserId) {
         log.debug("findPlayerByExternalIdentity({}, {})", provider, externalUserId);
-        PlayerConnectionDTO identity = yipeeClientConnectionRepository.findByProviderAndExternalUserId(provider, externalUserId).orElse(null);
+        PlayerConnectionEntity identity = yipeeClientConnectionRepository.findByProviderAndExternalUserId(provider, externalUserId).orElse(null);
         return identity != null ? identity.getPlayer() : null;
     }
 
@@ -271,9 +270,9 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         // 2) Upsert the connection row
         String connectionName = buildIdentityName(persistentPlayer); // e.g. connection:{name}:{id}
 
-        PlayerConnectionDTO connection = yipeeClientConnectionRepository
+        PlayerConnectionEntity connection = yipeeClientConnectionRepository
                 .findOptionalByName(connectionName)             // add this method to repo
-                .orElseGet(PlayerConnectionDTO::new);
+                .orElseGet(PlayerConnectionEntity::new);
 
         connection.setName(connectionName);
         connection.setClientId(clientId);
@@ -519,7 +518,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
             // or explicitly: seat.setSeatedPlayer(null); seat.setSeatReady(false);
         });
 
-        // 4) Remove PlayerConnectionDTO rows for this player (if you like)
+        // 4) Remove PlayerConnectionEntity rows for this player (if you like)
         yipeeClientConnectionRepository.deleteAllByPlayerId(playerId);
 
         // 5) Finally, delete the player entity

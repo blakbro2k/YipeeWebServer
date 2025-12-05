@@ -2,7 +2,7 @@ package asg.games.server.yipeewebserver.controllers;
 
 import asg.games.server.yipeewebserver.Version;
 import asg.games.server.yipeewebserver.config.ServerIdentity;
-import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
+import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
 import asg.games.server.yipeewebserver.net.api.JoinOrCreateTableRequest;
 import asg.games.server.yipeewebserver.net.api.JoinOrCreateTableResponse;
@@ -33,6 +33,7 @@ import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
 import asg.games.server.yipeewebserver.services.SessionService;
+import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
@@ -80,6 +81,7 @@ public class YipeeAPIController {
     private final YipeeClientConnectionRepository yipeeClientConnectionRepository;
     private final YipeePacketHandler packetHandler;
     private final SessionService sessionService;
+    private final TableService tableService;
 
     // -------------------------------------------------------
     // 1. Server status
@@ -114,7 +116,7 @@ public class YipeeAPIController {
             return ResponseEntity.notFound().build();
         }
 
-        PlayerConnectionDTO conn = yipeeClientConnectionRepository.findOptionalByName(player.getName()).orElse(new PlayerConnectionDTO());
+        PlayerConnectionEntity conn = yipeeClientConnectionRepository.findOptionalByName(player.getName()).orElse(new PlayerConnectionEntity());
         String sessionId = conn.getSessionId();
 
         PlayerProfileResponse response = new PlayerProfileResponse(
@@ -134,9 +136,14 @@ public class YipeeAPIController {
     // -------------------------------------------------------
     @PostMapping("/player/register")
     public ResponseEntity<PlayerProfileResponse> registerPlayer(@RequestBody RegisterPlayerRequest request) {
+        log.debug("request={}", request);
         String externalUserId = getCurrentExternalUserId();
-        log.debug("Registering player for provider={}, externalUserId={}",
-                YipeePacketHandler.IDENTITY_PROVIDER_WORDPRESS, externalUserId);
+        log.debug("Registering player for provider={}, externalUserId={}", YipeePacketHandler.IDENTITY_PROVIDER_WORDPRESS, externalUserId);
+
+        // Basic validation
+        if (request.getPlayerName() == null || request.getPlayerName().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
 
         YipeePlayer player = new YipeePlayer();
         player.setName(request.getPlayerName());
@@ -163,7 +170,6 @@ public class YipeeAPIController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
     // -------------------------------------------------------
     // 4. Handshake: POST /api/session/handshake
@@ -287,6 +293,11 @@ public class YipeeAPIController {
         boolean created = (request.tableNumber() == null ||
                 !yipeeTableRepository.existsById(table.getId()));
         // or you can return a flag from the service instead of recomputing
+
+        if(created) {
+            // ensure index row exists
+            tableService.onTableCreated(table);
+        }
 
         JoinOrCreateTableResponse response = new JoinOrCreateTableResponse(
                 room.getId(),
@@ -445,13 +456,13 @@ public class YipeeAPIController {
         return ResponseEntity.ok(details);
     }
 
+
     @PostMapping("/table/sitDown")
     public ResponseEntity<SitDownResponse> sitDown(@RequestBody SitDownRequest request) {
-        YipeeSeat seat = yipeeGameService.sitDown(
+        // TableService persists objects and handles idle table indexing
+        YipeeSeat seat = tableService.sitDown(request.tableId(),
                 request.playerId(),
-                request.tableId(),
-                request.seatNumber()
-        );
+                request.seatNumber());
 
         YipeeTable table = seat.getParentTable();
         YipeeRoom room = table.getRoom();
@@ -472,7 +483,7 @@ public class YipeeAPIController {
 
     @PostMapping("/table/standUp")
     public ResponseEntity<StandUpResponse> standUp(@RequestBody StandUpRequest request) {
-        YipeeSeat seat = yipeeGameService.standUp(
+        YipeeSeat seat = tableService.standUp(
                 request.playerId(),
                 request.tableId()
         );

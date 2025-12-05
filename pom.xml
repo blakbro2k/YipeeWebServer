@@ -57,7 +57,7 @@
 		<maven.plugin.version>3.3.6</maven.plugin.version>
 		<mockito.version>4.11.0</mockito.version>
 		<kyronet.version>2.22.0-RC1</kyronet.version>
-		<aspectj.version>1.9.9</aspectj.version>
+		<aspectj.version>1.9.25</aspectj.version>
 		<aspectj-maven.version>1.15.0</aspectj-maven.version>
 	</properties>
 	<repositories>
@@ -353,9 +353,9 @@
 					<version>${aspectj-maven.version}</version>
 
 					<configuration>
-						<complianceLevel>${java.version}</complianceLevel>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
+						<complianceLevel>17.0</complianceLevel>
+						<source>17.0</source>
+						<target>17.0</target>
 						<showWeaveInfo>true</showWeaveInfo>
 						<verbose>true</verbose>
 						<Xlint>ignore</Xlint>

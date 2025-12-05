@@ -2,7 +2,8 @@ package asg.games.server.yipeewebserver.net;
 
 import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.core.GameContext;
-import asg.games.server.yipeewebserver.core.ServerManager;
+import asg.games.server.yipeewebserver.core.GameContextFactory;
+import asg.games.server.yipeewebserver.core.ServerGameManager;
 import asg.games.server.yipeewebserver.tools.NetUtil;
 import asg.games.yipee.net.errors.ErrorCode;
 import asg.games.yipee.net.errors.ErrorMapper;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 public class YipeePacketHandler {
     private final ServerIdentity serverIdentity;
     private final ConnectionContextFactory connectionContextFactory;
+    private final GameContextFactory gameContextFactory;
     public static final String IDENTITY_PROVIDER_WORDPRESS = "WORDPRESS";
 
     // ========================================================================
@@ -85,6 +87,41 @@ public class YipeePacketHandler {
         }
     }
 
+    /**
+     * Attempts to safely resolve an {@link AbstractServerResponse} instance into a concrete
+     * response type by performing a runtime type check against the provided {@code Class<T>}.
+     * <p>
+     * This method is useful when the caller expects a specific subclass of
+     * {@link AbstractServerResponse} but the actual response is obtained from a generic
+     * or transport-agnostic source (e.g., Kryo, WebSocket, or REST handler) where the
+     * concrete type is not known at compile time.
+     * <p>
+     * The method performs a type-safe check using {@link Class#isInstance(Object)} and
+     * returns {@code null} when the provided response does not match the expected type.
+     * No {@link ClassCastException} will be thrown.
+     *
+     * <h3>Example:</h3>
+     *
+     * <pre>{@code
+     * AbstractServerResponse resp = packetHandler.handle(request);
+     *
+     * GameStartResponse start =
+     *         resolve(GameStartResponse.class, resp);
+     *
+     * if (start != null) {
+     *     // Handle game start response
+     * }
+     * }</pre>
+     *
+     * @param <T>     the expected concrete response type
+     * @param type    the {@link Class} object representing the expected response type
+     * @param resp    the response instance to check and cast
+     * @return        the response cast to type {@code T} if compatible; otherwise {@code null}
+     */
+    public static <T extends AbstractServerResponse> T getClassResponse(Class<T> type, AbstractServerResponse response) {
+        return type.isInstance(response) ? type.cast(response) : null;
+    }
+
     // ========================================================================
     //  Specific packet handlers
     // ========================================================================
@@ -92,9 +129,17 @@ public class YipeePacketHandler {
     private GameStartResponse handleGameStart(GameContext gameContext, GameStartRequest req) {
         log.debug("Handling GameStartRequest: {}", req);
 
+        //Get Game
+        //get player seat number
+        //
+
+        ServerGameManager gameManager = gameContextFactory.getGame(req.getGameId());
+        if(gameManager == null) throw new IllegalArgumentException(req.getGameId() + " gameId does not exist.");
+
         GameStartResponse resp = new GameStartResponse();
         NetUtil.copyEnvelope(req, resp);
 
+        req.getPlayerId();
         // TODO: plug into your GameServerManager / GameManager
         // var result = gameServerManager.startGame(req.getTableId(), req.getPlayerId(), ...);
         // resp.setGameId(result.getGameId());

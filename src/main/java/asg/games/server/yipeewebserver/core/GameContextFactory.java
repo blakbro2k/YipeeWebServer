@@ -82,6 +82,24 @@ public class GameContextFactory {
         );
     }
 
+    /**
+     * Build a GameContext using IDs only, so APIs / WebSockets / Kryo
+     * can all share this path.
+     */
+    public GameContext fromIds(String gameId, String playerId, String clientId, long serverTick) {
+        long now       = System.currentTimeMillis();
+
+        return new GameContext(
+                serverIdentity.getServiceName(),
+                serverIdentity.getFullId(),
+                serverTick,
+                clientId,
+                gameId,
+                playerId,
+                now
+        );
+    }
+
     private String generateUniqueGameId() {
         String id;
         do {
@@ -112,6 +130,12 @@ public class GameContextFactory {
         return gameManagers.get(gameId);
     }
 
+    /**
+     * Returns a view of all currently registered {@link ServerGameManager} instances.
+     * <p>
+     * The returned collection is backed by the underlying map and will reflect
+     * concurrent additions/removals.
+     */
     public Collection<ServerGameManager> getAllGames() {
         return gameManagers.values();
     }

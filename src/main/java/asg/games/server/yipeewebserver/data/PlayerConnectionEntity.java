@@ -21,7 +21,7 @@ import java.util.Objects;
                 @Index(name = "IDX_PLAYER_CONNECTION_ACTIVITY", columnList = "last_activity")
         }
 )
-public class PlayerConnectionDTO extends AbstractDTO {
+public class PlayerConnectionEntity extends AbstractDTO {
     @Column(name = "client_id", nullable = false, length = 64)
     private String clientId;
 
@@ -86,7 +86,7 @@ public class PlayerConnectionDTO extends AbstractDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PlayerConnectionDTO that)) return false;
+        if (!(o instanceof PlayerConnectionEntity that)) return false;
         if (!super.equals(o)) return false;
 
         return Objects.equals(sessionId, that.sessionId);
