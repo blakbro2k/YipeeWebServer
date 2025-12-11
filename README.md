@@ -141,3 +141,10 @@ gameserver:
 
 ## 📝 License
 Apache License 2.0 (see `LICENSE` file)
+
+---
+
+## Support
+
+Like what you see and wish to buy be a coffee? Here's the link.
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-FFDD00?logo=buymeacoffee)](https://buymeacoffee.com/boaten01y)
