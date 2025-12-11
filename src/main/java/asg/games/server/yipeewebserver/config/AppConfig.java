@@ -1,5 +1,6 @@
 package asg.games.server.yipeewebserver.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -11,6 +12,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+@Slf4j
 @PropertySource("classpath:application.properties")
 @EnableAspectJAutoProxy
 public class AppConfig {

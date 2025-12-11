@@ -4,11 +4,12 @@ import asg.games.server.yipeewebserver.data.YipeeTableOccupancyEntity;
 import asg.games.server.yipeewebserver.persistence.YipeeTableOccupancyRepository;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
 import asg.games.yipee.core.objects.YipeeSeat;
-import asg.games.yipee.core.objects.YipeeTable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TableService {
@@ -18,17 +19,21 @@ public class TableService {
 
     @Transactional
     public YipeeSeat sitDown(String tableId, String playerId, int seatNumber) {
-        // 1) Do the real game logic
         YipeeSeat seat = yipeeGameService.sitDown(playerId, tableId, seatNumber);
 
-        // 2) Update occupancy index
+        // update occupancy index here if you want, trusting game logic
         YipeeTableOccupancyEntity occ = occupancyRepository.findById(tableId)
                 .orElseGet(() -> new YipeeTableOccupancyEntity(tableId));
-        occ.incrementSeated();
+        occ.setSeatedCount(
+                (int) seat.getParentTable().getSeats().stream()
+                        .filter(YipeeSeat::isOccupied)
+                        .count()
+        );
         occupancyRepository.save(occ);
 
         return seat;
     }
+
 
     @Transactional
     public YipeeSeat standUp(String tableId, String playerId) {
@@ -42,17 +47,5 @@ public class TableService {
         });
 
         return seat;
-    }
-
-    @Transactional
-    public void onTableCreated(YipeeTable table) {
-        if (!occupancyRepository.existsById(table.getId())) {
-            occupancyRepository.save(new YipeeTableOccupancyEntity(table.getId()));
-        }
-    }
-
-    @Transactional
-    public void onTableDeleted(String tableId) {
-        occupancyRepository.deleteById(tableId);
     }
 }

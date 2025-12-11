@@ -34,9 +34,10 @@ public class YipeeCleanupService {
     public int cleanupExpiredSessions() {
         Instant cutoff = Instant.now().minusSeconds(TIMEOUT_SECONDS);
 
-        int deleted = connectionRepo.deleteByLastActivityBefore(cutoff);
+        int deleted = 0;
         List<PlayerConnectionEntity> expiredConnections = connectionRepo.findByLastActivityBefore(cutoff);
         for (PlayerConnectionEntity conn : expiredConnections) {
+            deleted++;
             String playerId = conn.getPlayer().getId();
             // delete the connection first (or inside removePlayerCompletely)
             connectionRepo.delete(conn);

@@ -1,5 +1,6 @@
 package asg.games.server.yipeewebserver.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
 
+@Slf4j
 @Configuration
 @ComponentScan(basePackages = "net.asg.games.yokel.config")
 public class Internalization implements WebMvcConfigurer {

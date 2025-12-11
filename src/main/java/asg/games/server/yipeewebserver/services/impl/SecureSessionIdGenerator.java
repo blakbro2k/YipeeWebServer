@@ -11,10 +11,15 @@ public class SecureSessionIdGenerator implements SessionIdGenerator {
 
     private final SecureRandom random = new SecureRandom();
 
+    /**
+     * Generate a 256-bit random session identifier, URL-safe.
+     */
     @Override
     public String generateSessionId() {
-        byte[] bytes = new byte[16]; // 128 bits
+        byte[] bytes = new byte[32]; // 256 bits
         random.nextBytes(bytes);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        return Base64.getUrlEncoder()
+                .withoutPadding()
+                .encodeToString(bytes);
     }
 }

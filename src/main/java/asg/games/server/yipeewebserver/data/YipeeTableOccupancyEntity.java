@@ -12,7 +12,7 @@ import java.time.Instant;
 
 @Entity
 @Table(
-        name = "yipee_table_occupancy",
+        name = "YT_TABLE_ACTIVITY",
         indexes = @Index(name = "idx_last_occupancy", columnList = "lastOccupancyChange")
 )
 @Getter

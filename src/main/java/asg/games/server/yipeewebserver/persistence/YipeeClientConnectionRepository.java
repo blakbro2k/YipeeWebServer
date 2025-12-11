@@ -16,9 +16,11 @@ public interface YipeeClientConnectionRepository extends YipeeRepository<PlayerC
 
     List<PlayerConnectionEntity> findByLastActivityBefore(Instant cutoff);
 
-    PlayerConnectionEntity findByPlayer_Id(String playerId); // Spring Data derives this
+    PlayerConnectionEntity findByPlayerId(String playerId); // Spring Data derives this
 
     PlayerConnectionEntity findByName(String name);
+
+    PlayerConnectionEntity findPlayerByClientId(String clientId);
 
     Optional<PlayerConnectionEntity> findOptionalByName(String name);
 
@@ -33,4 +35,6 @@ public interface YipeeClientConnectionRepository extends YipeeRepository<PlayerC
     boolean existsByProviderAndExternalUserId(String provider, String externalUserId);
 
     void deleteAllByPlayerId(String playerId);
+
+    Optional<PlayerConnectionEntity> findByPlayerIdAndClientId(String playerId, String clientId);
 }

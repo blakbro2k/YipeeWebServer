@@ -64,7 +64,7 @@
         <appender-ref ref="Console" />
     </logger>
 
-    <logger name="asg.games.server" level="info" additivity="false">
+    <logger name="asg.games.server" level="trace" additivity="false">
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
