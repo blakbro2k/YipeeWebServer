@@ -1,14 +1,9 @@
 package asg.games.server.yipeewebserver.net;
 
-import asg.games.server.yipeewebserver.config.ServerIdentity;
-import asg.games.server.yipeewebserver.core.GameContext;
-import asg.games.server.yipeewebserver.core.ServerGameManager;
-import asg.games.server.yipeewebserver.core.ServerManager;
 import asg.games.yipee.net.packets.AbstractClientRequest;
 import com.esotericsoftware.kryonet.Connection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.io.InvalidObjectException;
 import java.util.Map;
@@ -20,7 +15,6 @@ public class ConnectionContextFactory {
     private final Map<String, String> sessionToGameId = new ConcurrentHashMap<>();
     private final Map<Integer, String> connectionToGameIdx = new ConcurrentHashMap<>();
     private final Map<Integer, ConnectionContext> connectionContexts = new ConcurrentHashMap<>();
-
 
     public ConnectionContext updateConnectionContext(Connection connection, Object object) throws InvalidObjectException {
         if (!(object instanceof AbstractClientRequest req)) throw new InvalidObjectException("Packet recieved was not of type: AbstractClientRequest");

@@ -1,12 +1,15 @@
 package asg.games.server.yipeewebserver.services.impl;
 
-import asg.games.server.yipeewebserver.data.PlayerConnectionDTO;
+import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
+import asg.games.server.yipeewebserver.data.YipeeTableOccupancyEntity;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeTableOccupancyRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
+import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.yipee.common.enums.YipeeObject;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
@@ -19,7 +22,6 @@ import ch.qos.logback.core.util.StringUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -41,6 +44,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
     private final YipeePlayerRepository yipeePlayerRepository;
     private final YipeeSeatRepository yipeeSeatRepository;
     private final YipeeClientConnectionRepository yipeeClientConnectionRepository;
+    private final YipeeTableOccupancyRepository yipeeTableOccupancyRepository;
 
     @PostConstruct
     public void init() {
@@ -51,8 +55,8 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         register(YipeePlayer.class, yipeePlayerRepository);
 
         // Only include DTOs here if they really are JPA entities extending YipeeObject.
-        // If PlayerConnectionDTO is a real @Entity extending YipeeObject, keep it:
-        //register(PlayerConnectionDTO.class, yipeeClientConnectionRepository);
+        // If PlayerConnectionEntity is a real @Entity extending YipeeObject, keep it:
+        //register(PlayerConnectionEntity.class, yipeeClientConnectionRepository);
     }
 
     private <T extends YipeeObject> void register(Class<T> type, YipeeRepository<T, String> repo) {
@@ -234,7 +238,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
     @Transactional(readOnly = true)
     public YipeePlayer findPlayerByExternalIdentity(String provider, String externalUserId) {
         log.debug("findPlayerByExternalIdentity({}, {})", provider, externalUserId);
-        PlayerConnectionDTO identity = yipeeClientConnectionRepository.findByProviderAndExternalUserId(provider, externalUserId).orElse(null);
+        PlayerConnectionEntity identity = yipeeClientConnectionRepository.findByProviderAndExternalUserId(provider, externalUserId).orElse(null);
         return identity != null ? identity.getPlayer() : null;
     }
 
@@ -271,9 +275,9 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         // 2) Upsert the connection row
         String connectionName = buildIdentityName(persistentPlayer); // e.g. connection:{name}:{id}
 
-        PlayerConnectionDTO connection = yipeeClientConnectionRepository
+        PlayerConnectionEntity connection = yipeeClientConnectionRepository
                 .findOptionalByName(connectionName)             // add this method to repo
-                .orElseGet(PlayerConnectionDTO::new);
+                .orElseGet(PlayerConnectionEntity::new);
 
         connection.setName(connectionName);
         connection.setClientId(clientId);
@@ -326,54 +330,171 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         return room;
     }
 
-    @Transactional
-    public YipeeTable joinOrCreateTable(String playerId,
-                                        String roomId,
-                                        Integer tableNumber,
-                                        boolean createIfMissing) {
+    public YipeeTable createTable(String playerId,
+                                  String roomId,
+                                  boolean rated,
+                                  boolean soundOn,
+                                  String accessType) {
+        YipeeTable table = createLocalTable(playerId,
+                roomId,
+                rated,
+                soundOn,
+                accessType
+        );
 
+        yipeeTableOccupancyRepository.save(new YipeeTableOccupancyEntity(table.getId()));
+
+        return table;
+    }
+
+    @Transactional
+    private YipeeTable createLocalTable(String playerId,
+                                  String roomId,
+                                  boolean rated,
+                                  boolean soundOn,
+                                  String accessType) {
         YipeePlayer player = yipeePlayerRepository.findById(playerId)
                 .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
 
         YipeeRoom room = yipeeRoomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
 
-        // If a tableNumber is supplied, try to find it in that room
-        YipeeTable table = null;
-        if (tableNumber != null) {
-            table = yipeeTableRepository
-                    .findByRoomIdAndTableNumber(roomId, tableNumber)
-                    .orElse(null);
-            if (table == null && !createIfMissing) {
-                throw new IllegalArgumentException(
-                        "Table " + tableNumber + " does not exist in room " + roomId);
-            }
-        }
+        // uses your helper that maintains both sides
+        Map<String, Object> arguments = new HashMap<>();
+        arguments.put(YipeeTable.ARG_RATED, rated);
+        arguments.put(YipeeTable.ARG_SOUND, soundOn);
+        arguments.put(YipeeTable.ARG_TYPE, accessType);
 
-        // Create a new table if needed (either tableNumber null or not found)
-        boolean created = false;
-        if (table == null) {
-            int nextTableNumber = (tableNumber != null)
-                    ? tableNumber
-                    : asg.games.yipee.core.tools.Util.getNextTableNumber(room);
-
-            table = new YipeeTable(nextTableNumber);
-            //table.setTable(null); // seats will be tied to this table in the constructor
-            table.setRoom(room);        // important: hook into JPA relationship
-            room.getTableIndexMap().put(nextTableNumber, table);
-            created = true;
-        }
-
-
-
-        // Initial behavior: join as a watcher (sitting down will be a separate call)
+        YipeeTable table = room.addTable(arguments);
         table.addWatcher(player);
 
-        // Persist via room or table; both are managed. This is just to be explicit:
         yipeeTableRepository.save(table);
+
+        // Hibernate will flush on commit; returning the managed room is enough
+        return table;
+    }
+
+    @Transactional
+    public YipeeTable joinTable(String playerId,
+                                String roomId,
+                                Integer tableNumber,
+                                boolean createIfMissing) {
+
+        YipeeRoom room = getRoomById(roomId);
+
+        YipeeTable table = null;
+        if(tableNumber > 0) {
+            // Explicit table selection (e.g. clicking "Play Now" on a specific table)
+            table = room.getTableIndexMap().values().stream()
+                    .filter(Objects::nonNull)
+                    .filter(t -> t.getTableNumber() == tableNumber)
+                    .findFirst()
+                    .orElseGet(() -> {
+                        if (!createIfMissing) {
+                            throw new IllegalStateException(
+                                    "Table number " + tableNumber +
+                                            " does not exist in room " + roomId +
+                                            " and createIfMissing=false"
+                            );
+                        }
+                        // Create a new table in this room.
+                        // This uses your existing createTable JPA method.
+                        return createTable(
+                                playerId,
+                                roomId,
+                                /* rated   */ false,
+                                /* soundOn */ true,
+                                /* accessType */ "public"
+                        );
+                    });
+        } else {
+            // PLAY NOW PATH: auto-pick a table
+            table = findExistingTableWithFreeSeat(room)
+                    .orElseGet(() -> {
+                        if (!createIfMissing) {
+                            throw new IllegalStateException("No free tables and createIfMissing=false");
+                        }
+
+                        return createTable(
+                                playerId,
+                                roomId,
+                                false,
+                                true,
+                                "public");
+                    });
+        }
 
         return table;
     }
+
+    private void autoSeatPlayer(YipeeTable table, String playerId) {
+        if (table == null || playerId == null) {
+            return;
+        }
+
+        YipeePlayer player = yipeePlayerRepository.findById(playerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
+
+        // 1) If they’re already seated at this table, nothing to do
+        if (table.getSeats() != null && table.getSeats().stream()
+                .anyMatch(seat -> seat != null && player.equals(seat.getSeatedPlayer()))) {
+            return;
+        }
+
+        // 2) Defensive: clear any duplicate seats on this table (shouldn’t happen, but just in case)
+        if (table.getSeats() != null) {
+            table.getSeats().forEach(seat -> {
+                if (seat != null && player.equals(seat.getSeatedPlayer())) {
+                    seat.standUp();
+                }
+            });
+        }
+
+        // 3) Find the first free seat (by seatNumber)
+        YipeeSeat freeSeat = table.getSeats().stream()
+                .filter(Objects::nonNull)
+                .filter(seat -> !seat.isOccupied())
+                .sorted(java.util.Comparator.comparingInt(YipeeSeat::getSeatNumber))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        "No free seat available on table " + table.getId()
+                ));
+
+        // 4) Seat the player using your domain method
+        // If you have seat.sitDown(player), prefer that; otherwise set fields directly.
+        freeSeat.sitDown(player);
+        // Or:
+        // freeSeat.setSeatedPlayer(player);
+        // freeSeat.setSeatReady(false); // or true – your choice
+
+        // 5) Make sure they are no longer a watcher of this table
+        if (table.getWatchers() != null && table.getWatchers().remove(player)) {
+            log.debug("Removed player {} from watchers when auto-seating on table {}",
+                    player.getId(), table.getId());
+        }
+    }
+
+
+    private Optional<YipeeTable> findExistingTableWithFreeSeat(YipeeRoom room) {
+        if (room == null || room.getTableIndexMap() == null || room.getTableIndexMap().isEmpty()) {
+            return Optional.empty();
+        }
+
+        // Sort by table number so "Play Now" prefers lower-numbered tables first
+        return room.getTableIndexMap().values().stream()
+                .sorted(java.util.Comparator.comparingInt(YipeeTable::getTableNumber))
+                .filter(this::tableHasFreeSeat)
+                .findFirst();
+    }
+
+    private boolean tableHasFreeSeat(YipeeTable table) {
+        if (table == null || table.getSeats() == null) {
+            return false;
+        }
+        return table.getSeats().stream()
+                .anyMatch(seat -> seat != null && !seat.isOccupied());
+    }
+
 
     @Transactional
     public void leaveRoom(String playerId, String roomId) {
@@ -436,40 +557,48 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
 
     @Transactional
     public YipeeSeat sitDown(String playerId, String tableId, int seatNumber) {
-        YipeePlayer player = yipeePlayerRepository.findById(playerId)
-                .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
-
+        // Load managed entities
         YipeeTable table = yipeeTableRepository.findById(tableId)
                 .orElseThrow(() -> new IllegalArgumentException("Table not found: " + tableId));
 
-        // Optional: ensure player is in the room that owns this table
-        YipeeRoom room = table.getRoom();
-        if (!room.getPlayers().contains(player)) {
-            // either auto-join or enforce strict invariant
-            room.joinRoom(player);
+        YipeePlayer player = yipeePlayerRepository.findById(playerId)
+                .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
+
+        // 1) Make sure player is not already seated at this table
+        table.getSeats().forEach(seat -> {
+            if (seat.isOccupied()
+                    && seat.getSeatedPlayer() != null
+                    && playerId.equals(seat.getSeatedPlayer().getId())) {
+                    seat.standUp();
+                    //throw new IllegalStateException("Player " + playerId + " is already seated at table " + tableId);
+            }
+        });
+
+        // 2) Find the requested seatNumber on this table
+        YipeeSeat targetSeat = table.getSeats().stream()
+                .filter(s -> s.getSeatNumber() == seatNumber)
+                .findFirst()
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Seat " + seatNumber + " not found for table " + tableId)
+                );
+
+        // 3) Ensure that seat is not already occupied
+        if (targetSeat.isOccupied() && targetSeat.getSeatedPlayer() != null) {
+            throw new IllegalStateException(
+                    "Seat " + seatNumber + " at table " + tableId + " is already occupied by player "
+                            + targetSeat.getSeatedPlayer().getId()
+            );
         }
 
-        // Make sure seatNumber is valid and obtain the seat
-        YipeeSeat seat = table.getSeat(seatNumber);
-        if (seat == null) {
-            throw new IllegalArgumentException("Invalid seat number: " + seatNumber);
-        }
+        // 4) Assign the player to the seat
+        targetSeat.setSeatedPlayer(player);
+        targetSeat.setSeatReady(false);  // or whatever your default is
+        // isOccupied could be derived from seatedPlayer, or set explicitly:
+        // targetSeat.setOccupied(true);
 
-        // If seat already occupied by someone else, reject
-        if (seat.getSeatedPlayer() != null && !seat.getSeatedPlayer().equals(player)) {
-            throw new IllegalStateException("Seat " + seatNumber + " is already occupied.");
-        }
-
-        // If player is already seated at some other seat in this table, stand them up first
-        table.getSeats().stream()
-                .filter(s -> player.equals(s.getSeatedPlayer()))
-                .forEach(YipeeSeat::standUp);
-
-        seat.sitDown(player);
-
-        // No explicit save needed; transactional + managed entities + cascading will persist changes
-        return seat;
+        return targetSeat;
     }
+
 
     @Transactional
     public YipeeSeat standUp(String playerId, String tableId) {
@@ -514,12 +643,11 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         });
 
         // 3) Stand them up from all seats
-        yipeeSeatRepository.findBySeatedPlayer_Id(playerId).forEach(seat -> {
-            seat.standUp();      // clears seatedPlayer + isSeatReady
-            // or explicitly: seat.setSeatedPlayer(null); seat.setSeatReady(false);
-        });
+        // clears seatedPlayer + isSeatReady
+        // or explicitly: seat.setSeatedPlayer(null); seat.setSeatReady(false);
+        yipeeSeatRepository.findBySeatedPlayer_Id(playerId).forEach(YipeeSeat::standUp);
 
-        // 4) Remove PlayerConnectionDTO rows for this player (if you like)
+        // 4) Remove PlayerConnectionEntity rows for this player (if you like)
         yipeeClientConnectionRepository.deleteAllByPlayerId(playerId);
 
         // 5) Finally, delete the player entity

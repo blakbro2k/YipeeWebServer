@@ -1,12 +1,10 @@
 package asg.games.server.yipeewebserver.net.api;
 
-public record StandUpResponse(
+public record CreateTableResponse(
         String roomId,
         String roomName,
         String tableId,
         int tableNumber,
         String playerId,
-        String seatId,
-        int seatNumber,
-        boolean success
+        boolean created
 ) {}

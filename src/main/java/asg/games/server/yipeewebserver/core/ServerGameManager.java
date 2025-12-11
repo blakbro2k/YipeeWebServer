@@ -487,7 +487,6 @@ public class ServerGameManager {
                 if (left.isRunning())  left.tick(serverTick, delta, leftBoardState,  rightBoardState);
                 if (right.isRunning()) right.tick(serverTick, delta, rightBoardState, leftBoardState);
             }
-
         }
 
         // 3. Check Win/Loss Conditions
@@ -529,14 +528,11 @@ public class ServerGameManager {
         // Submit the player action to the executor service for async processing.
         // Synchronize on the target board to ensure thread-safe updates.
         // Wrap in try/catch to avoid unhandled exceptions crashing the thread.
-        //synchronized (board.getLock()) {
-            try {
-                applyPlayerActionToBoard(action, board, serverTick);
-                //setGameBoard(targetSeatId, board);
-            } catch (Exception e) {
-                log.error("Error processing player action", e);
-            }
-        //}
+        try {
+            applyPlayerActionToBoard(action, board, serverTick);
+        } catch (Exception e) {
+            log.error("Error processing player action", e);
+        }
     }
 
     /**

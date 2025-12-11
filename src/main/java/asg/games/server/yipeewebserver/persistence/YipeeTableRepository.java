@@ -4,8 +4,11 @@ package asg.games.server.yipeewebserver.persistence;
 // CRUD refers Create, Read, Update, Delete
 
 import asg.games.yipee.core.objects.YipeeTable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +17,6 @@ public interface YipeeTableRepository extends YipeeRepository<YipeeTable, String
     Optional<YipeeTable> findByRoomIdAndTableNumber(String roomId, int tableNumber);
     // Tables where the player is a watcher
     List<YipeeTable> findByWatchers_Id(String playerId);
+
+
 }

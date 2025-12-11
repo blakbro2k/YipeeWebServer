@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Yipee Lobby</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    h1 { margin-bottom: 0.5rem; }
+    .step {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    input, select, button, textarea {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    button { cursor: pointer; }
+    .muted { color: #666; font-size: 0.9rem; }
+
+    #log {
+      background: #111;
+      color: #0f0;
+      padding: 0.5rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      max-height: 250px;
+      overflow: auto;
+      border-radius: 6px;
+    }
+
+    .tables-controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tables-wrapper {
+      max-height: 320px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 0.5rem;
+      background: #fafafa;
+    }
+
+    .tables-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      border: 1px solid #ccc; /* border around the whole table */
+    }
+
+    .tables-table th,
+    .tables-table td {
+      padding: 0.25rem 0.4rem;
+      vertical-align: top;
+      border: 1px solid #ccc; /* border around each cell/column */
+    }
+
+    .table-number-cell {
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .watch-btn {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.6rem;
+    }
+
+    .seats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.25rem;
+    }
+
+    .seat-btn {
+      width: 100%;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.3rem;
+      box-sizing: border-box;
+    }
+
+    .seat-btn.occupied {
+      opacity: 0.75;
+      cursor: not-allowed;
+      font-weight: 600;
+    }
+
+    .watchers-list {
+      font-size: 0.8rem;
+      max-width: 180px;
+      word-wrap: break-word;
+    }
+
+    .watchers-textarea {
+      width: 100%;
+      min-width: 140px;
+      font-size: 0.8rem;
+      resize: vertical;
+    }
+
+    .debug-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .debug-header h2 {
+      margin: 0;
+    }
+
+    .small-button {
+      font-size: 0.8rem;
+      padding: 0.25rem 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Yipee Lobby</h1>
+
+<div class="step">
+  <h2>Player Identity</h2>
+  <input id="username-input" placeholder="username"/>
+  <input id="rating-input" placeholder="rating"/>
+  <input id="icon-input" placeholder="icon"/>
+  <button id="register-btn">Register</button>
+  <div id="register-status" class="muted"></div>
+</div>
+
+<div class="step">
+  <h2>Player</h2>
+  <button id="whoami-btn">Who Am I</button>
+  <span id="whoami-label" class="muted"></span>
+  <div class="muted" id="ids-label"></div>
+</div>
+
+<div class="step">
+  <h2>Room</h2>
+  <select id="room-select"></select>
+  <button id="join-room-btn">Join Room</button>
+  <button id="refresh-rooms-btn">Refresh Rooms</button>
+  <span id="room-status" class="muted"></span>
+</div>
+
+<div class="step">
+  <h2>Tables</h2>
+  <div class="tables-controls">
+    <button id="load-tables-btn">Load Tables</button>
+    <button id="play-now-btn">Play Now</button>
+    <button id="create-table-btn">Create Table</button>
+  </div>
+  <div id="tables-wrapper" class="tables-wrapper">
+    <table class="tables-table">
+      <tbody id="tables-body"></tbody>
+    </table>
+  </div>
+  <div id="tables-status" class="muted"></div>
+</div>
+
+<div class="step">
+  <div class="debug-header">
+    <h2>Debug Log</h2>
+    <button id="clear-log-btn" class="small-button">Clear</button>
+  </div>
+  <pre id="log"></pre>
+</div>
+
+<script>
+  const USERNAME_KEY   = "yipee.username";
+  const RATING_KEY     = "yipee.rating";
+  const ICON_KEY       = "yipee.icon";
+  const PLAYER_ID_KEY  = "yipee.playerId";
+  const SESSION_KEY    = "yipee.sessionId";
+  const TOKEN_KEY      = "yipee.jwt";
+
+  let currentRoomId = null;
+  let authToken = null;
+  let sessionId = localStorage.getItem(SESSION_KEY) || null;
+  let currentPlayerId = localStorage.getItem(PLAYER_ID_KEY) || null;
+
+  // For local dev with Spring Boot on same origin:
+  const API_BASE = "";
+
+  const usernameInput = document.getElementById("username-input");
+  const ratingInput = document.getElementById("rating-input");
+  const iconInput = document.getElementById("icon-input");
+  const registerBtn = document.getElementById("register-btn");
+  const registerStatus = document.getElementById("register-status");
+  const whoamiBtn = document.getElementById("whoami-btn");
+  const whoamiLabel = document.getElementById("whoami-label");
+  const idsLabel = document.getElementById("ids-label");
+  const roomSelect = document.getElementById("room-select");
+  const joinRoomBtn = document.getElementById("join-room-btn");
+  const refreshRoomsBtn = document.getElementById("refresh-rooms-btn");
+  const roomStatus = document.getElementById("room-status");
+  const loadTablesBtn = document.getElementById("load-tables-btn");
+  const playNowBtn = document.getElementById("play-now-btn");
+  const createTableBtn = document.getElementById("create-table-btn");
+  const tablesBody = document.getElementById("tables-body");
+  const tablesStatus = document.getElementById("tables-status");
+  const clearLogBtn = document.getElementById("clear-log-btn");
+  const logEl = document.getElementById("log");
+
+  function log(msg, obj) {
+    logEl.textContent += `[${new Date().toISOString()}] ${msg}\n`;
+    if (obj !== undefined) logEl.textContent += JSON.stringify(obj, null, 2) + "\n";
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  clearLogBtn.onclick = () => {
+    logEl.textContent = "";
+  };
+
+  function getClientId() {
+    let cid = localStorage.getItem("yipeeClientId");
+    if (!cid) {
+      cid = "client:" + crypto.randomUUID();
+      localStorage.setItem("yipeeClientId", cid);
+    }
+    return cid;
+  }
+
+  function setSessionId(id) {
+    sessionId = id;
+    if (id) localStorage.setItem(SESSION_KEY, id);
+  }
+
+  function updateIdsLabel() {
+    idsLabel.textContent =
+      `clientId=${getClientId()} · playerId=${currentPlayerId} · sessionId=${sessionId}`;
+  }
+
+  // Mock JWT utility (kept for later, but NOT used in MVP)
+  function base64UrlEncode(obj) {
+    return btoa(JSON.stringify(obj))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+
+  function createMockJwt(playerId, username, rating, icon) {
+    const payload = { sub: playerId, username, rating, icon };
+    return base64UrlEncode({ alg: "none" }) + "." + base64UrlEncode(payload) + ".dev";
+  }
+
+  function loadIdentityFromStorage() {
+    const storedUsername = localStorage.getItem(USERNAME_KEY);
+    const storedRating   = localStorage.getItem(RATING_KEY);
+    const storedIcon     = localStorage.getItem(ICON_KEY);
+    const storedToken    = localStorage.getItem(TOKEN_KEY);
+
+    if (storedUsername) usernameInput.value = storedUsername;
+    if (storedRating)   ratingInput.value   = storedRating;
+    if (storedIcon)     iconInput.value     = storedIcon;
+    if (storedToken)    authToken           = storedToken;
+  }
+
+  function saveIdentityToStorage() {
+    localStorage.setItem(USERNAME_KEY, usernameInput.value || "");
+    localStorage.setItem(RATING_KEY,   ratingInput.value || "");
+    localStorage.setItem(ICON_KEY,     iconInput.value || "");
+  }
+
+  async function api(path, options = {}) {
+    const headers = options.headers || {};
+    headers["Content-Type"] = "application/json";
+
+    // Send mock JWT so backend can distinguish users per browser
+    if (authToken) {
+     headers["Authorization"] = "Bearer " + authToken;
+    }
+
+    headers["X-Client-Id"] = getClientId();
+    if (sessionId) headers["X-Session-Id"] = sessionId;
+
+    const res = await fetch(API_BASE + path, { ...options, headers });
+    const txt = await res.text();
+    let json = null;
+    try {
+      json = txt ? JSON.parse(txt) : null;
+    } catch (e) {
+      // non-JSON response, keep as text
+      json = txt;
+    }
+    log(`${options.method || "GET"} ${path} → ${res.status}`, json);
+    if (!res.ok) throw new Error(txt);
+    return json;
+  }
+
+  async function doHandshake(pid) {
+    const res = await api("/api/session/handshake", {
+      method: "POST",
+      body: JSON.stringify({ playerId: pid, clientId: getClientId() })
+    });
+    setSessionId(res.sessionId || res.id);
+    updateIdsLabel();
+  }
+
+  async function ensureSession() {
+    if (sessionId) return;
+    if (!currentPlayerId) {
+      log("No playerId for handshake");
+      return;
+    }
+    await doHandshake(currentPlayerId);
+  }
+
+  registerBtn.onclick = async () => {
+    saveIdentityToStorage();
+
+    const body = {
+      playerName: usernameInput.value,
+      rating: ratingInput.value,
+      icon: iconInput.value,
+      clientId: getClientId()
+    };
+
+    const res = await api("/api/player/register", {
+      method: "POST",
+      body: JSON.stringify(body)
+    });
+
+    currentPlayerId = res.playerId;
+    localStorage.setItem(PLAYER_ID_KEY, currentPlayerId);
+
+    // Create a mock JWT that encodes this player identity (per browser)
+    authToken = createMockJwt(
+      currentPlayerId,
+      usernameInput.value,
+      ratingInput.value,
+      iconInput.value
+    );
+    localStorage.setItem(TOKEN_KEY, authToken);
+
+    await doHandshake(currentPlayerId);
+    updateIdsLabel();
+    registerStatus.textContent = "Registered OK";
+  };
+
+  whoamiBtn.onclick = async () => {
+    try {
+      const res = await api("/api/player/whoami", { method: "GET" });
+
+      // Expected shape:
+      // { playerId, name, icon, rating, sessionId }
+      whoamiLabel.textContent =
+        `You are ${res.name} (rating ${res.rating})`;
+
+      currentPlayerId = res.playerId;
+      localStorage.setItem(PLAYER_ID_KEY, currentPlayerId);
+
+      if (res.sessionId) {
+        setSessionId(res.sessionId);
+      }
+
+      usernameInput.value = res.name || "";
+      ratingInput.value   = res.rating ?? "";
+      iconInput.value     = res.icon || "";
+      saveIdentityToStorage();
+
+      updateIdsLabel();
+    } catch (err) {
+      console.error(err);
+      whoamiLabel.textContent =
+        "No player profile found on server (whoami returned an error). Please register.";
+    }
+  };
+
+  joinRoomBtn.onclick = async () => {
+    await ensureSession();
+    const roomId = roomSelect.value;
+    if (!roomId) {
+      roomStatus.textContent = "No room selected.";
+      return;
+    }
+    await api("/api/room/join", {
+      method: "POST",
+      body: JSON.stringify({ roomId })
+    });
+    currentRoomId = roomId;
+    roomStatus.textContent = "Joined";
+  };
+
+  playNowBtn.onclick = async () => {
+    await ensureSession();
+    await api("/api/table/join", {
+      method: "POST",
+      body: JSON.stringify({ roomId: currentRoomId, tableNumber: null })
+    });
+  };
+
+  createTableBtn.onclick = async () => {
+    await ensureSession();
+    await api("/api/table/create", {
+      method: "POST",
+      body: JSON.stringify({ roomId: currentRoomId })
+    });
+  };
+
+  async function loadTables() {
+    tablesStatus.textContent = "Loading tables…";
+    tablesBody.innerHTML = "";
+
+    await ensureSession();
+
+    if (!currentRoomId) {
+      tablesStatus.textContent = "Join or select a room first.";
+      return;
+    }
+
+    try {
+      const tables = await api(
+        "/api/table/getTablesDetailed?roomId=" + encodeURIComponent(currentRoomId),
+        { method: "GET" }
+      );
+
+      log("renderTables: received details", tables);
+      renderTables(tables || []);
+      tablesStatus.textContent = `Loaded ${tables ? tables.length : 0} table(s).`;
+    } catch (err) {
+      console.error(err);
+      tablesStatus.textContent = "Failed to load tables (see log).";
+    }
+  }
+
+  function renderTables(tableDetails) {
+    tablesBody.innerHTML = "";
+
+    if (!tableDetails || tableDetails.length === 0) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = 4; // 4 columns now
+      td.textContent = "No tables available.";
+      tr.appendChild(td);
+      tablesBody.appendChild(tr);
+      return;
+    }
+
+    const SEAT_RENDER_ORDER = [1, 3, 5, 7, 2, 4, 6, 0];
+
+    tableDetails.forEach((detail, index) => {
+      const table  = detail.table || detail;
+      const seats  = detail.seats || [];
+      const watchers = detail.watcherNames || [];
+
+      const tr = document.createElement("tr");
+
+      // Column 1: Table number / label
+      const tdNumber = document.createElement("td");
+      tdNumber.className = "table-number-cell";
+
+      const tableNumber =
+        table.tableNumber ??
+        table.number ??
+        (index + 1);
+
+      tdNumber.textContent = "#" + tableNumber;
+      tr.appendChild(tdNumber);
+
+      // Column 2: Stand Up + Start Game + players summary
+      const tdWatch = document.createElement("td");
+
+      // Stand Up button (replaces old Watch behavior)
+      const standBtn = document.createElement("button");
+      standBtn.type = "button";
+      standBtn.textContent = "Stand Up";
+      standBtn.className = "watch-btn";
+      standBtn.onclick = () => standUpFromTable(detail);
+      tdWatch.appendChild(standBtn);
+
+      // Start Game button
+      const startBtn = document.createElement("button");
+      startBtn.type = "button";
+      startBtn.textContent = "Start Game";
+      startBtn.className = "watch-btn";
+      startBtn.style.display = "block";      // stack vertically
+      startBtn.style.marginTop = "0.25rem";
+      startBtn.onclick = () => startGameForTable(detail);
+      tdWatch.appendChild(startBtn);
+
+      // Players summary
+      const occupiedCount = seats.filter(s => s.occupied).length;
+      const totalSeats = seats.length || 8;
+
+      const playersLabel = document.createElement("div");
+      playersLabel.textContent = `Players: ${occupiedCount} / ${totalSeats}`;
+      playersLabel.className = "muted";
+      playersLabel.style.marginTop = "0.25rem";
+      tdWatch.appendChild(playersLabel);
+
+      tr.appendChild(tdWatch);
+
+      // Column 3: Seat grid
+      const tdSeats = document.createElement("td");
+      const grid = document.createElement("div");
+      grid.className = "seats-grid";
+
+      const seatMap = {};
+      seats.forEach(seat => {
+        seatMap[seat.seatNumber] = seat;
+      });
+
+      SEAT_RENDER_ORDER.forEach(seatNum => {
+        const seat = seatMap[seatNum] || {
+          seatNumber: seatNum,
+          occupied: false,
+          playerId: null
+        };
+
+        // Seat 0 is actually the 8th seat in the UI
+        const displaySeatNum = (seat.seatNumber === 0) ? 8 : seat.seatNumber;
+
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "seat-btn";
+
+        let label;
+        if (seat.occupied) {
+          const name = seat.playerName || seat.playerId || "Unknown";
+          label = `Seat ${displaySeatNum}: ${name}`;
+        } else {
+          label = `Seat ${displaySeatNum} (Empty)`;
+        }
+
+        btn.textContent = label;
+
+        if (seat.occupied) {
+          btn.classList.add("occupied");
+          btn.disabled = true;
+        } else {
+          btn.onclick = () => sitAtSeat(detail, seat.seatNumber);
+        }
+
+        grid.appendChild(btn);
+      });
+
+      tdSeats.appendChild(grid);
+      tr.appendChild(tdSeats);
+
+      // Column 4: Watchers list (from watcherNames)
+      const tdWatchers = document.createElement("td");
+      const watchersDiv = document.createElement("div");
+      watchersDiv.className = "watchers-list";
+
+      if (!watchers || watchers.length === 0) {
+        watchersDiv.textContent = "None";
+      } else {
+        watchersDiv.textContent = watchers.join(", ");
+      }
+
+      tdWatchers.appendChild(watchersDiv);
+      tr.appendChild(tdWatchers);
+
+      tablesBody.appendChild(tr);
+    });
+  }
+
+  async function watchTable(tableDetail) {
+    await ensureSession();
+
+    const table = tableDetail.table || tableDetail;
+
+    const tableNumber =
+      table.tableNumber ??
+      table.number ??
+      null;
+
+    const numberLabel =
+      table.tableNumber ??
+      table.number ??
+      table.tableId ??
+      table.id ??
+      "?";
+
+    try {
+      await api("/api/table/join", {
+        method: "POST",
+        body: JSON.stringify({
+          roomId: currentRoomId,
+          tableNumber: tableNumber,
+          createIfMissing: false
+        })
+      });
+
+      tablesStatus.textContent = `Joined table ${numberLabel} as watcher.`;
+      await loadTables();
+    } catch (err) {
+      console.error(err);
+      tablesStatus.textContent = `Failed to watch table ${numberLabel}.`;
+    }
+  }
+
+  async function sitAtSeat(tableDetail, seatNumber) {
+    await ensureSession();
+
+    const table = tableDetail.table || tableDetail;
+
+    const tableId =
+      tableDetail.tableId ||
+      table.tableId ||
+      table.id ||
+      null;
+
+    const number =
+      table.tableNumber ??
+      table.number ??
+      tableId ??
+      "?";
+
+    if (!tableId) {
+      tablesStatus.textContent = "Cannot sit: unknown table id.";
+      log("sitAtSeat: missing tableId in tableDetail", tableDetail);
+      return;
+    }
+
+    try {
+      const res = await api("/api/table/sitDown", {
+        method: "POST",
+        body: JSON.stringify({
+          roomId: currentRoomId,
+          tableId: tableId,
+          seatNumber: seatNumber
+        })
+      });
+
+      log("sitDown response", res);
+
+      tablesStatus.textContent =
+        `Sat at seat ${seatNumber} on table ${number}.`;
+
+      await loadTables();
+    } catch (err) {
+      console.error(err);
+      tablesStatus.textContent =
+        `Failed to sit at seat ${seatNumber} on table ${number}.`;
+    }
+  }
+
+  async function standUpFromTable(tableDetail) {
+    await ensureSession();
+
+    const table = tableDetail.table || tableDetail;
+
+    const tableId =
+      tableDetail.tableId ||
+      table.tableId ||
+      table.id ||
+      null;
+
+    const numberLabel =
+      table.tableNumber ??
+      table.number ??
+      tableId ??
+      "?";
+
+    if (!tableId) {
+      tablesStatus.textContent = "Cannot stand up: unknown table id.";
+      log("standUpFromTable: missing tableId in tableDetail", tableDetail);
+      return;
+    }
+
+    try {
+      const res = await api("/api/table/standUp", {
+        method: "POST",
+        body: JSON.stringify({
+          roomId: currentRoomId,
+          tableId: tableId
+        })
+      });
+
+      log("standUp response", res);
+      tablesStatus.textContent = `Stood up from table ${numberLabel}.`;
+      await loadTables();
+    } catch (err) {
+      console.error(err);
+      tablesStatus.textContent = `Failed to stand up from table ${numberLabel}.`;
+    }
+  }
+
+  async function loadRooms() {
+    roomStatus.textContent = "Loading rooms…";
+    await ensureSession();
+    try {
+      const rooms = await api("/api/room/getRooms", { method: "GET" });
+
+      roomSelect.innerHTML = "";
+
+      if (!rooms || rooms.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "(no rooms available)";
+        roomSelect.appendChild(opt);
+        roomStatus.textContent = "No rooms available.";
+        return;
+      }
+
+      rooms.forEach(room => {
+        const opt = document.createElement("option");
+        opt.value = room.id || room.roomId || room.name;
+        opt.textContent = room.name || `Room ${opt.value}`;
+        roomSelect.appendChild(opt);
+      });
+
+      currentRoomId = roomSelect.value || null;
+      roomStatus.textContent = "Rooms loaded.";
+    } catch (err) {
+      console.error(err);
+      roomStatus.textContent = "Failed to load rooms.";
+    }
+  }
+
+  refreshRoomsBtn.onclick = loadRooms;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadIdentityFromStorage();
+    authToken = authToken || localStorage.getItem(TOKEN_KEY) || null;
+    updateIdsLabel();
+
+    if (loadTablesBtn) {
+      loadTablesBtn.onclick = loadTables;
+    }
+    if (refreshRoomsBtn) {
+      refreshRoomsBtn.onclick = loadRooms;
+    }
+  });
+</script>
+
+</body>
+</html>

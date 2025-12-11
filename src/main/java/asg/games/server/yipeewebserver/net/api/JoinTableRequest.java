@@ -1,7 +1,6 @@
 package asg.games.server.yipeewebserver.net.api;
 
-public record JoinOrCreateTableRequest(
-        String playerId,
+public record JoinTableRequest(
         String roomId,
         Integer tableNumber,
         boolean createIfMissing

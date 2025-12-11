@@ -1,7 +1,14 @@
 package asg.games.server.yipeewebserver.data;
 
 import asg.games.yipee.core.objects.YipeePlayer;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +28,7 @@ import java.util.Objects;
                 @Index(name = "IDX_PLAYER_CONNECTION_ACTIVITY", columnList = "last_activity")
         }
 )
-public class PlayerConnectionDTO extends AbstractDTO {
+public class PlayerConnectionEntity extends AbstractDTO {
     @Column(name = "client_id", nullable = false, length = 64)
     private String clientId;
 
@@ -86,7 +93,7 @@ public class PlayerConnectionDTO extends AbstractDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PlayerConnectionDTO that)) return false;
+        if (!(o instanceof PlayerConnectionEntity that)) return false;
         if (!super.equals(o)) return false;
 
         return Objects.equals(sessionId, that.sessionId);

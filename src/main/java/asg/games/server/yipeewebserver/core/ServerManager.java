@@ -195,7 +195,6 @@ public class ServerManager implements Disposable {
         List<TableStateUpdateResponse> serverResponses = new LinkedList<>();
 
         for (ServerGameManager gameManager : gameContextFactory.getAllGames()) {
-
             // 1. Run one tick of THIS game's logic
             try {
                 gameManager.update(deltaTime);   // serverTick++ happens inside

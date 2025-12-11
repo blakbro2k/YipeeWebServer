@@ -15,6 +15,7 @@ public class TableCleanupJob {
 
     @Scheduled(fixedRate = 60_000) // every minute
     public void runCleanup() {
-        cleanupService.cleanupExpiredSessions();
+        cleanupService.cleanupEmptyTables();
     }
 }
+

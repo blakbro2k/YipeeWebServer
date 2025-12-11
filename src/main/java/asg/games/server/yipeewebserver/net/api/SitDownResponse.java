@@ -4,6 +4,7 @@ public record SitDownResponse(
         String roomId,
         String roomName,
         String tableId,
+        String playerId,
         int tableNumber,
         String seatId,
         int seatNumber,
