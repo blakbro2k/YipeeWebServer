@@ -5,6 +5,7 @@ import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.services.SessionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SessionConnectionArgumentResolver implements HandlerMethodArgumentResolver {

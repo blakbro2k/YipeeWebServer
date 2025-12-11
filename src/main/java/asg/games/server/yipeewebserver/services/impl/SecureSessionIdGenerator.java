@@ -1,11 +1,13 @@
 package asg.games.server.yipeewebserver.services.impl;
 
 import asg.games.server.yipeewebserver.services.SessionIdGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Base64;
 
+@Slf4j
 @Component
 public class SecureSessionIdGenerator implements SessionIdGenerator {
 

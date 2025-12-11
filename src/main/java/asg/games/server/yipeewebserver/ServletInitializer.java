@@ -1,10 +1,12 @@
 package asg.games.server.yipeewebserver;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+@Slf4j
 public class ServletInitializer extends SpringBootServletInitializer {
 	private static final Logger logger = LoggerFactory.getLogger(SpringBootServletInitializer.class);
 
