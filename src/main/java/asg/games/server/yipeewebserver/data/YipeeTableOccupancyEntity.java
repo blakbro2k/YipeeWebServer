@@ -30,6 +30,12 @@ public class YipeeTableOccupancyEntity {
     @Column(nullable = false)
     private Instant lastOccupancyChange;
 
+    @Column(nullable=false)
+    private int watcherCount;
+
+    @Column
+    private Instant lastEmptyAt;
+
     private String roomId;
 
     private String gameId;

@@ -13,9 +13,8 @@ public class TableCleanupJob {
 
     private final YipeeCleanupService cleanupService;
 
-    @Scheduled(fixedRate = 60_000) // every minute
+    @Scheduled(fixedDelayString = "${yipee.tables.cleanUpRate:60000}") // every minute
     public void runCleanup() {
         cleanupService.cleanupEmptyTables();
     }
 }
-

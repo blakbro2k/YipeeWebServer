@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ConnectionCleanupJob {
+public class TableReconciliationJob {
 
     private final YipeeCleanupService cleanupService;
 
-    @Scheduled(fixedDelayString = "${yipee.connection.cleanUpRate:60000}") // every minute
-    public void runCleanup() {
-        cleanupService.cleanupExpiredSessions();
+    @Scheduled(fixedDelayString = "${yipee.tables.reconcileMs:60000}")
+    public void runTableReconciliations() {
+        cleanupService.reconcileTableActivity();
     }
 }
