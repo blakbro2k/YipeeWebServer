@@ -22,8 +22,7 @@ public class TableService {
         YipeeSeat seat = yipeeGameService.sitDown(playerId, tableId, seatNumber);
 
         // update occupancy index here if you want, trusting game logic
-        YipeeTableOccupancyEntity occ = occupancyRepository.findById(tableId)
-                .orElseGet(() -> new YipeeTableOccupancyEntity(tableId));
+        YipeeTableOccupancyEntity occ = occupancyRepository.findById(tableId).orElseGet(() -> new YipeeTableOccupancyEntity(tableId));
         occ.setSeatedCount(
                 (int) seat.getParentTable().getSeats().stream()
                         .filter(YipeeSeat::isOccupied)

@@ -245,7 +245,7 @@
 
   function updateIdsLabel() {
     idsLabel.textContent =
-      `clientId=${getClientId()} · playerId=${currentPlayerId} · sessionId=${sessionId}`;
+      `clientId=${getClientId()} \n playerId=${currentPlayerId} \n sessionId=${sessionId}`;
   }
 
   // Mock JWT utility (kept for later, but NOT used in MVP)
@@ -481,7 +481,7 @@
       // Stand Up button (replaces old Watch behavior)
       const standBtn = document.createElement("button");
       standBtn.type = "button";
-      standBtn.textContent = "Stand Up";
+      standBtn.textContent = "Watch";
       standBtn.className = "watch-btn";
       standBtn.onclick = () => standUpFromTable(detail);
       tdWatch.appendChild(standBtn);

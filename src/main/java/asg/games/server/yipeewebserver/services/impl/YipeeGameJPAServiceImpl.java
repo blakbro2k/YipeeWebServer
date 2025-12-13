@@ -507,7 +507,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         // 1) Remove player from all tables in this room (watcher + seats)
         room.getTableIndexMap().values().forEach(table -> {
             // remove as watcher
-            table.getWatchers().remove(player);
+            table.removeWatcher(player);
 
             // stand up from any seat they occupy
             table.getSeats().forEach(seat -> {
@@ -596,6 +596,9 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         // isOccupied could be derived from seatedPlayer, or set explicitly:
         // targetSeat.setOccupied(true);
 
+        // 5) Remove player from watchers list if they sit down
+        table.removeWatcher(player);
+
         return targetSeat;
     }
 
@@ -620,37 +623,48 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         }
 
         seat.standUp();
+
+        //add Player to watch list
+        table.addWatcher(player);
         return seat;
     }
 
     @Transactional
     public void removePlayerCompletely(String playerId) {
-        YipeePlayer player = yipeePlayerRepository.findById(playerId)
-                .orElse(null);
+        log.debug("Enter removePlayerCompletely()");
+        YipeePlayer player = yipeePlayerRepository.findById(playerId).orElse(null);
         if (player == null) {
             return; // already gone
         }
 
+        log.debug("Remove from all rooms");
         // 1) Remove from all rooms
         yipeeRoomRepository.findByPlayers_Id(playerId).forEach(room -> {
-            room.getPlayers().removeIf(p -> playerId.equals(p.getId()));
+            log.debug("Removing player from room=" + room.getName());
+
+            room.leaveRoom(player);
             // because YipeeRoom is owning side of @ManyToMany, this is enough
         });
 
+        log.debug("Remove from all table watchers");
         // 2) Remove from all table watchers
         yipeeTableRepository.findByWatchers_Id(playerId).forEach(table -> {
-            table.getWatchers().removeIf(p -> playerId.equals(p.getId()));
+            log.debug("Removing player from table=" + table.getName());
+            table.removeWatcher(player);
         });
 
         // 3) Stand them up from all seats
         // clears seatedPlayer + isSeatReady
         // or explicitly: seat.setSeatedPlayer(null); seat.setSeatReady(false);
+        log.debug("Remove all seated players");
         yipeeSeatRepository.findBySeatedPlayer_Id(playerId).forEach(YipeeSeat::standUp);
 
         // 4) Remove PlayerConnectionEntity rows for this player (if you like)
+        log.debug("Remove all connected players");
         yipeeClientConnectionRepository.deleteAllByPlayerId(playerId);
 
         // 5) Finally, delete the player entity
+        log.debug("Exit removePlayerCompletely()");
         yipeePlayerRepository.delete(player);
     }
 

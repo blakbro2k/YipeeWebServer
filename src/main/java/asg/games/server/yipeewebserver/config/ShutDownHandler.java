@@ -26,6 +26,10 @@ public class ShutDownHandler {
             // Only clear ephemeral connection/session rows
             yipeeCleanUpService.deleteAllConnections();
 
+            log.info("clearing all talbes...");
+            // Only clear ephemeral connection/session rows
+            yipeeCleanUpService.deleteAllConnections();
+
             // If you REALLY want to clear identities too, uncomment this:
             // yipeeGameService.clearAllPlayerIdentities();
             log.info("cleanup complete.");

@@ -26,7 +26,6 @@ public class YipeeCleanupService {
     private final YipeeTableRepository yipeeTableRepository;
     private final YipeeTableOccupancyRepository yipeeTableOccupancyRepository;
 
-
     // 10 minutes default (configurable)
     private static final long TIMEOUT_SECONDS = 600;
 
@@ -59,9 +58,11 @@ public class YipeeCleanupService {
 
     @Transactional
     public void cleanupEmptyTables() {
+        log.debug("Enter cleanupEmptyTables()");
         Instant cutoff = Instant.now().minusSeconds(TIMEOUT_SECONDS);
 
         var stale = yipeeTableOccupancyRepository.findBySeatedCountAndLastOccupancyChangeBefore(0, cutoff);
+        log.debug("stale=" + stale);
 
         int deleted = 0;
         for (YipeeTableOccupancyEntity occ : stale) {
@@ -72,7 +73,7 @@ public class YipeeCleanupService {
             yipeeTableOccupancyRepository.delete(occ);
             deleted++;
         }
-
+        log.debug("Enter cleanupEmptyTables()");
     }
 
 }
