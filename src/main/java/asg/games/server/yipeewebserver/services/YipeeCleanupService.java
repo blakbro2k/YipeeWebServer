@@ -94,7 +94,7 @@ public class YipeeCleanupService {
             yipeeTableOccupancyRepository.delete(occ);
             deleted++;
         }
-        log.debug("Enter cleanupEmptyTables()={}", deleted);
+        log.debug("Exit cleanupEmptyTables()={}", deleted);
     }
 
     @Transactional

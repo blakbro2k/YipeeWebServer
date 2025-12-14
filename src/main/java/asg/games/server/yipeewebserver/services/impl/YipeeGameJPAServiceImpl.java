@@ -9,7 +9,6 @@ import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableOccupancyRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
-import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.yipee.common.enums.YipeeObject;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
@@ -239,6 +238,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
     public YipeePlayer findPlayerByExternalIdentity(String provider, String externalUserId) {
         log.debug("findPlayerByExternalIdentity({}, {})", provider, externalUserId);
         PlayerConnectionEntity identity = yipeeClientConnectionRepository.findByProviderAndExternalUserId(provider, externalUserId).orElse(null);
+        log.debug("retreived identity={}", identity);
         return identity != null ? identity.getPlayer() : null;
     }
 

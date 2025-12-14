@@ -668,16 +668,34 @@ public class YipeeAPIController {
     // Helper: Extract external user id from JWT / SecurityContext
     // -------------------------------------------------------
     private String getCurrentExternalUserId() {
+        log.debug("Enter ()");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        // DEV MODE: no security configured yet
+        log.debug("auth={}", auth);
+
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
             log.warn("No Authentication found in SecurityContext, using DEV-USER");
             return "DEV-USER";
         }
 
-        // Simplest version: assume principal name == externalUserId (WordPress user id)
-        // Adjust this if your JWT stores it differently.
-        return auth.getName();
+        String name = auth.getName();
+        log.debug("name={}", name);
+
+        if (name != null && name.contains(":")) {
+            log.warn("Auth name is prefixed: authClass={}, principalClass={}, name='{}', principal='{}'",
+                    auth.getClass().getName(),
+                    auth.getPrincipal() != null ? auth.getPrincipal().getClass().getName() : null,
+                    name,
+                    auth.getPrincipal(),
+                    new RuntimeException("Authentication creation trace"));
+        }
+        log.debug("Exit ()={}", stripTypePrefix(name));
+        return stripTypePrefix(name);
+    }
+
+    private static String stripTypePrefix(String id) {
+        if (id == null) return null;
+        int idx = id.indexOf(':');
+        return idx > 0 ? id.substring(idx + 1) : id;
     }
 
     private String getServerStatus() {
