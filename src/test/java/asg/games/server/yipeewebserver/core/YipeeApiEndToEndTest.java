@@ -140,7 +140,7 @@ public class YipeeApiEndToEndTest {
         when(yipeeClientConnectionRepository.findOptionalByName("Alice"))
                 .thenReturn(Optional.of(conn));
 
-        ResponseEntity<PlayerProfileResponse> response = controller.getCurrentPlayer();
+        ResponseEntity<PlayerProfileResponse> response = controller.getCurrentPlayer(conn);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         PlayerProfileResponse body = response.getBody();
@@ -161,7 +161,12 @@ public class YipeeApiEndToEndTest {
                 "EXT-2"
         )).thenReturn(null);
 
-        ResponseEntity<PlayerProfileResponse> response = controller.getCurrentPlayer();
+        PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
+        when(conn.getSessionId()).thenReturn("SESSION-1");
+        when(yipeeClientConnectionRepository.findOptionalByName("Alice"))
+                .thenReturn(Optional.of(conn));
+
+        ResponseEntity<PlayerProfileResponse> response = controller.getCurrentPlayer(conn);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody()).isNull();
     }
@@ -394,8 +399,7 @@ public class YipeeApiEndToEndTest {
         when(yipeeGameService.joinTable("PLAYER-1", "ROOM-1", 1, true))
                 .thenReturn(table);
 
-        ResponseEntity<JoinTableResponse> response =
-                controller.joinTable(request, conn);
+        ResponseEntity<JoinTableResponse> response = controller.joinTable(request, conn);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         JoinTableResponse body = response.getBody();
@@ -446,8 +450,7 @@ public class YipeeApiEndToEndTest {
         // first time we call existsById -> false => created
         when(yipeeTableRepository.existsById("TABLE-1")).thenReturn(false);
 
-        ResponseEntity<CreateTableResponse> response =
-                controller.createTable(request, conn);
+        ResponseEntity<CreateTableResponse> response = controller.createTable(request, conn);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         CreateTableResponse body = response.getBody();
@@ -488,8 +491,7 @@ public class YipeeApiEndToEndTest {
         when(yipeeTableRepository.findById("TABLE-1"))
                 .thenReturn(Optional.of(table));
 
-        ResponseEntity<LeaveTableResponse> response =
-                controller.leaveTable(request, conn);
+        ResponseEntity<LeaveTableResponse> response = controller.leaveTable(request, conn);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         LeaveTableResponse body = response.getBody();
@@ -751,9 +753,12 @@ public class YipeeApiEndToEndTest {
         when(watcher.getIcon()).thenReturn(10);
         when(watcher.getRating()).thenReturn(1500);
 
+        PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
+        when(conn.getPlayer()).thenReturn(watcher);
+
         when(yipeeGameService.getTableWatchers("TABLE-1")).thenReturn(Set.of(watcher));
 
-        ResponseEntity<TableWatchersResponse> response = controller.getWatchers("TABLE-1");
+        ResponseEntity<TableWatchersResponse> response = controller.getWatchers("TABLE-1", conn);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         TableWatchersResponse body = response.getBody();

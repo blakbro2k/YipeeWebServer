@@ -195,6 +195,8 @@
   let authToken = null;
   let sessionId = localStorage.getItem(SESSION_KEY) || null;
   let currentPlayerId = localStorage.getItem(PLAYER_ID_KEY) || null;
+  let currentSeatedTableId = null;
+  let currentSeatedSeatNumber = null; // server seatNumber (0..7) as you currently pass to sitDown
 
   // For local dev with Spring Boot on same origin:
   const API_BASE = "";
@@ -279,6 +281,12 @@
     localStorage.setItem(ICON_KEY,     iconInput.value || "");
   }
 
+  function setCurrentSeatContext(tableId, seatNumber) {
+    currentSeatedTableId = tableId;
+    currentSeatedSeatNumber = seatNumber;
+    log("Seat context set", { tableId, seatNumber });
+  }
+
   async function api(path, options = {}) {
     const headers = options.headers || {};
     headers["Content-Type"] = "application/json";
@@ -359,14 +367,14 @@
     try {
       const res = await api("/api/player/whoami", { method: "GET" });
 
-// Keep the Authorization identity in sync with server whoami
-authToken = createMockJwt(
-  currentPlayerId,
-  res.name || usernameInput.value,
-  res.rating ?? ratingInput.value,
-  res.icon || iconInput.value
-);
-localStorage.setItem(TOKEN_KEY, authToken);
+    // Keep the Authorization identity in sync with server whoami
+    authToken = createMockJwt(
+      currentPlayerId,
+      res.name || usernameInput.value,
+      res.rating ?? ratingInput.value,
+      res.icon || iconInput.value
+    );
+    localStorage.setItem(TOKEN_KEY, authToken);
 
       // Expected shape:
       // { playerId, name, icon, rating, sessionId }
@@ -582,6 +590,52 @@ localStorage.setItem(TOKEN_KEY, authToken);
     });
   }
 
+  async function startGameForTable(detail) {
+    await ensureSession();
+
+    // We mint launchToken for the seat the CURRENT PLAYER is actually seated in.
+    if (!currentSeatedTableId || currentSeatedSeatNumber == null) {
+      alert("You must sit in a seat first, then click Start Game to get a launch token.");
+      return;
+    }
+
+    // If you want to enforce it matches THIS row’s table, do it here:
+    const table = detail.table || detail;
+    const rowTableId =
+      detail.tableId ||
+      table.tableId ||
+      table.id ||
+      null;
+
+    if (rowTableId && rowTableId !== currentSeatedTableId) {
+      alert("You are seated at a different table. Sit at a seat on this table first.");
+      return;
+    }
+
+    try {
+      // Use YOUR existing api() wrapper so headers/session/clientId are consistent
+      const data = await api("/api/game/getlaunchToken", {
+        method: "POST",
+        body: JSON.stringify({
+          tableId: currentSeatedTableId,
+          seatNo: currentSeatedSeatNumber
+        })
+      });
+
+      // LaunchTokenResponse expected: { launchToken, expiresAt, wsUrl }
+      alert(
+        "Launch Token (copy/paste into desktop client):\n\n" +
+        data.launchToken +
+        (data.expiresAt ? ("\n\nExpires: " + data.expiresAt) : "") +
+        (data.wsUrl ? ("\nWS: " + data.wsUrl) : "")
+      );
+
+    } catch (err) {
+      console.error(err);
+      alert("LaunchToken failed. See debug log.");
+    }
+  }
+
   async function watchTable(tableDetail) {
     await ensureSession();
 
@@ -651,9 +705,9 @@ localStorage.setItem(TOKEN_KEY, authToken);
       });
 
       log("sitDown response", res);
+      setCurrentSeatContext(tableId, seatNumber);
 
-      tablesStatus.textContent =
-        `Sat at seat ${seatNumber} on table ${number}.`;
+      tablesStatus.textContent = `Sat at seat ${seatNumber} on table ${number}.`;
 
       await loadTables();
     } catch (err) {
@@ -685,6 +739,9 @@ localStorage.setItem(TOKEN_KEY, authToken);
       log("standUpFromTable: missing tableId in tableDetail", tableDetail);
       return;
     }
+
+    currentSeatedTableId = null;
+    currentSeatedSeatNumber = null;
 
     try {
       const res = await api("/api/table/standUp", {

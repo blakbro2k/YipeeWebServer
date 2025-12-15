@@ -2,8 +2,10 @@ package asg.games.server.yipeewebserver.controllers;
 
 import asg.games.server.yipeewebserver.Version;
 import asg.games.server.yipeewebserver.annotations.SessionConnection;
+import asg.games.server.yipeewebserver.config.OpenApiConfig;
 import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
+import asg.games.server.yipeewebserver.net.ConnectionContext;
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
 import asg.games.server.yipeewebserver.net.api.CreateTableRequest;
 import asg.games.server.yipeewebserver.net.api.CreateTableResponse;
@@ -11,6 +13,8 @@ import asg.games.server.yipeewebserver.net.api.JoinRoomRequest;
 import asg.games.server.yipeewebserver.net.api.JoinRoomResponse;
 import asg.games.server.yipeewebserver.net.api.JoinTableRequest;
 import asg.games.server.yipeewebserver.net.api.JoinTableResponse;
+import asg.games.server.yipeewebserver.net.api.LaunchTokenRequest;
+import asg.games.server.yipeewebserver.net.api.LaunchTokenResponse;
 import asg.games.server.yipeewebserver.net.api.LeaveRoomRequest;
 import asg.games.server.yipeewebserver.net.api.LeaveRoomResponse;
 import asg.games.server.yipeewebserver.net.api.LeaveTableRequest;
@@ -31,10 +35,13 @@ import asg.games.server.yipeewebserver.net.api.TableDetailResponse;
 import asg.games.server.yipeewebserver.net.api.TableDetailsSummary;
 import asg.games.server.yipeewebserver.net.api.TableSummary;
 import asg.games.server.yipeewebserver.net.api.TableWatchersResponse;
+import asg.games.server.yipeewebserver.net.api.GameWhoAmIResponse;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
+import asg.games.server.yipeewebserver.services.LaunchTokenService;
 import asg.games.server.yipeewebserver.services.SessionService;
 import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
@@ -44,6 +51,7 @@ import asg.games.yipee.core.objects.YipeeSeat;
 import asg.games.yipee.core.objects.YipeeTable;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,11 +72,11 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Instant;
 import java.util.List;
 
-
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping(ControllerContstants.API_BASE_PATH)
 @RequiredArgsConstructor
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class YipeeAPIController {
     private static final String HEADER_ARG_CLIENT_ID = "X-Client-Id";
     private static final String HEADER_ARG_USER_AGENT = "User-Agent";
@@ -83,16 +91,18 @@ public class YipeeAPIController {
     private final YipeeGameJPAServiceImpl yipeeGameService;
     private final YipeeTableRepository yipeeTableRepository;
     private final YipeePlayerRepository yipeePlayerRepository;
+    private final YipeeSeatRepository yipeeSeatRepository;
     private final YipeeRoomRepository yipeeRoomRepository;
     private final YipeeClientConnectionRepository yipeeClientConnectionRepository;
     private final YipeePacketHandler packetHandler;
     private final SessionService sessionService;
     private final TableService tableService;
+    private final LaunchTokenService launchTokenService;
 
     // -------------------------------------------------------
     // 1. Server status
     // -------------------------------------------------------
-    @GetMapping("/status")
+    @GetMapping(ControllerContstants.API_STATUS_PATH)
     public ResponseEntity<ServerStatusResponse> getStatus() {
         ServerStatusResponse status = new ServerStatusResponse(
                 getServerStatus(),
@@ -111,28 +121,18 @@ public class YipeeAPIController {
     //    404: no player yet -> client should call register
     // -------------------------------------------------------
 
-    @GetMapping("/player/whoami")
-    public ResponseEntity<PlayerProfileResponse> getCurrentPlayer() {
-        String externalUserId = getCurrentExternalUserId();
-        log.debug("Looking up player for provider={}, externalUserId={}", YipeePacketHandler.IDENTITY_PROVIDER_WORDPRESS, externalUserId);
+    @GetMapping(ControllerContstants.API_PLAYER_WHOAMI_PATH)
+    public ResponseEntity<PlayerProfileResponse> getCurrentPlayer(@SessionConnection PlayerConnectionEntity conn) {
+        YipeePlayer player = conn.getPlayer();
+        if (player == null) return ResponseEntity.notFound().build();
 
-        YipeePlayer player = yipeeGameService.findPlayerByExternalIdentity(YipeePacketHandler.IDENTITY_PROVIDER_WORDPRESS, externalUserId);
-
-        if (player == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        PlayerConnectionEntity conn = yipeeClientConnectionRepository.findOptionalByName(player.getName()).orElse(new PlayerConnectionEntity());
-        String sessionId = conn.getSessionId();
-
-        PlayerProfileResponse response = new PlayerProfileResponse(
+        return ResponseEntity.ok(new PlayerProfileResponse(
                 player.getId(),
                 player.getName(),
                 player.getIcon(),
                 player.getRating(),
-                sessionId
-        );
-        return ResponseEntity.ok(response);
+                conn.getSessionId()
+        ));
     }
 
     // -------------------------------------------------------
@@ -140,7 +140,7 @@ public class YipeeAPIController {
     //    Body: name/icon/rating
     //    Returns playerId + profile
     // -------------------------------------------------------
-    @PostMapping("/player/register")
+    @PostMapping(ControllerContstants.API_PLAYER_REGISTER_PATH)
     public ResponseEntity<PlayerProfileResponse> registerPlayer(@RequestBody RegisterPlayerRequest request,
                                                                 @RequestHeader(HEADER_ARG_CLIENT_ID) String clientId) {
         log.debug("request={}", request);
@@ -183,7 +183,7 @@ public class YipeeAPIController {
     //    Body: ClientHandshakeRequest (clientId, playerId, etc.)
     //    Uses existing YipeePacketHandler logic
     // -------------------------------------------------------
-    @PostMapping("/session/handshake")
+    @PostMapping(ControllerContstants.API_SESSION_HANDSHAKE_PATH)
     public ResponseEntity<ClientHandshakeResponse> handshake(
             @RequestBody ClientHandshakeRequest request,
             HttpServletRequest httpRequest,
@@ -205,7 +205,7 @@ public class YipeeAPIController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("/session/ping")
+    @PostMapping(ControllerContstants.API_SESSION_PING_PATH)
     public ResponseEntity<Void> ping(@SessionConnection PlayerConnectionEntity conn) {
         String sessionId = conn.getSessionId();
         log.debug("Heartbeat received for session {}", sessionId);
@@ -217,7 +217,7 @@ public class YipeeAPIController {
     // Helper: Room Functions
     // -------------------------------------------------------
 
-    @PostMapping("/room/join")
+    @PostMapping(ControllerContstants.API_ROOM_JOIN_PATH)
     public ResponseEntity<JoinRoomResponse> joinRoom(@RequestBody JoinRoomRequest request,
                                                      @SessionConnection PlayerConnectionEntity conn
     ) {
@@ -247,7 +247,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/room/leave")
+    @PostMapping(ControllerContstants.API_ROOM_LEAVE_PATH)
     public ResponseEntity<LeaveRoomResponse> leaveRoom(@RequestBody LeaveRoomRequest request,
                                                        @SessionConnection PlayerConnectionEntity conn
     ) {
@@ -269,7 +269,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/room/getRooms")
+    @GetMapping(ControllerContstants.API_ROOM_GET_ROOMS_PATH)
     public ResponseEntity<java.util.List<RoomSummary>> getRooms() {
         List<YipeeRoom> rooms = yipeeGameService.getAllRooms();
 
@@ -286,7 +286,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/room/getPlayers")
+    @GetMapping(ControllerContstants.API_ROOM_GET_PLAYERS_PATH)
     public ResponseEntity<RoomPlayersResponse> getRoomPlayers(@RequestParam("roomId") String roomId
     ) {
         java.util.Set<YipeePlayer> players = yipeeGameService.getRoomPlayers(roomId);
@@ -322,14 +322,13 @@ public class YipeeAPIController {
     // Helper: Table Functions
     // -------------------------------------------------------
 
-    @PostMapping("/table/join")
+    @PostMapping(ControllerContstants.API_TABLE_JOIN_PATH)
     public ResponseEntity<JoinTableResponse> joinTable(
             @RequestBody JoinTableRequest request,
             @SessionConnection PlayerConnectionEntity conn
     ) {
         YipeePlayer player = conn.getPlayer();
 
-        YipeeRoom room = yipeeRoomRepository.findRoomById(request.roomId());
 
         YipeeTable table = yipeeGameService.joinTable(
                 player.getId(),
@@ -337,6 +336,8 @@ public class YipeeAPIController {
                 request.tableNumber(),
                 request.createIfMissing()
         );
+
+        YipeeRoom room = yipeeRoomRepository.findRoomById(request.roomId());
 
         JoinTableResponse response = new JoinTableResponse(
                 room.getId(),
@@ -347,7 +348,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/table/create")
+    @PostMapping(ControllerContstants.API_TABLE_CREATE_PATH)
     public ResponseEntity<CreateTableResponse> createTable(
             @RequestBody CreateTableRequest request,
             @SessionConnection PlayerConnectionEntity conn
@@ -380,7 +381,7 @@ public class YipeeAPIController {
                 })
                 .toList();
 
-        boolean created = !yipeeTableRepository.existsById(table.getId());
+        boolean created = true;
 
         CreateTableResponse response = new CreateTableResponse(
                 room.getId(),
@@ -394,7 +395,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/table/leave")
+    @PostMapping(ControllerContstants.API_TABLE_LEAVE_PATH)
     public ResponseEntity<LeaveTableResponse> leaveTable(@RequestBody LeaveTableRequest request,
                                                          @SessionConnection PlayerConnectionEntity conn
     ) {
@@ -422,7 +423,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/table/getTables")
+    @GetMapping(ControllerContstants.API_TABLE_GET_TABLES_PATH)
     public ResponseEntity<java.util.List<TableSummary>> getTables(
             @RequestParam("roomId") String roomId
     ) {
@@ -441,7 +442,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/table/getTableDetailed")
+    @GetMapping(ControllerContstants.API_TABLE_GET_TABLE_DETAILS_PATH)
     public ResponseEntity<TableDetailResponse> getTableDetailed(
             @RequestParam("tableId") String tableId
     ) {
@@ -495,7 +496,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/table/getTablesDetailed")
+    @GetMapping(ControllerContstants.API_TABLE_GET_TABLES_DETAILS_PATH)
     public ResponseEntity<java.util.List<TableDetailsSummary>> getTablesDetailed(
             @RequestParam("roomId") String roomId
     ) {
@@ -564,7 +565,7 @@ public class YipeeAPIController {
         return null;
     }
 
-    @PostMapping("/table/sitDown")
+    @PostMapping(ControllerContstants.API_TABLE_SITDOWN_PATH)
     public ResponseEntity<SitDownResponse> sitDown(@RequestBody SitDownRequest request,
                                                    @SessionConnection PlayerConnectionEntity conn
     ) {
@@ -594,7 +595,7 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/table/standUp")
+    @PostMapping(ControllerContstants.API_TABLE_SITUP_PATH)
     public ResponseEntity<StandUpResponse> standUp(@RequestBody StandUpRequest request,
                                                    @SessionConnection PlayerConnectionEntity conn
     ) {
@@ -642,8 +643,9 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/table/getWatchers")
-    public ResponseEntity<TableWatchersResponse> getWatchers(@RequestParam("tableId") String tableId) {
+    @GetMapping(ControllerContstants.API_TABLE_WATCHERS_PATH)
+    public ResponseEntity<TableWatchersResponse> getWatchers(@RequestParam("tableId") String tableId,
+                                                             @SessionConnection PlayerConnectionEntity conn) {
         java.util.Set<YipeePlayer> watchers = yipeeGameService.getTableWatchers(tableId);
 
         java.util.List<PlayerSummary> watcherDtos = watchers.stream()
@@ -662,6 +664,63 @@ public class YipeeAPIController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    // -------------------------------------------------------
+    // Game API:
+    // -------------------------------------------------------
+
+    @PostMapping(ControllerContstants.API_GAME_LAUNCH_TOKEN_PATH)
+    public LaunchTokenResponse createLaunchToken(
+            @RequestBody LaunchTokenRequest req,
+            @SessionConnection ConnectionContext ctx   // <-- your existing resolved identity
+    ) {
+        // 1) Validate the player is actually seated in that seat
+        // (or seated anywhere at that table if you prefer)
+        //var seated = yipeeSeatRepository.findBySeatedPlayer_Id(ctx.getPlayerId(), req.tableId());
+        //if (!seated) {
+        //    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player not seated in that seat");
+        //}
+
+        // 2) Resolve gameId (whatever your model uses)
+        //String gameId = yipeeGameService.getGameIdForTable(req.tableId());
+        //Does each unique table request a gameID that all players share??
+        String gameId = "";
+
+        // 3) Mint token
+        String token = launchTokenService.mintLaunchToken(
+                ctx.getPlayerId(),
+                ctx.getClientId(),
+                ctx.getSessionId(),
+                gameId,
+                req.tableId()
+        );
+
+        Instant expiresAt = Instant.now().plusSeconds(120);
+        String wsUrl = "/ws/game"; // or full wss URL later
+
+        return new LaunchTokenResponse(token, expiresAt, wsUrl);
+    }
+
+    @GetMapping(ControllerContstants.API_GAME_WHOAMI_PATH)
+    public GameWhoAmIResponse gameWhoAmI(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
+
+        var jws = launchTokenService.verifyLaunchToken(token);
+        var c = jws.getBody();
+
+        if (!"launch".equals(c.get("scope", String.class))) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong token scope");
+        }
+
+        return new GameWhoAmIResponse(
+                c.getSubject(),
+                c.get("cid", String.class),
+                c.get("sid", String.class),
+                c.get("gid", String.class),
+                c.get("tid", String.class),
+                c.getExpiration().toInstant()
+        );
     }
 
     // -------------------------------------------------------
