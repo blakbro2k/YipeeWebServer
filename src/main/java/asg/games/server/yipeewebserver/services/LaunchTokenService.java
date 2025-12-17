@@ -32,6 +32,7 @@ public class LaunchTokenService {
     }
 
     public String mintLaunchToken(String playerId,
+                                  String playerName,
                                   int playerIcon,
                                   int playerRating,
                                   String clientId,
@@ -48,6 +49,7 @@ public class LaunchTokenService {
                 .setExpiration(Date.from(exp))        // exp
                 .setId(UUID.randomUUID().toString())  // jti
                 .claim("scope", "launch")
+                .claim("pname", playerName)
                 .claim("picon", 3)
                 .claim("prate", 1500)
                 .claim("cid", clientId)

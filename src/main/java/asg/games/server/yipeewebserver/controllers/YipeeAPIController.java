@@ -721,6 +721,7 @@ public class YipeeAPIController {
         // 3) Mint token
         String token = launchTokenService.mintLaunchToken(
                 playerId,
+                validPlayer.getName(),
                 validPlayer.getIcon(),
                 validPlayer.getRating(),
                 clientId,
@@ -753,7 +754,7 @@ public class YipeeAPIController {
 
         // Identity is derived from token
         String playerId  = c.getSubject();
-        String playerName  = "";
+        String playerName  = c.get("pname", String.class);;
         int playerIcon  = c.get("picon", Integer.class);
         int playerRating  = c.get("prate", Integer.class);
         String clientId  = c.get("cid", String.class);
