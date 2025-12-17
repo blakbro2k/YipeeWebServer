@@ -22,8 +22,10 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -605,27 +607,25 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
 
     @Transactional
     public YipeeSeat standUp(String playerId, String tableId) {
+
         YipeePlayer player = yipeePlayerRepository.findById(playerId)
-                .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unknown player"));
+
+        YipeeSeat seat = yipeeSeatRepository
+                .findFirstByParentTable_IdAndSeatedPlayer_Id(tableId, playerId)
+                .orElse(null);
+
+        if (seat == null) return null;
+
+        seat.standUp();
+        yipeeSeatRepository.save(seat);     // <-- add back (or saveAndFlush)
 
         YipeeTable table = yipeeTableRepository.findById(tableId)
                 .orElseThrow(() -> new IllegalArgumentException("Table not found: " + tableId));
 
-        // Find the seat where this player is seated
-        YipeeSeat seat = table.getSeats().stream()
-                .filter(s -> player.equals(s.getSeatedPlayer()))
-                .findFirst()
-                .orElse(null);
-
-        if (seat == null) {
-            // Idempotent: nothing to do, but still "success"
-            return null;
-        }
-
-        seat.standUp();
-
-        //add Player to watch list
         table.addWatcher(player);
+        yipeeTableRepository.save(table);
+
         return seat;
     }
 

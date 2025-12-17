@@ -595,16 +595,21 @@ public class YipeeAPIController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(ControllerContstants.API_TABLE_SITUP_PATH)
+    @PostMapping(ControllerContstants.API_TABLE_STANDUP_PATH)
     public ResponseEntity<StandUpResponse> standUp(@RequestBody StandUpRequest request,
                                                    @SessionConnection PlayerConnectionEntity conn
     ) {
+        log.debug("Enter standUp()");
         YipeePlayer player = conn.getPlayer();
         String playerId = player.getId();
 
+        log.debug("conn={}", conn);
+        log.debug("request={}", request);
+        log.debug("player={}", player);
+        log.debug("playerId={}", playerId);
         YipeeSeat seat = tableService.standUp(
-                playerId,
-                request.tableId()
+                request.tableId(),
+                playerId
         );
 
         // If seat == null, the player wasn't seated -> still treat as success, but fill with null-ish seat fields.
@@ -623,11 +628,14 @@ public class YipeeAPIController {
                     -1,
                     true
             );
+            log.debug("Exit standUp()");
             return ResponseEntity.ok(response);
         }
 
         YipeeTable table = seat.getParentTable();
         YipeeRoom room = table.getRoom();
+        log.debug("table={}", table);
+        log.debug("room={}", room);
 
         StandUpResponse response = new StandUpResponse(
                 room.getId(),
@@ -639,7 +647,9 @@ public class YipeeAPIController {
                 seat.getSeatNumber(),
                 true
         );
+        log.debug("response={}", response);
 
+        log.debug("Exit standUp()");
         return ResponseEntity.ok(response);
     }
 
@@ -673,38 +683,66 @@ public class YipeeAPIController {
     @PostMapping(ControllerContstants.API_GAME_LAUNCH_TOKEN_PATH)
     public LaunchTokenResponse createLaunchToken(
             @RequestBody LaunchTokenRequest req,
-            @SessionConnection ConnectionContext ctx   // <-- your existing resolved identity
+            @SessionConnection PlayerConnectionEntity conn
     ) {
+        log.debug("Enter createLaunchToken(req={}, ctx={})", req, conn);
+        //log.debug("Authorization={}", ctx.getHeader("Authorization"));
+        log.debug("tableId={}, playerId={})", req.tableId(), conn.getPlayer());
+
+        String playerId = conn.getPlayer().getId();
+        String clientId = conn.getClientId();
+        String sessionId = conn.getSessionId();
+        log.debug("playerId={})", playerId);
+        log.debug("clientId={})", clientId);
+        log.debug("sessionId={})", sessionId);
+        if (playerId == null || playerId.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing/invalid bearer token");
+        }
+
+        String tableId = req.tableId();
+        if (tableId == null || tableId.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Missing/invalid table id");
+        }
+
         // 1) Validate the player is actually seated in that seat
         // (or seated anywhere at that table if you prefer)
-        //var seated = yipeeSeatRepository.findBySeatedPlayer_Id(ctx.getPlayerId(), req.tableId());
-        //if (!seated) {
-        //    throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player not seated in that seat");
-        //}
+        if (!tableService.isPlayerAtTable(tableId, playerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player is not in given table");
+        }
+
+        YipeePlayer validPlayer = yipeePlayerRepository.findById(playerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player does not exist."));
 
         // 2) Resolve gameId (whatever your model uses)
-        //String gameId = yipeeGameService.getGameIdForTable(req.tableId());
+        //String gameId = yipeeGameService.getGameIdForTable(tableId);
         //Does each unique table request a gameID that all players share??
         String gameId = "";
 
         // 3) Mint token
         String token = launchTokenService.mintLaunchToken(
-                ctx.getPlayerId(),
-                ctx.getClientId(),
-                ctx.getSessionId(),
+                playerId,
+                validPlayer.getIcon(),
+                validPlayer.getRating(),
+                clientId,
+                sessionId,
                 gameId,
-                req.tableId()
+                tableId
         );
 
         Instant expiresAt = Instant.now().plusSeconds(120);
         String wsUrl = "/ws/game"; // or full wss URL later
 
+        log.debug("Exit createLaunchToken()");
         return new LaunchTokenResponse(token, expiresAt, wsUrl);
     }
 
     @GetMapping(ControllerContstants.API_GAME_WHOAMI_PATH)
     public GameWhoAmIResponse gameWhoAmI(@RequestHeader("Authorization") String authHeader) {
+
         String token = authHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        if (token.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Bearer token");
+        }
 
         var jws = launchTokenService.verifyLaunchToken(token);
         var c = jws.getBody();
@@ -713,13 +751,35 @@ public class YipeeAPIController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong token scope");
         }
 
+        // Identity is derived from token
+        String playerId  = c.getSubject();
+        String playerName  = "";
+        int playerIcon  = c.get("picon", Integer.class);
+        int playerRating  = c.get("prate", Integer.class);
+        String clientId  = c.get("cid", String.class);
+        String sessionId = c.get("sid", String.class);
+        String gameId    = c.get("gid", String.class);
+        String tableId   = c.get("tid", String.class);
+        Instant expires  = c.getExpiration().toInstant();
+
+        // OPTIONAL but strongly recommended:
+        // verify sessionId is still valid and belongs to playerId/clientId
+        // and verify player is actually seated at tableId/seatNo (or is a watcher)
+        //
+        // Example:
+        // sessionService.assertValidSession(sessionId, playerId, clientId);
+        // tableService.assertPlayerSeated(tableId, seatNo, playerId);
+
         return new GameWhoAmIResponse(
-                c.getSubject(),
-                c.get("cid", String.class),
-                c.get("sid", String.class),
-                c.get("gid", String.class),
-                c.get("tid", String.class),
-                c.getExpiration().toInstant()
+                playerId,
+                playerName,
+                playerIcon,
+                playerRating,
+                clientId,
+                sessionId,
+                gameId,
+                tableId,
+                expires
         );
     }
 
@@ -727,7 +787,7 @@ public class YipeeAPIController {
     // Helper: Extract external user id from JWT / SecurityContext
     // -------------------------------------------------------
     private String getCurrentExternalUserId() {
-        log.debug("Enter ()");
+        log.debug("Enter getCurrentExternalUserId()");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.debug("auth={}", auth);
 
@@ -747,7 +807,7 @@ public class YipeeAPIController {
                     auth.getPrincipal(),
                     new RuntimeException("Authentication creation trace"));
         }
-        log.debug("Exit ()={}", stripTypePrefix(name));
+        log.debug("Exit getCurrentExternalUserId()={}", stripTypePrefix(name));
         return stripTypePrefix(name);
     }
 

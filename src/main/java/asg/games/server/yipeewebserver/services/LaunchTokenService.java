@@ -22,7 +22,7 @@ public class LaunchTokenService {
     private final Duration ttl;
 
     public LaunchTokenService(
-            @Value("${yipee.launch.jwtSecret}") String secret,
+            @Value("${security.jwt.secret}") String secret,
             @Value("${yipee.launch.ttlSeconds:120}") long ttlSeconds
     ) {
         // IMPORTANT: for HS256, secret must be long enough (>= 32 bytes is a safe baseline).
@@ -32,6 +32,8 @@ public class LaunchTokenService {
     }
 
     public String mintLaunchToken(String playerId,
+                                  int playerIcon,
+                                  int playerRating,
                                   String clientId,
                                   String sessionId,
                                   String gameId,
@@ -46,6 +48,8 @@ public class LaunchTokenService {
                 .setExpiration(Date.from(exp))        // exp
                 .setId(UUID.randomUUID().toString())  // jti
                 .claim("scope", "launch")
+                .claim("picon", 3)
+                .claim("prate", 1500)
                 .claim("cid", clientId)
                 .claim("sid", sessionId)
                 .claim("gid", gameId)

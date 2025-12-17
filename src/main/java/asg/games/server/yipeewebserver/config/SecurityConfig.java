@@ -1,6 +1,7 @@
 package asg.games.server.yipeewebserver.config;
 
 import asg.games.server.yipeewebserver.security.DevJwtAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final DevJwtAuthenticationFilter devJwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,7 +41,7 @@ public class SecurityConfig {
                 )
                 // NEW: run DevJwtAuthenticationFilter on every request
                 .addFilterBefore(
-                        new DevJwtAuthenticationFilter(),
+                        devJwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
 

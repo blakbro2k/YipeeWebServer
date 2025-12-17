@@ -28,6 +28,7 @@ public class ConnectionContextFactory {
 
         connectionContext.clientId = req.getClientId();
         connectionContext.sessionId = req.getSessionId();
+        //TODO:connectionContext.playerId = req.getPlayerId(); // if it exists on AbstractClientRequest
 
         // gameId will be resolved by server after lookup:
         connectionContext.gameId = findGameIdForSession(req.getSessionId());

@@ -12,6 +12,9 @@ public interface YipeeTableRepository extends YipeeRepository<YipeeTable, String
 
     Optional<YipeeTable> findByRoomIdAndTableNumber(String roomId, int tableNumber);
 
+    // watcher exists in YT_TABLE_PLAYERS for this table
+    boolean existsByIdAndWatchers_Id(String tableId, String playerId);
+
     // Tables where the player is a watcher
     List<YipeeTable> findByWatchers_Id(String playerId);
 

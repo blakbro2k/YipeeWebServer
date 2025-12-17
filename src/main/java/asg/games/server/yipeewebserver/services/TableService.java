@@ -1,7 +1,9 @@
 package asg.games.server.yipeewebserver.services;
 
 import asg.games.server.yipeewebserver.data.YipeeTableOccupancyEntity;
+import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableOccupancyRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
 import asg.games.yipee.core.objects.YipeeSeat;
 import jakarta.transaction.Transactional;
@@ -16,6 +18,18 @@ public class TableService {
 
     private final YipeeGameJPAServiceImpl yipeeGameService;
     private final YipeeTableOccupancyRepository occupancyRepository;
+    private final YipeeSeatRepository yipeeSeatRepository;
+    private final YipeeTableRepository yipeeTableRepository;
+
+    public boolean isPlayerAtTable(String tableId, String playerId) {
+        log.debug("isPlayerAtTable=(tableId={}, playerId={})",tableId, playerId);
+        if (playerId == null || playerId.isBlank()) return false;
+
+        log.debug("existsByParentTable_IdAndSeatedPlayer_Id={}",yipeeSeatRepository.existsByParentTable_IdAndSeatedPlayer_Id(tableId, playerId));
+        log.debug("existsByIdAndWatchers_Id={}",yipeeTableRepository.existsByIdAndWatchers_Id(tableId, playerId));
+        return yipeeSeatRepository.existsByParentTable_IdAndSeatedPlayer_Id(tableId, playerId)
+                || yipeeTableRepository.existsByIdAndWatchers_Id(tableId, playerId);
+    }
 
     @Transactional
     public YipeeSeat sitDown(String tableId, String playerId, int seatNumber) {
@@ -36,6 +50,7 @@ public class TableService {
 
     @Transactional
     public YipeeSeat standUp(String tableId, String playerId) {
+        log.debug("Enter standUp(tableId={}, playerId={})", tableId, playerId);
         // 1) Domain logic
         YipeeSeat seat = yipeeGameService.standUp(playerId, tableId);
 
@@ -45,6 +60,7 @@ public class TableService {
             occupancyRepository.save(occ);
         });
 
+        log.debug("Exit standUp()={}", seat);
         return seat;
     }
 }

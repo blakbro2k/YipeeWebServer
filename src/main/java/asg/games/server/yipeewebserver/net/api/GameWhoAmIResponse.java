@@ -4,6 +4,9 @@ import java.time.Instant;
 
 public record GameWhoAmIResponse(
         String playerId,
+        String name,
+        int icon,
+        int rating,
         String clientId,
         String sessionId,
         String gameId,

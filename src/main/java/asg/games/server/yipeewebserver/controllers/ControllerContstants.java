@@ -18,7 +18,7 @@ public class ControllerContstants {
     public static final String API_TABLE_GET_TABLE_DETAILS_PATH = "/table/getTableDetailed";
     public static final String API_TABLE_GET_TABLES_DETAILS_PATH = "/table/getTablesDetailed";
     public static final String API_TABLE_SITDOWN_PATH = "/table/sitDown";
-    public static final String API_TABLE_SITUP_PATH = "/table/standUp";
+    public static final String API_TABLE_STANDUP_PATH = "/table/standUp";
     public static final String API_TABLE_WATCHERS_PATH = "/table/getWatchers";
     public static final String API_GAME_LAUNCH_TOKEN_PATH = "/game/getlaunchToken";
     public static final String API_GAME_WHOAMI_PATH = "/game/whoami";
