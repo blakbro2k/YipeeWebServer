@@ -7,9 +7,11 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
 
+@Slf4j
 @Entity
 @Table(
         name = "YT_TABLE_ACTIVITY",
@@ -27,6 +29,12 @@ public class YipeeTableOccupancyEntity {
 
     @Column(nullable = false)
     private Instant lastOccupancyChange;
+
+    @Column(nullable=false)
+    private int watcherCount;
+
+    @Column
+    private Instant lastEmptyAt;
 
     private String roomId;
 

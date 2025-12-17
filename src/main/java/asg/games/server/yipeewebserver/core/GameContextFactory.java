@@ -6,6 +6,7 @@ import asg.games.server.yipeewebserver.net.ConnectionContextFactory;
 import asg.games.yipee.net.packets.AbstractClientRequest;
 import com.esotericsoftware.kryonet.Connection;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *   <li>Produce a transport-agnostic {@link GameContext} snapshot for packet handling</li>
  * </ul>
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GameContextFactory {

@@ -2,8 +2,10 @@ package asg.games.server.yipeewebserver.core;
 
 import asg.games.yipee.common.game.GameBoardState;
 import com.badlogic.gdx.utils.ObjectMap;
+import lombok.extern.slf4j.Slf4j;
 
-public class GameTickState {
+@Slf4j
+ class GameTickState {
     private final long tick;
     private final ObjectMap<Integer, GameBoardState> seatStates = new ObjectMap<>();
 

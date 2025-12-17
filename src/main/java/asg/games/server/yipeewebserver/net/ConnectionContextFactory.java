@@ -3,12 +3,14 @@ package asg.games.server.yipeewebserver.net;
 import asg.games.yipee.net.packets.AbstractClientRequest;
 import com.esotericsoftware.kryonet.Connection;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.InvalidObjectException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ConnectionContextFactory {
@@ -26,6 +28,7 @@ public class ConnectionContextFactory {
 
         connectionContext.clientId = req.getClientId();
         connectionContext.sessionId = req.getSessionId();
+        //TODO:connectionContext.playerId = req.getPlayerId(); // if it exists on AbstractClientRequest
 
         // gameId will be resolved by server after lookup:
         connectionContext.gameId = findGameIdForSession(req.getSessionId());

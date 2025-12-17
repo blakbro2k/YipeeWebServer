@@ -20,28 +20,43 @@ public class ShutDownHandler {
 
     @PreDestroy
     public void onShutdown() {
-        log.info("Server is shutting down...");
+        log.warn("Server is shutting down...");
+
+        // 1) Stop game loop / network writers first (best practice)
         try {
-            log.info("clearing connection sessions...");
-            // Only clear ephemeral connection/session rows
-            yipeeCleanUpService.deleteAllConnections();
-
-            // If you REALLY want to clear identities too, uncomment this:
-            // yipeeGameService.clearAllPlayerIdentities();
-            log.info("cleanup complete.");
-
-            // Your shutdown logic here
+            log.warn("shutdown: stopping headless launcher...");
             launcher.shutDown();
+            log.warn("shutdown: headless launcher stopped.");
         } catch (Exception e) {
-            log.error("YipeeShutdownCleanup: error while cleaning up session data", e);
+            log.error("shutdown: error while stopping headless launcher", e);
         }
+
+        // 2) Delete ephemeral connection/session rows
+        try {
+            log.warn("shutdown: clearing connection sessions...");
+            yipeeCleanUpService.deleteAllConnections();
+            log.warn("shutdown: connection sessions cleared.");
+        } catch (Exception e) {
+            log.error("shutdown: error while clearing connection sessions", e);
+        }
+
+        // 3) Forced purge of all tables (UNCONDITIONAL — does NOT rely on occupancy counters)
+        try {
+            log.warn("shutdown: FORCE PURGE all tables/seats/watchers/activity...");
+            yipeeCleanUpService.forceDeleteAllTables();
+            log.warn("shutdown: FORCE PURGE complete.");
+        } catch (Exception e) {
+            log.error("shutdown: error while force purging tables", e);
+        }
+
+        log.warn("shutdown: complete.");
     }
 
     /*
      * Invoke with `0` to indicate no error or different code to indicate
-     * abnormal exit. es: shutdownManager.initiateShutdown(0);
-     **/
-    public void initiateShutdown(int returnCode){
+     * abnormal exit. e.g. shutdownManager.initiateShutdown(0);
+     */
+    public void initiateShutdown(int returnCode) {
         SpringApplication.exit(appContext, () -> returnCode);
     }
 }

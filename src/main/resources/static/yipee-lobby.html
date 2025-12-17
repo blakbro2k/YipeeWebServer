@@ -195,6 +195,8 @@
   let authToken = null;
   let sessionId = localStorage.getItem(SESSION_KEY) || null;
   let currentPlayerId = localStorage.getItem(PLAYER_ID_KEY) || null;
+  let currentSeatedTableId = null;
+  let currentSeatedSeatNumber = null; // server seatNumber (0..7) as you currently pass to sitDown
 
   // For local dev with Spring Boot on same origin:
   const API_BASE = "";
@@ -245,7 +247,7 @@
 
   function updateIdsLabel() {
     idsLabel.textContent =
-      `clientId=${getClientId()} · playerId=${currentPlayerId} · sessionId=${sessionId}`;
+      `clientId=${getClientId()} \n playerId=${currentPlayerId} \n sessionId=${sessionId}`;
   }
 
   // Mock JWT utility (kept for later, but NOT used in MVP)
@@ -277,6 +279,40 @@
     localStorage.setItem(USERNAME_KEY, usernameInput.value || "");
     localStorage.setItem(RATING_KEY,   ratingInput.value || "");
     localStorage.setItem(ICON_KEY,     iconInput.value || "");
+  }
+
+  function setCurrentSeatContext(tableId, seatNumber) {
+    currentSeatedTableId = tableId;
+    currentSeatedSeatNumber = seatNumber;
+    log("Seat context set", { tableId, seatNumber });
+    log("Seat context set", { currentSeatedTableId, currentSeatedSeatNumber });
+  }
+
+  function syncIdentityFromProfile(profile) {
+    // profile: { playerId, name, rating, icon, sessionId? }
+    currentPlayerId = profile.playerId;
+    localStorage.setItem(PLAYER_ID_KEY, currentPlayerId);
+
+    usernameInput.value = profile.name ?? "";
+    ratingInput.value   = profile.rating ?? "";
+    iconInput.value     = profile.icon ?? "";
+
+    // IMPORTANT: mint token that matches the new playerId
+    authToken = createMockJwt(
+      currentPlayerId,
+      usernameInput.value,
+      ratingInput.value,
+      iconInput.value
+    );
+    localStorage.setItem(TOKEN_KEY, authToken);
+
+    if (profile.sessionId) setSessionId(profile.sessionId);
+
+    saveIdentityToStorage();
+    updateIdsLabel();
+
+    currentSeatedTableId = null;
+    currentSeatedSeatNumber = null;
   }
 
   async function api(path, options = {}) {
@@ -326,32 +362,28 @@
   registerBtn.onclick = async () => {
     saveIdentityToStorage();
 
-    const body = {
-      playerName: usernameInput.value,
-      rating: ratingInput.value,
-      icon: iconInput.value,
-      clientId: getClientId()
-    };
-
     const res = await api("/api/player/register", {
       method: "POST",
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        playerName: usernameInput.value,
+        rating: ratingInput.value,
+        icon: iconInput.value,
+        clientId: getClientId()
+      })
     });
 
-    currentPlayerId = res.playerId;
-    localStorage.setItem(PLAYER_ID_KEY, currentPlayerId);
+    // res is PlayerProfileResponse: { playerId, name, icon, rating, sessionId? }
+    syncIdentityFromProfile({
+      playerId: res.playerId,
+      name: res.name,
+      rating: res.rating,
+      icon: res.icon,
+      sessionId: res.sessionId
+    });
 
-    // Create a mock JWT that encodes this player identity (per browser)
-    authToken = createMockJwt(
-      currentPlayerId,
-      usernameInput.value,
-      ratingInput.value,
-      iconInput.value
-    );
-    localStorage.setItem(TOKEN_KEY, authToken);
-
+    // Always handshake *after* identity is finalized
     await doHandshake(currentPlayerId);
-    updateIdsLabel();
+
     registerStatus.textContent = "Registered OK";
   };
 
@@ -359,28 +391,19 @@
     try {
       const res = await api("/api/player/whoami", { method: "GET" });
 
-      // Expected shape:
-      // { playerId, name, icon, rating, sessionId }
-      whoamiLabel.textContent =
-        `You are ${res.name} (rating ${res.rating})`;
+      syncIdentityFromProfile({
+        playerId: res.playerId,
+        name: res.name,
+        rating: res.rating,
+        icon: res.icon,
+        sessionId: res.sessionId
+      });
 
-      currentPlayerId = res.playerId;
-      localStorage.setItem(PLAYER_ID_KEY, currentPlayerId);
-
-      if (res.sessionId) {
-        setSessionId(res.sessionId);
-      }
-
-      usernameInput.value = res.name || "";
-      ratingInput.value   = res.rating ?? "";
-      iconInput.value     = res.icon || "";
-      saveIdentityToStorage();
-
-      updateIdsLabel();
+      whoamiLabel.textContent = `You are ${res.name} (rating ${res.rating})`;
     } catch (err) {
       console.error(err);
       whoamiLabel.textContent =
-        "No player profile found on server (whoami returned an error). Please register.";
+        "No player profile found on server. Please register.";
     }
   };
 
@@ -481,7 +504,7 @@
       // Stand Up button (replaces old Watch behavior)
       const standBtn = document.createElement("button");
       standBtn.type = "button";
-      standBtn.textContent = "Stand Up";
+      standBtn.textContent = "Watch";
       standBtn.className = "watch-btn";
       standBtn.onclick = () => standUpFromTable(detail);
       tdWatch.appendChild(standBtn);
@@ -573,6 +596,61 @@
     });
   }
 
+  async function startGameForTable(detail) {
+    await ensureSession();
+
+    // We mint launchToken for the seat the CURRENT PLAYER is actually seated in.
+    if (!currentSeatedTableId || currentSeatedSeatNumber == null) {
+      alert("You must sit in a seat first, then click Start Game to get a launch token.");
+      return;
+    }
+
+    // If you want to enforce it matches THIS row’s table, do it here:
+    const table = detail.table || detail;
+    const rowTableId =
+      detail.tableId ||
+      table.tableId ||
+      table.id ||
+      null;
+
+    if (rowTableId && rowTableId !== currentSeatedTableId) {
+
+      alert("You are seated at a different table. Sit at a seat on this table first.");
+      return;
+    }
+
+    try {
+
+      console.log("launchToken request", {
+        tableId: currentSeatedTableId,
+        seatNumber: currentSeatedSeatNumber,
+        playerId: currentPlayerId,
+        sessionId,
+      });
+
+      // Use YOUR existing api() wrapper so headers/session/clientId are consistent
+      const data = await api("/api/game/getlaunchToken", {
+        method: "POST",
+        body: JSON.stringify({
+          tableId: currentSeatedTableId,
+          seatNumber: currentSeatedSeatNumber
+        })
+      });
+
+      // LaunchTokenResponse expected: { launchToken, expiresAt, wsUrl }
+      alert(
+        "Launch Token (copy/paste into desktop client):\n\n" +
+        data.launchToken +
+        (data.expiresAt ? ("\n\nExpires: " + data.expiresAt) : "") +
+        (data.wsUrl ? ("\nWS: " + data.wsUrl) : "")
+      );
+
+    } catch (err) {
+      console.error(err);
+      alert("LaunchToken failed. See debug log.");
+    }
+  }
+
   async function watchTable(tableDetail) {
     await ensureSession();
 
@@ -642,9 +720,12 @@
       });
 
       log("sitDown response", res);
+      log("tableId=", tableId);
+      log("seatNumber=", seatNumber);
 
-      tablesStatus.textContent =
-        `Sat at seat ${seatNumber} on table ${number}.`;
+      setCurrentSeatContext(tableId, seatNumber);
+
+      tablesStatus.textContent = `Sat at seat ${seatNumber} on table ${number}.`;
 
       await loadTables();
     } catch (err) {
@@ -656,6 +737,7 @@
 
   async function standUpFromTable(tableDetail) {
     await ensureSession();
+    //await whoamiBtn.onclick?.(); // or factor whoami logic into a function and call it
 
     const table = tableDetail.table || tableDetail;
 
@@ -688,10 +770,91 @@
 
       log("standUp response", res);
       tablesStatus.textContent = `Stood up from table ${numberLabel}.`;
+
+      currentSeatedTableId = null;
+      currentSeatedSeatNumber = null;
+
       await loadTables();
     } catch (err) {
       console.error(err);
       tablesStatus.textContent = `Failed to stand up from table ${numberLabel}.`;
+    }
+  }
+
+    async function refreshWhoAmI() {
+    const res = await api("/api/player/whoami", { method: "GET" });
+
+    currentPlayerId = res.playerId;
+    localStorage.setItem(PLAYER_ID_KEY, currentPlayerId);
+
+    authToken = createMockJwt(
+      currentPlayerId,
+      res.name || usernameInput.value,
+      res.rating ?? ratingInput.value,
+      res.icon || iconInput.value
+    );
+    localStorage.setItem(TOKEN_KEY, authToken);
+
+    if (res.sessionId) setSessionId(res.sessionId);
+    updateIdsLabel();
+    return res;
+  }
+
+  async function switchToWatch(tableDetail) {
+    await ensureSession();
+
+    // Always sync auth identity first (prevents "Player not found" from stale JWT)
+    //try {
+    //  await refreshWhoAmI();
+    //} catch (e) {
+    //  alert("WhoAmI failed — please Register again (stale token/player).");
+    //  return;
+    //}
+
+    const table = tableDetail.table || tableDetail;
+    const tableId =
+      tableDetail.tableId ||
+      table.tableId ||
+      table.id ||
+      null;
+
+    const tableNumber =
+      table.tableNumber ??
+      table.number ??
+      null;
+
+    if (!tableId) {
+      tablesStatus.textContent = "Cannot watch: unknown table id.";
+      log("switchToWatch: missing tableId", tableDetail);
+      return;
+    }
+
+    try {
+      // 1) If you're seated anywhere, stand up first (server can ignore if not seated)
+      await api("/api/table/standUp", {
+        method: "POST",
+        body: JSON.stringify({ roomId: currentRoomId, tableId })
+      });
+
+      // clear local seat context after successful standUp
+      currentSeatedTableId = null;
+      currentSeatedSeatNumber = null;
+
+      // 2) Join table as watcher
+      await api("/api/table/join", {
+        method: "POST",
+        body: JSON.stringify({
+          roomId: currentRoomId,
+          tableNumber: tableNumber,
+          createIfMissing: false
+        })
+      });
+
+      tablesStatus.textContent = "Now watching table.";
+      await loadTables();
+    } catch (err) {
+      console.error(err);
+      tablesStatus.textContent = "Failed to switch to Watch (see log).";
     }
   }
 
