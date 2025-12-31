@@ -1,3 +1,5 @@
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-donate-FFDD00?logo=buymeacoffee)](https://buymeacoffee.com/boaten01y)
+
 # Yipee WebServer
 
 Authoritative game server for **Yipee!**, a modernized, network-enabled clone of Yahoo! Towers.  
