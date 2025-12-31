@@ -10,5 +10,6 @@ public record GameContext(
         String clientId,
         String gameId,      // e.g. ServerGameManager.getGameId()
         String sessionId,   // optional
+        String playerId,
         long timestampMillis
 ) {}

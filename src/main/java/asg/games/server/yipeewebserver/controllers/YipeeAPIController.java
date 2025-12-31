@@ -371,16 +371,16 @@ public class YipeeAPIController {
                     YipeePlayer seated = seat.getSeatedPlayer();
                     String seatedPlayerId = seated != null ? seated.getId() : null;
                     return new SeatSummary(
-                            seatedPlayerId,
                             seat.getId(),
-                            getSeatedPlayerName(seat),
                             seat.getSeatNumber(),
                             seat.isSeatReady(),
-                            seat.isOccupied()
-                    );
+                            seat.isOccupied(),
+                            seatedPlayerId,
+                            getSeatedPlayerName(seat)
+                            );
                 })
                 .toList();
-
+        
         boolean created = true;
 
         CreateTableResponse response = new CreateTableResponse(
@@ -464,14 +464,16 @@ public class YipeeAPIController {
                             seat.getSeatNumber(),
                             seat.isSeatReady(),
                             seat.isOccupied(),
-                            p != null ? p.getId() : null,
-                            p != null ? p.getName() : null,
-                            p != null ? p.getIcon() : null,
-                            p != null ? p.getRating() : null
+                            new PlayerSummary(
+                                    p != null ? p.getId() : null,
+                                    p != null ? p.getName() : null,
+                                    p != null ? p.getIcon() : -1,
+                                    p != null ? p.getRating() : -1   
+                            )
                     );
                 })
                 .toList();
-
+        
         // Build watcher summaries
         var watchers = table.getWatchers().stream()
                 .map(p -> new PlayerSummary(
@@ -485,14 +487,20 @@ public class YipeeAPIController {
         TableDetailResponse response = new TableDetailResponse(
                 room.getId(),
                 room.getName(),
-                table.getId(),
-                table.getTableNumber(),
-                table.isRated(),
-                table.isSoundOn(),
-                seats,
-                watchers
+                new TableDetailsSummary(
+                        new TableSummary(
+                                table.getId(),
+                                table.getTableNumber(),
+                                table.getAccessType().toString(),
+                                true,
+                                table.isRated(),
+                                table.isSoundOn(),
+                                table.getWatchers().size()
+                                ),
+                        seats,
+                        watchers
+                )
         );
-
         return ResponseEntity.ok(response);
     }
 
@@ -518,26 +526,35 @@ public class YipeeAPIController {
                     );
 
                     // 2) Build SeatSummary list
-                    var seats = table.getSeats().stream()
-                            .map(seat -> new SeatSummary(
-                                    getSeatedPlayerId(seat),
-                                    getSeatedPlayerName(seat),
+                    var seatsSummaries = table.getSeats().stream()
+                            .map(seat -> new SeatDetailSummary(
                                     seat.getId(),
                                     seat.getSeatNumber(),
                                     seat.isSeatReady(),
-                                    seat.isOccupied()
+                                    seat.isOccupied(),
+                                    new PlayerSummary(
+                                            getSeatedPlayerId(seat),
+                                            getSeatedPlayerName(seat),
+                                            getSeatedPlayerIcon(seat),
+                                            getSeatedPlayerRating(seat)
+                                    )
                             ))
                             .toList();
 
                     // 3) Build watcher names list
-                    var watcherNames = table.getWatchers().stream()
-                            .map(YipeePlayer::getName)
+                    var watcherSummaries = table.getWatchers().stream()
+                            .map(watcher -> new PlayerSummary(
+                                    watcher.getId(),
+                                    watcher.getName(),
+                                    watcher.getIcon(),
+                                    watcher.getRating()
+                            ))
                             .toList();
 
                     return new TableDetailsSummary(
                             tableSummary,
-                            seats,
-                            watcherNames
+                            seatsSummaries,
+                            watcherSummaries
                     );
                 })
                 .toList();
@@ -563,6 +580,26 @@ public class YipeeAPIController {
             }
         }
         return null;
+    }
+
+    private int getSeatedPlayerIcon(YipeeSeat seat) {
+        if(seat != null) {
+            YipeePlayer player = seat.getSeatedPlayer();
+            if(player != null){
+                return player.getIcon();
+            }
+        }
+        return -1;
+    }
+
+    private int getSeatedPlayerRating(YipeeSeat seat) {
+        if(seat != null) {
+            YipeePlayer player = seat.getSeatedPlayer();
+            if(player != null){
+                return player.getRating();
+            }
+        }
+        return -1;
     }
 
     @PostMapping(ControllerContstants.API_TABLE_SITDOWN_PATH)
@@ -674,114 +711,6 @@ public class YipeeAPIController {
         );
 
         return ResponseEntity.ok(response);
-    }
-
-    // -------------------------------------------------------
-    // Game API:
-    // -------------------------------------------------------
-
-    @PostMapping(ControllerContstants.API_GAME_LAUNCH_TOKEN_PATH)
-    public LaunchTokenResponse createLaunchToken(
-            @RequestBody LaunchTokenRequest req,
-            @SessionConnection PlayerConnectionEntity conn
-    ) {
-        log.debug("Enter createLaunchToken(req={}, ctx={})", req, conn);
-        //log.debug("Authorization={}", ctx.getHeader("Authorization"));
-        log.debug("tableId={}, playerId={})", req.tableId(), conn.getPlayer());
-
-        String playerId = conn.getPlayer().getId();
-        String clientId = conn.getClientId();
-        String sessionId = conn.getSessionId();
-        log.debug("playerId={})", playerId);
-        log.debug("clientId={})", clientId);
-        log.debug("sessionId={})", sessionId);
-        if (playerId == null || playerId.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing/invalid bearer token");
-        }
-
-        String tableId = req.tableId();
-        if (tableId == null || tableId.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Missing/invalid table id");
-        }
-
-        // 1) Validate the player is actually seated in that seat
-        // (or seated anywhere at that table if you prefer)
-        if (!tableService.isPlayerAtTable(tableId, playerId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player is not in given table");
-        }
-
-        YipeePlayer validPlayer = yipeePlayerRepository.findById(playerId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player does not exist."));
-
-        // 2) Resolve gameId (whatever your model uses)
-        //String gameId = yipeeGameService.getGameIdForTable(tableId);
-        //Does each unique table request a gameID that all players share??
-        String gameId = "";
-
-        // 3) Mint token
-        String token = launchTokenService.mintLaunchToken(
-                playerId,
-                validPlayer.getName(),
-                validPlayer.getIcon(),
-                validPlayer.getRating(),
-                clientId,
-                sessionId,
-                gameId,
-                tableId
-        );
-
-        Instant expiresAt = Instant.now().plusSeconds(120);
-        String wsUrl = "/ws/game"; // or full wss URL later
-
-        log.debug("Exit createLaunchToken()");
-        return new LaunchTokenResponse(token, expiresAt, wsUrl);
-    }
-
-    @GetMapping(ControllerContstants.API_GAME_WHOAMI_PATH)
-    public GameWhoAmIResponse gameWhoAmI(@RequestHeader("Authorization") String authHeader) {
-
-        String token = authHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
-        if (token.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Bearer token");
-        }
-
-        var jws = launchTokenService.verifyLaunchToken(token);
-        var c = jws.getBody();
-
-        if (!"launch".equals(c.get("scope", String.class))) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong token scope");
-        }
-
-        // Identity is derived from token
-        String playerId  = c.getSubject();
-        String playerName  = c.get("pname", String.class);;
-        int playerIcon  = c.get("picon", Integer.class);
-        int playerRating  = c.get("prate", Integer.class);
-        String clientId  = c.get("cid", String.class);
-        String sessionId = c.get("sid", String.class);
-        String gameId    = c.get("gid", String.class);
-        String tableId   = c.get("tid", String.class);
-        Instant expires  = c.getExpiration().toInstant();
-
-        // OPTIONAL but strongly recommended:
-        // verify sessionId is still valid and belongs to playerId/clientId
-        // and verify player is actually seated at tableId/seatNo (or is a watcher)
-        //
-        // Example:
-        // sessionService.assertValidSession(sessionId, playerId, clientId);
-        // tableService.assertPlayerSeated(tableId, seatNo, playerId);
-
-        return new GameWhoAmIResponse(
-                playerId,
-                playerName,
-                playerIcon,
-                playerRating,
-                clientId,
-                sessionId,
-                gameId,
-                tableId,
-                expires
-        );
     }
 
     // -------------------------------------------------------

@@ -477,12 +477,13 @@
       return;
     }
 
-    const SEAT_RENDER_ORDER = [1, 3, 5, 7, 2, 4, 6, 0];
+    const SEAT_RENDER_ORDER = [0, 2, 4, 6, 1, 3, 5, 7];
 
     tableDetails.forEach((detail, index) => {
       const table  = detail.table || detail;
       const seats  = detail.seats || [];
-      const watchers = detail.watcherNames || [];
+      const watchers = detail.watchers || [];
+      const watcherNames = (watchers ?? []).map(w => w.name);
 
       const tr = document.createElement("tr");
 
@@ -549,15 +550,14 @@
         };
 
         // Seat 0 is actually the 8th seat in the UI
-        const displaySeatNum = (seat.seatNumber === 0) ? 8 : seat.seatNumber;
-
+        const displaySeatNum = (seat.seatNumber === 0) ? 1 : seat.seatNumber + 1;
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "seat-btn";
 
         let label;
         if (seat.occupied) {
-          const name = seat.playerName || seat.playerId || "Unknown";
+          const name = seat.playerSummary.name || seat.playerSummary.playerId || "Unknown";
           label = `Seat ${displaySeatNum}: ${name}`;
         } else {
           label = `Seat ${displaySeatNum} (Empty)`;
@@ -578,7 +578,7 @@
       tdSeats.appendChild(grid);
       tr.appendChild(tdSeats);
 
-      // Column 4: Watchers list (from watcherNames)
+      // Column 4: Watchers list (from watchers)
       const tdWatchers = document.createElement("td");
       const watchersDiv = document.createElement("div");
       watchersDiv.className = "watchers-list";
@@ -586,7 +586,7 @@
       if (!watchers || watchers.length === 0) {
         watchersDiv.textContent = "None";
       } else {
-        watchersDiv.textContent = watchers.join(", ");
+        watchersDiv.textContent = watcherNames.join(", ");
       }
 
       tdWatchers.appendChild(watchersDiv);

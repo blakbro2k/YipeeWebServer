@@ -79,6 +79,11 @@ public class ServerGameManager {
     @Setter
     private String gameId;
 
+    /** Unique identifier for this game table (e.g., shared with clients). */
+    @Getter
+    @Setter
+    private String tableId;
+
     /**
      * Monotonically increasing tick counter for this game session.
      * <p>
@@ -488,10 +493,6 @@ public class ServerGameManager {
                 if (right.isRunning()) right.tick(serverTick, delta, rightBoardState, leftBoardState);
             }
         }
-
-        // 3. Check Win/Loss Conditions
-        log.debug("Checking Game End conditions");
-        checkGameEndConditions();
     }
 
     /**

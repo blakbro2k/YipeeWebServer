@@ -3,6 +3,7 @@ package asg.games.server.yipeewebserver.core;
 import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.net.ConnectionContext;
 import asg.games.server.yipeewebserver.net.ConnectionContextFactory;
+import asg.games.server.yipeewebserver.session.GameSession;
 import asg.games.yipee.net.packets.AbstractClientRequest;
 import com.esotericsoftware.kryonet.Connection;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 @RequiredArgsConstructor
 public class GameContextFactory {
-    private static final int CONST_UPPER_ID_LIMIT = 8;
+    private static final int CONST_UPPER_ID_LIMIT = 16;
     private static final int CONST_LOWER_ID_LIMIT = 0;
 
     private final ServerIdentity serverIdentity;
@@ -68,6 +69,7 @@ public class GameContextFactory {
     private GameContext buildFrom(ConnectionContext ctx, AbstractClientRequest req) {
         String gameId   = (ctx != null && ctx.getGameId()   != null) ? ctx.getGameId()   : req.getGameId();
         String playerId = (ctx != null && ctx.getPlayerId() != null) ? ctx.getPlayerId() : null;
+        String sessionId = (ctx != null && ctx.getSessionId() != null) ? ctx.getSessionId() : null;
 
         ServerGameManager game = getGame(gameId);
         long now       = System.currentTimeMillis();
@@ -79,6 +81,7 @@ public class GameContextFactory {
                 serverTick,
                 req.getClientId(),
                 gameId,
+                sessionId,
                 playerId,
                 now
         );
@@ -88,7 +91,7 @@ public class GameContextFactory {
      * Build a GameContext using IDs only, so APIs / WebSockets / Kryo
      * can all share this path.
      */
-    public GameContext fromIds(String gameId, String playerId, String clientId, long serverTick) {
+    public GameContext fromIds(String gameId, String playerId, String clientId, String sessionId, long serverTick) {
         long now       = System.currentTimeMillis();
 
         return new GameContext(
@@ -97,10 +100,33 @@ public class GameContextFactory {
                 serverTick,
                 clientId,
                 gameId,
+                sessionId,
                 playerId,
                 now
         );
     }
+
+    public GameContext fromGameSession(GameSession gs, AbstractClientRequest req) {
+        String gameId = (gs != null && gs.gameId() != null) ? gs.gameId() : req.getGameId();
+        String playerId = (gs != null) ? gs.playerId() : null;
+        String sessionId = (gs != null) ? gs.sessionId() : req.getSessionId();
+
+        ServerGameManager game = getGame(gameId);
+        long serverTick = (game != null) ? game.getServerTick() : 0L;
+        long now = System.currentTimeMillis();
+
+        return new GameContext(
+                serverIdentity.getServiceName(),
+                serverIdentity.getFullId(),
+                serverTick,
+                req.getClientId(),
+                gameId,
+                sessionId,
+                playerId,
+                now
+        );
+    }
+
 
     private String generateUniqueGameId() {
         String id;

@@ -13,10 +13,13 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,6 +31,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,15 +59,78 @@ public class ServerManager implements Disposable {
     // Unique identifier for the server instance
     String serverId = UUID.randomUUID().toString();
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    // Replace Kryo connections with WS subscribers.
+    // MVP recommendation: key by tableId so watchers persist even if gameId changes later.
+    private final Map<String, Set<WebSocketSession>> subscribersByTableId = new ConcurrentHashMap<>();
+
+    // Maintain Kyro connections
     Map<String, List<Connection>> connectionsPerGame = new ConcurrentHashMap<>();
 
     private Storage storageAdapter;
+
+    public void subscribeToTable(String tableId, WebSocketSession session) {
+        subscribersByTableId
+                .computeIfAbsent(tableId, k -> ConcurrentHashMap.newKeySet())
+                .add(session);
+    }
+
+    public void unsubscribeEverywhere(WebSocketSession session) {
+        for (Set<WebSocketSession> set : subscribersByTableId.values()) {
+            set.remove(session);
+        }
+    }
+
+    public Set<WebSocketSession> getSubscribers(String tableId) {
+        return subscribersByTableId.getOrDefault(tableId, Collections.emptySet());
+    }
+
+    /** Broadcasts one packet to all subscribers of a table. */
+    public void broadcastToTable(String tableId, Object packet) {
+        String json;
+        try {
+            json = objectMapper.writeValueAsString(packet);
+        } catch (Exception e) {
+            log.error("Failed to serialize packet for table {}", tableId, e);
+            return;
+        }
+
+        TextMessage msg = new TextMessage(json);
+
+        for (WebSocketSession s : Util.safeIterable(getSubscribers(tableId))) {
+            try {
+                if (s != null && s.isOpen()) {
+                    s.sendMessage(msg);
+                }
+            } catch (Exception e) {
+                log.warn("WS send failed; removing subscriber. tableId={}", tableId, e);
+                unsubscribeEverywhere(s);
+                try { s.close(); } catch (Exception ignore) {}
+            }
+        }
+    }
+
+    public void forceKickTable(String tableId, Object finalPacket) {
+        // 1) Broadcast final message (optional)
+        if (finalPacket != null) {
+            broadcastToTable(tableId, finalPacket);
+        }
+
+        // 2) Close sessions + clear subscriptions
+        Set<WebSocketSession> subs = subscribersByTableId.remove(tableId);
+        if (subs != null) {
+            for (WebSocketSession s : subs) {
+                try { if (s != null && s.isOpen()) s.close(); } catch (Exception ignore) {}
+            }
+        }
+    }
 
     /**
      * Broadcasts the current game state to all connected clients.
      * This method should be called periodically during the game loop.
      */
-    public void broadcastServerResponses(List<TableStateUpdateResponse> responses) {
+    public void broadcastKryoServerResponses(List<TableStateUpdateResponse> responses) {
         for (TableStateUpdateResponse response : responses) {
             sendTCPs(getConnectionsFromGameId(response.getGameId()), response);
         }
@@ -203,17 +270,35 @@ public class ServerManager implements Disposable {
             }
 
             // 2. Build a per-game tick packet
+            long tick = gameManager.getServerTick();
             TableStateUpdateResponse tickPacket = new TableStateUpdateResponse();
-            tickPacket.setServerTick(gameManager.getServerTick());  // per-game tick
+            tickPacket.setServerTick(tick);  // per-game tick
             tickPacket.setGameId(gameManager.getGameId());
             tickPacket.setServerId(serverId);
-            serverResponses.add(tickPacket);
+            //serverResponses.add(tickPacket);
+
+            // MVP requirement: we must know which table to broadcast to
+            broadcastToTable(gameManager.getTableId(), tickPacket);
+
+            if (gameManager.checkGameEndConditions()) {
+                gameManager.endGameLoop();
+
+                // MVP: tell clients to close
+                var end = new java.util.HashMap<String, Object>();
+                end.put("type", "GAME_END");
+                end.put("tableId", gameManager.getTableId());
+                end.put("gameId", gameManager.getGameId());
+                end.put("serverTick", gameManager.getServerTick());
+
+                //TODO: Send game end Response so that end message can be annimated.
+                // optional: send game-over packet then kick
+                //forceKickTable(gm.getTableId(), /* GameEndResponse */ null);
+            }
         }
 
         // 3. Send to only active players at this table
-        broadcastServerResponses(serverResponses);
+        //broadcastKryoServerResponses(serverResponses);
     }
-
 
     /**
      * Disposes of server resources gracefully.
@@ -222,9 +307,18 @@ public class ServerManager implements Disposable {
     public void dispose() {
         try {
             log.trace("Entering Game Dispose");
+            //connectionsPerGame.clear();
 
-            if (server != null) server.stop();
-            connectionsPerGame.clear();
+            // Stop Kryo servers
+            if (server != null) {
+                server.stop();
+            }
+
+            for (Set<WebSocketSession> set : subscribersByTableId.values()) {
+                for (WebSocketSession s : set) {
+                    try { if (s != null && s.isOpen()) s.close(); } catch (Exception ignore) {}
+                }
+            }
         } catch (Exception e) {
             log.error("Error while shutting down GameServerManager", e);
             throw new RuntimeException(e);

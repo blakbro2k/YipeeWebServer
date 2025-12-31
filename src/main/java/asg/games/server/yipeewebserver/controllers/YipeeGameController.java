@@ -1,19 +1,54 @@
 package asg.games.server.yipeewebserver.controllers;
 
+import asg.games.server.yipeewebserver.annotations.SessionConnection;
+import asg.games.server.yipeewebserver.config.OpenApiConfig;
+import asg.games.server.yipeewebserver.config.ServerIdentity;
+import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
+import asg.games.server.yipeewebserver.net.YipeePacketHandler;
+import asg.games.server.yipeewebserver.net.api.GameWhoAmIResponse;
+import asg.games.server.yipeewebserver.net.api.LaunchTokenRequest;
+import asg.games.server.yipeewebserver.net.api.LaunchTokenResponse;
+import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
+import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
+import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
+import asg.games.server.yipeewebserver.services.LaunchTokenService;
+import asg.games.server.yipeewebserver.services.SessionService;
+import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
+import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
+import asg.games.yipee.core.objects.YipeeSeat;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.Instant;
 
 @Slf4j
-@Controller
+@RestController
+@RequestMapping(ControllerContstants.API_BASE_PATH)
 @RequiredArgsConstructor
+@SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class YipeeGameController {
+    private final YipeeSeatRepository yipeeSeatRepository;
     private final YipeeGameJPAServiceImpl yipeeGameService;
+    private final YipeePlayerRepository yipeePlayerRepository;
+    private final TableService tableService;
+    private final LaunchTokenService launchTokenService;
+    private final ServerIdentity serverIdentity;
 
     @GetMapping("/game/{id}")
     public String launchGame(@PathVariable(value = "id") String id, Model model) {
@@ -22,6 +57,129 @@ public class YipeeGameController {
             model.addAttribute("roomTitle", room.getName());
         }
         return "room";
+    }
+
+    // -------------------------------------------------------
+    // Game API:
+    // -------------------------------------------------------
+
+    @PostMapping(ControllerContstants.API_GAME_LAUNCH_TOKEN_PATH)
+    public LaunchTokenResponse createLaunchToken(
+            @RequestBody LaunchTokenRequest req,
+            @SessionConnection PlayerConnectionEntity conn
+    ) {
+        log.debug("Enter createLaunchToken(req={}, ctx={})", req, conn);
+        //log.debug("Authorization={}", ctx.getHeader("Authorization"));
+        log.debug("tableId={}, playerId={})", req.tableId(), conn.getPlayer());
+
+        String playerId = conn.getPlayer().getId();
+        String clientId = conn.getClientId();
+        String sessionId = conn.getSessionId();
+        int playerSeatIndex = 0;
+
+        log.debug("playerId={})", playerId);
+        log.debug("clientId={})", clientId);
+        log.debug("sessionId={})", sessionId);
+        if (playerId == null || playerId.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing/invalid bearer token");
+        }
+
+        String tableId = req.tableId();
+        if (tableId == null || tableId.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Missing/invalid table id");
+        }
+
+        YipeeSeat playerSeat = yipeeSeatRepository.findFirstByParentTable_IdAndSeatedPlayer_Id(tableId, playerId).orElse(null);
+        if (playerSeat == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Missing/invalid Player Seat");
+        }
+
+        // 1) Validate the player is actually seated in that seat
+        // (or seated anywhere at that table if you prefer)
+        if (!tableService.isPlayerAtTable(tableId, playerId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Player is not in given table");
+        }
+
+        YipeePlayer validPlayer = yipeePlayerRepository.findById(playerId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Player does not exist."));
+
+        // 2) Resolve gameId (whatever your model uses)
+        //String gameId = yipeeGameService.getGameIdForTable(tableId);
+        //Does each unique table request a gameID that all players share??
+        String gameId = "";
+
+        // 3) Mint token
+        String token = launchTokenService.mintLaunchToken(
+                playerId,
+                validPlayer.getName(),
+                validPlayer.getIcon(),
+                validPlayer.getRating(),
+                clientId,
+                sessionId,
+                gameId,
+                tableId,
+                playerSeat.getSeatNumber()
+        );
+
+        Instant expiresAt = Instant.now().plusSeconds(120);
+        String wsUrl = "/ws/game"; // or full wss URL later
+
+        LaunchTokenResponse response = new LaunchTokenResponse(token, expiresAt, wsUrl);
+        log.debug("Exit createLaunchToken()={}", response);
+        return response;
+    }
+
+    @GetMapping(ControllerContstants.API_GAME_WHOAMI_PATH)
+    public GameWhoAmIResponse gameWhoAmI(@RequestHeader("Authorization") String authHeader) {
+
+        String token = authHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
+        if (token.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Bearer token");
+        }
+
+        var jws = launchTokenService.verifyLaunchToken(token);
+        var c = jws.getBody();
+
+        if (!"launch".equals(c.get("scope", String.class))) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong token scope");
+        }
+
+        // Identity is derived from token
+        String playerId  = c.getSubject();
+        String playerName  = c.get("pname", String.class);;
+        int playerIcon  = c.get("picon", Integer.class);
+        int playerRating  = c.get("prate", Integer.class);
+        String clientId  = c.get("cid", String.class);
+        String sessionId = c.get("sid", String.class);
+        String gameId    = c.get("gid", String.class);
+        String tableId   = c.get("tid", String.class);
+        int seatIndex      = c.get("seatIndex", Integer.class);
+        Instant expires  = c.getExpiration().toInstant();
+
+        // OPTIONAL but strongly recommended:
+        // verify sessionId is still valid and belongs to playerId/clientId
+        // and verify player is actually seated at tableId/seatNo (or is a watcher)
+        //
+        // Example:
+        // sessionService.assertValidSession(sessionId, playerId, clientId);
+        // tableService.assertPlayerSeated(tableId, seatNo, playerId);
+
+        return new GameWhoAmIResponse(
+                playerId,
+                playerName,
+                playerIcon,
+                playerRating,
+                clientId,
+                sessionId,
+                gameId,
+                tableId,
+                seatIndex,
+                expires,
+                serverIdentity.getServerId(),
+                -1,
+                expires.getEpochSecond(),
+                serverIdentity.getTickRate()
+        );
     }
 }
 

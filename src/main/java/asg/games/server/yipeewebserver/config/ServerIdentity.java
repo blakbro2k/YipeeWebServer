@@ -19,6 +19,15 @@ public class ServerIdentity {
     @Value("${gameserver.server.serviceName}")
     private String serviceName;
 
+    @Value("${gameserver.port}")
+    private int tcpPort;
+
+    @Value("${gameserver.udp.port}")
+    private int udpPort;
+
+    @Value("${gameserver.tickrate}")
+    private float tickRate;
+
     private String instanceId;
 
     private String fullId;

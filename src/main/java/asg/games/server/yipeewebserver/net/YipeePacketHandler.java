@@ -4,6 +4,7 @@ import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.core.GameContext;
 import asg.games.server.yipeewebserver.core.GameContextFactory;
 import asg.games.server.yipeewebserver.core.ServerGameManager;
+import asg.games.server.yipeewebserver.services.GameSessionService;
 import asg.games.server.yipeewebserver.tools.NetUtil;
 import asg.games.yipee.net.errors.ErrorCode;
 import asg.games.yipee.net.errors.ErrorMapper;
@@ -13,6 +14,7 @@ import asg.games.yipee.net.packets.AbstractServerResponse;
 import asg.games.yipee.net.packets.ErrorResponse;
 import asg.games.yipee.net.packets.GameStartRequest;
 import asg.games.yipee.net.packets.GameStartResponse;
+import asg.games.yipee.net.packets.GameSubscribeRequest;
 import asg.games.yipee.net.packets.MappedKeyUpdateRequest;
 import asg.games.yipee.net.packets.MappedKeyUpdateResponse;
 import asg.games.yipee.net.packets.PlayerActionRequest;
@@ -31,19 +33,19 @@ import java.util.ArrayList;
 
 /**
  * YipeePacketHandler is now responsible ONLY for in-game messages:
- *
- *   - GameStartRequest / GameStartResponse
- *   - PlayerActionRequest / PlayerActionResponse
- *   - MappedKeyUpdateRequest / MappedKeyUpdateResponse
- *   - TableStateUpdateRequest
- *   - Broadcast packets (TableStateBroadcastResponse, TableActionsBroadcastResponse, AllStatesBroadcastResponse)
- *   - ErrorResponse (via ErrorMapper)
- *
+ * <p>
+ * - GameStartRequest / GameStartResponse
+ * - PlayerActionRequest / PlayerActionResponse
+ * - MappedKeyUpdateRequest / MappedKeyUpdateResponse
+ * - TableStateUpdateRequest
+ * - Broadcast packets (TableStateBroadcastResponse, TableActionsBroadcastResponse, AllStatesBroadcastResponse)
+ * - ErrorResponse (via ErrorMapper)
+ * <p>
  * It NO LONGER:
- *
- *   - performs handshake / session creation
- *   - touches JPA repositories
- *   - manages lobby (rooms / tables / players) – that's all HTTP + JPA now.
+ * <p>
+ * - performs handshake / session creation
+ * - touches JPA repositories
+ * - manages lobby (rooms / tables / players) – that's all HTTP + JPA now.
  */
 @Slf4j
 @Component
@@ -52,6 +54,8 @@ public class YipeePacketHandler {
     private final ServerIdentity serverIdentity;
     private final ConnectionContextFactory connectionContextFactory;
     private final GameContextFactory gameContextFactory;
+    private final GameSessionService gameSessionService;
+
     public static final String IDENTITY_PROVIDER_WORDPRESS = "WORDPRESS";
 
     // ========================================================================
@@ -64,7 +68,9 @@ public class YipeePacketHandler {
      */
     public AbstractServerResponse handle(GameContext gameContext, AbstractClientRequest request) {
         try {
-            if (request instanceof GameStartRequest r) {
+            if (request instanceof GameSubscribeRequest r) {
+                return handleGameSubscription(gameContext, r);
+            } else if (request instanceof GameStartRequest r) {
                 return handleGameStart(gameContext, r);
             } else if (request instanceof MappedKeyUpdateRequest r) {
                 return handleMappedKeyUpdate(gameContext, r);
@@ -100,10 +106,10 @@ public class YipeePacketHandler {
      * returns {@code null} when the provided response does not match the expected type.
      * No {@link ClassCastException} will be thrown.
      *
-     * <h3>Example:</h3>
+     * <h2>Example:</h2>
      *
      * <pre>{@code
-     * AbstractServerResponse resp = packetHandler.handle(request);
+     * AbstractServerResponse resp = packetHandler.handle(ctx, request);
      *
      * GameStartResponse start =
      *         resolve(GameStartResponse.class, resp);
@@ -113,10 +119,10 @@ public class YipeePacketHandler {
      * }
      * }</pre>
      *
-     * @param <T>     the expected concrete response type
-     * @param type    the {@link Class} object representing the expected response type
-     * @param resp    the response instance to check and cast
-     * @return        the response cast to type {@code T} if compatible; otherwise {@code null}
+     * @param <T>      the expected concrete response type
+     * @param type     the {@link Class} object representing the expected response type
+     * @param response the response instance to check and cast
+     * @return the response cast to type {@code T} if compatible; otherwise {@code null}
      */
     public static <T extends AbstractServerResponse> T getClassResponse(Class<T> type, AbstractServerResponse response) {
         return type.isInstance(response) ? type.cast(response) : null;
@@ -125,32 +131,53 @@ public class YipeePacketHandler {
     // ========================================================================
     //  Specific packet handlers
     // ========================================================================
+    private AbstractServerResponse handleGameSubscription(GameContext gameContext, GameSubscribeRequest req) {
+        log.debug("Handling GameSubscribeRequest: {}", req);
+
+        String gameId = gameContext.gameId();
+        if (gameId == null || gameId.isBlank()) {
+            return errorResponse(req, ErrorCode.BAD_REQUEST, "gameId missing from context");
+        }
+
+        ServerGameManager gameManager = gameContextFactory.getGame(gameId);
+        if (gameManager == null) {
+            return errorResponse(req, ErrorCode.BAD_REQUEST, gameId + " gameId does not exist.");
+        }
+
+        // MVP placeholder
+        return errorResponse(req, ErrorCode.UNSUPPORTED_OPERATION, "GameSubscribe not implemented yet");
+    }
+
 
     private GameStartResponse handleGameStart(GameContext gameContext, GameStartRequest req) {
         log.debug("Handling GameStartRequest: {}", req);
 
-        //Get Game
-        //get player seat number
-        //
+        String tableId = req.getTableId();
+        if (tableId == null || tableId.isBlank()) {
+            throw new IllegalArgumentException("tableId required");
+        }
 
-        ServerGameManager gameManager = gameContextFactory.getGame(req.getGameId());
-        if(gameManager == null) throw new IllegalArgumentException(req.getGameId() + " gameId does not exist.");
+        String gameId = gameContext.gameId();
+        if (gameId == null || gameId.isBlank()) throw new IllegalArgumentException("gameId required");
+
+        ServerGameManager gameManager = gameContextFactory.getGame(gameId);
+        if (gameManager == null) {
+            throw new IllegalArgumentException(gameId + " gameId does not exist.");
+        }
+
+        // Bind session -> game for future requests/broadcast routing
+        gameSessionService.bindGame(req.getSessionId(), req.getClientId(), gameId);
 
         GameStartResponse resp = new GameStartResponse();
         NetUtil.copyEnvelope(req, resp);
-
-        req.getPlayerId();
-        // TODO: plug into your GameServerManager / GameManager
-        // var result = gameServerManager.startGame(req.getTableId(), req.getPlayerId(), ...);
-        // resp.setGameId(result.getGameId());
-        // resp.setAccepted(result.isAccepted());
-
-        resp.setGameId(req.getGameId()); // temporary echo-back behavior
         resp.setAccepted(true);
+        resp.setGameId(gameId);
+        resp.setTableId(tableId);
 
         NetUtil.stampServerMeta(resp, serverIdentity);
         return resp;
     }
+
 
     private MappedKeyUpdateResponse handleMappedKeyUpdate(GameContext gameContext, MappedKeyUpdateRequest req) {
         log.debug("Handling MappedKeyUpdateRequest: {}", req);
@@ -189,9 +216,9 @@ public class YipeePacketHandler {
 
     /**
      * TableStateUpdateRequest might be admin/host-only. Typically you either:
-     *  - apply a state patch and then broadcast, or
-     *  - reject it as invalid.
-     *
+     * - apply a state patch and then broadcast, or
+     * - reject it as invalid.
+     * <p>
      * For now, we accept and echo via a TableStateBroadcastResponse.
      */
     private AbstractServerResponse handleTableStateUpdate(GameContext gameContext, TableStateUpdateRequest req) {
@@ -204,14 +231,14 @@ public class YipeePacketHandler {
         TableStateUpdateResponse tableUpdateRes = new TableStateUpdateResponse();
         NetUtil.copyEnvelope(req, tableUpdateRes);
         tableUpdateRes.setGameId(gameContext.gameId());
-        tableUpdateRes.setSeatState1(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState2(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState3(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState4(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState5(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState6(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState7(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
-        tableUpdateRes.setSeatState8(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext,  null ));
+        tableUpdateRes.setSeatState1(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState2(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState3(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState4(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState5(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState6(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState7(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
+        tableUpdateRes.setSeatState8(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
 
         NetUtil.stampServerMeta(tableUpdateRes, serverIdentity);
         return tableUpdateRes;
@@ -219,9 +246,9 @@ public class YipeePacketHandler {
 
     /**
      * TableStateUpdateRequest might be admin/host-only. Typically you either:
-     *  - apply a state patch and then broadcast, or
-     *  - reject it as invalid.
-     *
+     * - apply a state patch and then broadcast, or
+     * - reject it as invalid.
+     * <p>
      * For now, we accept and echo via a TableStateBroadcastResponse.
      */
     private AbstractServerResponse handleSeatStateUpdate(GameContext gameContext, SeatStateUpdateRequest req) {
@@ -333,12 +360,12 @@ public class YipeePacketHandler {
     /**
      * Single entrypoint from your KryoNet Listener.
      * Example usage in your Listener:
-     *
-     *   public void received(Connection c, Object o) {
-     *       if (o instanceof AbstractClientRequest req) {
-     *           packetHandler.handleKryoRequest(c, req);
-     *       }
-     *   }
+     * <p>
+     * public void received(Connection c, Object o) {
+     *  if (o instanceof AbstractClientRequest req) {
+     *  packetHandler.handleKryoRequest(c, req);
+     *  }
+     * }
      */
     public void handleKryoRequest(Connection connection, AbstractClientRequest request, GameContext gameContext) {
         AbstractServerResponse resp = handle(gameContext, request);

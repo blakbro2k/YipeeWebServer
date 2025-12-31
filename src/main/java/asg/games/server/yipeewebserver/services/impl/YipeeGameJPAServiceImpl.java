@@ -514,7 +514,7 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
             // stand up from any seat they occupy
             table.getSeats().forEach(seat -> {
                 if (player.equals(seat.getSeatedPlayer())) {
-                    seat.standUp();  // clears ready + seatedPlayer
+                    seat.standUp();  // clears seatReady + seatedPlayer
                 }
             });
         });

@@ -11,5 +11,10 @@ public record GameWhoAmIResponse(
         String sessionId,
         String gameId,
         String tableId,
-        Instant expiresAt
+        int seatIndex,
+        Instant expiresAt,
+        String serverId,
+        long serverTick,
+        long serverTimestamp,
+        float tickRate
 ) {}

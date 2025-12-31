@@ -1,5 +1,6 @@
 package asg.games.server.yipeewebserver;
 
+import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.core.GameContextFactory;
 import asg.games.server.yipeewebserver.headless.HeadlessLauncher;
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
@@ -28,15 +29,7 @@ public class YipeeWebserverApplication extends ServletInitializer implements Com
 	private final GameContextFactory gameContextFactory;
 	private final ApplicationContext appContext;
 	private final YipeeGameJPAServiceImpl yipeeGameJPAService;
-
-	@Value("${gameserver.port}")
-	private int tcpPort;
-
-	@Value("${gameserver.udp.port}")
-	private int udpPort;
-
-	@Value("${gameserver.tickrate}")
-	private float tickRate;
+	private final ServerIdentity serverIdentity;
 
 	public static void main(String[] args) {
 		SpringApplication.run(YipeeWebserverApplication.class, args);
@@ -47,6 +40,6 @@ public class YipeeWebserverApplication extends ServletInitializer implements Com
 		// Launch HeadlessLauncher and pass configuration
 		HeadlessLauncher launcher = new HeadlessLauncher(yipeePacketHandler, gameContextFactory, appContext, yipeeGameJPAService);
 		log.info("Starting Web Server, launching {}", launcher.getClass().getSimpleName());
-		launcher.launch(tcpPort, udpPort, tickRate);
+		launcher.launch(serverIdentity.getTcpPort(), serverIdentity.getUdpPort(), serverIdentity.getTickRate());
 	}
 }

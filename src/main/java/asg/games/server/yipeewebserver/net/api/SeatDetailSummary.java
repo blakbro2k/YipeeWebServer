@@ -5,8 +5,5 @@ public record SeatDetailSummary(
         int seatNumber,
         boolean seatReady,
         boolean occupied,
-        String playerId,
-        String playerName,
-        Integer playerIcon,
-        Integer playerRating
+        PlayerSummary playerSummary
 ) {}

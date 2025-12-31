@@ -38,7 +38,8 @@ public class LaunchTokenService {
                                   String clientId,
                                   String sessionId,
                                   String gameId,
-                                  String tableId) {
+                                  String tableId,
+                                  int playerSeatIndex) {
 
         Instant now = Instant.now();
         Instant exp = now.plus(ttl);
@@ -56,6 +57,7 @@ public class LaunchTokenService {
                 .claim("sid", sessionId)
                 .claim("gid", gameId)
                 .claim("tid", tableId)
+                .claim("seatIndex", playerSeatIndex)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
