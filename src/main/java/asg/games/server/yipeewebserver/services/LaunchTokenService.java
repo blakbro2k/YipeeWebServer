@@ -22,7 +22,7 @@ public class LaunchTokenService {
     private final Duration ttl;
 
     public LaunchTokenService(
-            @Value("${security.jwt.secret}") String secret,
+            @Value("${yipee.jwt.secret}") String secret,
             @Value("${yipee.launch.ttlSeconds:120}") long ttlSeconds
     ) {
         // IMPORTANT: for HS256, secret must be long enough (>= 32 bytes is a safe baseline).
@@ -51,8 +51,8 @@ public class LaunchTokenService {
                 .setId(UUID.randomUUID().toString())  // jti
                 .claim("scope", "launch")
                 .claim("pname", playerName)
-                .claim("picon", 3)
-                .claim("prate", 1500)
+                .claim("picon", playerIcon)
+                .claim("prate", playerRating)
                 .claim("cid", clientId)
                 .claim("sid", sessionId)
                 .claim("gid", gameId)
@@ -68,4 +68,40 @@ public class LaunchTokenService {
                 .build()
                 .parseClaimsJws(token);
     }
+
+    public record LaunchTokenContext(
+            String playerId,
+            String clientId,
+            String sessionId,
+            String gameId,
+            String tableId,
+            Integer seatIndex,
+            String playerName,
+            Integer playerIcon,
+            Integer playerRating
+    ) {}
+
+    public LaunchTokenContext requireContext(String token) {
+        Claims c = verifyLaunchToken(token).getBody();
+
+        String scope = c.get("scope", String.class);
+        if (!"launch".equals(scope)) throw new IllegalArgumentException("Invalid token scope: " + scope);
+
+        Number seat = c.get("seatIndex", Number.class);
+        Number icon = c.get("picon", Number.class);
+        Number rate = c.get("prate", Number.class);
+
+        return new LaunchTokenContext(
+                c.getSubject(),
+                c.get("cid", String.class),
+                c.get("sid", String.class),
+                c.get("gid", String.class),
+                c.get("tid", String.class),
+                seat == null ? null : seat.intValue(),
+                c.get("pname", String.class),
+                icon == null ? null : icon.intValue(),
+                rate == null ? null : rate.intValue()
+        );
+    }
+
 }

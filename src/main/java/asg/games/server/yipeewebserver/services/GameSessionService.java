@@ -15,8 +15,9 @@ public class GameSessionService {
 
     private final SessionService sessionService;       // DB-backed: validates
     private final GameSessionStore gameSessionStore;   // in-memory: bindings
+    private final GameSessionTokenService gameSessionTokenService;   // in-memory: bindings
 
-    public GameSession require(String sessionId, String clientId) {
+    public GameSession requireGameSession(String sessionId, String clientId) {
         // validates lifetime + ownership (DB)
         PlayerConnectionEntity conn = sessionService.requireSession(sessionId, clientId);
 
@@ -28,6 +29,41 @@ public class GameSessionService {
                     Instant now = Instant.now();
                     return new GameSession(sessionId, clientId, conn.getPlayer().getId(), null, null, now, now);
                 });
+    }
+
+    /**
+     * Validates the signed game session token and returns a GameSession that is
+     * bound to the game/table contained in the token.
+     *
+     * <p>Preferred for game-scoped endpoints launched from the lobby, since the client
+     * does not need to send sessionId/clientId/tableId separately.</p>
+     */
+    public GameSession requireGameSessionByToken(String gameSessionToken) {
+        GameSessionTokenService.GameSessionTokenContext ctx = gameSessionTokenService.requireContext(gameSessionToken);
+
+        // Reuse existing DB validation (ownership + expiry) if you want that extra gate:
+        GameSession base = requireGameSession(ctx.sessionId(), ctx.clientId());
+
+        // Optional sanity: ensure token subject matches DB session owner
+        if (!base.playerId().equals(ctx.playerId())) {
+            throw new YipeeSessionException("Token player does not match session owner.");
+        }
+
+        Instant now = Instant.now();
+        Instant boundAt = (base.boundAt() != null) ? base.boundAt() : now;
+
+        GameSession bound = new GameSession(
+                base.sessionId(),
+                base.clientId(),
+                base.playerId(),
+                ctx.gameId(),
+                ctx.tableId(),
+                boundAt,
+                now
+        );
+
+        gameSessionStore.upsert(bound);
+        return bound;
     }
 
 
@@ -56,6 +92,13 @@ public class GameSessionService {
         // validate ownership before clearing
         sessionService.requireSession(sessionId, clientId);
         gameSessionStore.clear(sessionId);
+    }
+
+    public String requireTableId(GameSession gs) {
+        if (gs.tableId() == null || gs.tableId().isBlank()) {
+            throw new YipeeSessionException("Session is not bound to a table.");
+        }
+        return gs.tableId();
     }
 
     public String requireGameId(GameSession gs) {

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsPackets>
+    <packet type="ClientHandshakeRequest" class="asg.games.yipee.net.packets.ClientHandshakeRequest"/>
+    <packet type="DisconnectRequest" class="asg.games.yipee.net.packets.DisconnectRequest"/>
+    <packet type="GameStartRequest" class="asg.games.yipee.net.packets.GameStartRequest"/>
+    <packet type="GameSubscribeRequest" class="asg.games.yipee.net.packets.GameSubscribeRequest"/>
+    <packet type="MappedKeyUpdateRequest" class="asg.games.yipee.net.packets.MappedKeyUpdateRequest"/>
+    <packet type="PlayerActionRequest" class="asg.games.yipee.net.packets.PlayerActionRequest"/>
+    <packet type="SeatSelectionRequest" class="asg.games.yipee.net.packets.SeatSelectionRequest"/>
+    <packet type="SeatStateUpdateRequest" class="asg.games.yipee.net.packets.SeatStateUpdateRequest"/>
+    <packet type="TableStateUpdateRequest" class="asg.games.yipee.net.packets.TableStateUpdateRequest"/>
+
+    <!-- Add more packets any time -->
+</wsPackets>

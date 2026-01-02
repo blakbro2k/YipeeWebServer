@@ -48,6 +48,7 @@ public class DevJwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring("Bearer ".length()).trim();
+            log.debug("Token: {}", token);
             log.debug("Token starts: {}", token.substring(0, Math.min(20, token.length())));
             try {
                 JwtIdentity identity = parseJwt(token);

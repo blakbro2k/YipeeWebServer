@@ -13,13 +13,21 @@ import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
+import asg.games.server.yipeewebserver.services.GameSessionService;
+import asg.games.server.yipeewebserver.services.GameSessionTokenService;
 import asg.games.server.yipeewebserver.services.LaunchTokenService;
 import asg.games.server.yipeewebserver.services.SessionService;
 import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
+import asg.games.server.yipeewebserver.session.GameSession;
+import asg.games.yipee.common.dto.NetYipeePlayer;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
 import asg.games.yipee.core.objects.YipeeSeat;
+import asg.games.yipee.core.objects.YipeeTable;
+import asg.games.yipee.net.packets.GameAuthTokenResponse;
+import asg.games.yipee.net.packets.SeatStateUpdateResponse;
+import asg.games.yipee.net.packets.TableDetailsResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +40,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -43,12 +56,16 @@ import java.time.Instant;
 @RequiredArgsConstructor
 @SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class YipeeGameController {
+    private final YipeeTableRepository yipeeTableRepository;
     private final YipeeSeatRepository yipeeSeatRepository;
     private final YipeeGameJPAServiceImpl yipeeGameService;
     private final YipeePlayerRepository yipeePlayerRepository;
     private final TableService tableService;
     private final LaunchTokenService launchTokenService;
     private final ServerIdentity serverIdentity;
+    private final GameSessionService gameSessionService;
+    private final GameSessionTokenService gameSessionTokenService;
+
 
     @GetMapping("/game/{id}")
     public String launchGame(@PathVariable(value = "id") String id, Model model) {
@@ -181,5 +198,93 @@ public class YipeeGameController {
                 serverIdentity.getTickRate()
         );
     }
-}
 
+    @GetMapping(ControllerContstants.API_GAME_TABLE_PATH)
+    public TableDetailsResponse gameGetTable(
+            @RequestHeader("Authorization") String authHeader) {
+
+        // 1) Extract bearer token
+        String token = extractBearer(authHeader);
+        int serverTick = -1;
+        String gameId = null;
+        String sessionId = null;
+
+        LaunchTokenService.LaunchTokenContext ctx = launchTokenService.requireContext(token);
+
+        // 2) Validate/resolve token -> game context (playerId/tableId/etc)
+        //    This depends on your existing launch token logic:
+        //GameSession gs = gameSessionService.requireGameSessionByToken(token);
+        //String tableId = gameSessionService.requireTableId(gs);
+        String tableId = ctx.tableId();
+
+        // 4) Load the table aggregate (your JPA/service layer)
+        YipeeTable table = yipeeTableRepository.findById(tableId).orElse(null);
+        if (table == null) {
+            throw new IllegalArgumentException("table not valid for requested tableId");
+            // or throw new YipeeAuthException / access denied
+        }
+
+
+        // 5) Load table snapshot and return
+        TableDetailsResponse response =  new TableDetailsResponse();
+        response.setServerId(serverIdentity.getServerId());
+        response.setServerTimestamp(serverIdentity.getServerTimeStamp());
+        response.setTickRate(serverIdentity.getTickRate());
+        response.setServerTick(serverTick);
+        response.setTableId(tableId);
+        response.setSeats(mapSeats(table));         // List<SeatStateUpdateResponse>
+        response.setWatchers(mapWatchers(table));   // List<NetYipeePlayer>
+        response.setGameId(gameId);
+        response.setSessionId(sessionId);
+
+        return response;
+    }
+
+    private static String extractBearer(String authHeader) {
+        if (authHeader == null) throw new IllegalArgumentException("Missing Authorization header");
+        String h = authHeader.trim();
+        if (!h.regionMatches(true, 0, "Bearer ", 0, 7)) {
+            throw new IllegalArgumentException("Authorization must be 'Bearer <token>'");
+        }
+        return h.substring(7).trim();
+    }
+
+    private List<SeatStateUpdateResponse> mapSeats(YipeeTable table) {
+        return table.getSeats().stream()
+                .sorted(Comparator.comparingInt(YipeeSeat::getSeatNumber)) // optional
+                .map(seat -> {
+                    SeatStateUpdateResponse s = new SeatStateUpdateResponse();
+                    s.setTableId(table.getId());                 // if your packet has it
+                    s.setSeatIndex(seat.getSeatNumber());
+
+                    YipeePlayer player = seat.getSeatedPlayer();
+                    if (player != null) {
+                        s.setOccupied(true);
+                        s.setPlayer(toNetPlayer(player));        // or set playerId/name separately
+                        s.setPlayerId(player.getId());           // depending on your packet design
+                        s.setReady(seat.isSeatReady());              // if you track ready
+                    } else {
+                        s.setOccupied(false);
+                        s.setReady(false);
+                    }
+
+                    return s;
+                })
+                .toList();
+    }
+
+    private List<NetYipeePlayer> mapWatchers(YipeeTable table) {
+        return table.getWatchers().stream()
+                .map(this::toNetPlayer)
+                .toList();
+    }
+
+    private NetYipeePlayer toNetPlayer(YipeePlayer p) {
+        NetYipeePlayer net = new YipeePlayer();
+        net.setId(p.getId());
+        net.setName(p.getName());
+        net.setIcon(p.getIcon());
+        net.setRating(p.getRating());
+        return net;
+    }
+}

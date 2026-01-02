@@ -1,9 +1,13 @@
 package asg.games.server.yipeewebserver.net;
 
+import asg.games.server.yipeewebserver.config.WsLaunchTokenHandshakeInterceptor;
+import asg.games.server.yipeewebserver.config.WsPacketRegistry;
 import asg.games.server.yipeewebserver.core.GameContext;
 import asg.games.server.yipeewebserver.core.GameContextFactory;
 import asg.games.server.yipeewebserver.data.WsPacketEnvelope;
 import asg.games.server.yipeewebserver.services.GameSessionService;
+import asg.games.server.yipeewebserver.services.GameSessionTokenService;
+import asg.games.server.yipeewebserver.services.SessionService;
 import asg.games.server.yipeewebserver.session.GameSession;
 import asg.games.server.yipeewebserver.session.WebSocketSessionRegistry;
 import asg.games.yipee.net.packets.AbstractClientRequest;
@@ -25,21 +29,59 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.time.Instant;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class YipeeWebSocketHandler extends TextWebSocketHandler {
+
     private final YipeePacketHandler packetHandler;
     private final GameContextFactory gameContextFactory;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final GameSessionService gameSessionService;
     private final WebSocketSessionRegistry wsRegistry;
+    private final SessionService sessionService;
+    private final GameSessionTokenService gameSessionTokenService;
+    private final WsPacketRegistry wsPacketRegistry;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public void afterConnectionEstablished(WebSocketSession session) {
+    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         log.info("WebSocket connected: {}", session.getId());
-        // If you want, you can stash sessionId ↔ session in a map here
-        // for pushing broadcasts later.
+
+        // If handshake interceptor populated launch claims, immediately bootstrap a session JWT
+        Object playerId = session.getAttributes().get(WsLaunchTokenHandshakeInterceptor.ATTR_PLAYER_ID);
+        Object clientId = session.getAttributes().get(WsLaunchTokenHandshakeInterceptor.ATTR_CLIENT_ID);
+        Object sessionId = session.getAttributes().get(WsLaunchTokenHandshakeInterceptor.ATTR_SESSION_ID);
+        Object gameId = session.getAttributes().get(WsLaunchTokenHandshakeInterceptor.ATTR_GAME_ID);
+        Object tableId = session.getAttributes().get(WsLaunchTokenHandshakeInterceptor.ATTR_TABLE_ID);
+        Object seatIndex = session.getAttributes().get(WsLaunchTokenHandshakeInterceptor.ATTR_SEAT_INDEX);
+
+        if (playerId instanceof String pid && clientId instanceof String cid && sessionId instanceof String sid) {
+            Integer sidx = (seatIndex instanceof Integer i) ? i : null;
+
+            String jwt = gameSessionTokenService.mintGameSessionToken(
+                    pid, cid, sid,
+                    (gameId instanceof String g ? g : null),
+                    (tableId instanceof String t ? t : null),
+                    sidx
+            );
+
+            // Bind sessionId -> WS for server broadcasts
+            wsRegistry.bind(sid, session);
+
+            // Build a response packet (reflection-safe)
+            Instant expiresAt = Instant.now().plusSeconds(60L * 60L * 4L); // match default TTL minutes=240
+            Object resp = WsPacketFactory.gameAuthTokenResponse(
+                    jwt, sid, cid, pid,
+                    (gameId instanceof String g ? g : null),
+                    (tableId instanceof String t ? t : null),
+                    sidx,
+                    expiresAt
+            );
+
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(resp)));
+        }
     }
 
     @Override
@@ -50,40 +92,51 @@ public class YipeeWebSocketHandler extends TextWebSocketHandler {
         WsPacketEnvelope envelope = objectMapper.readValue(payload, WsPacketEnvelope.class);
         JsonNode node = envelope.getPayload();
 
-        AbstractClientRequest request = switch (envelope.getPacketType()) {
+        boolean isHandshake = "ClientHandshakeRequest".equals(envelope.getPacketType());
+
+        /*AbstractClientRequest request = switch (envelope.getPacketType()) {
             case "ClientHandshakeRequest" -> objectMapper.treeToValue(node, ClientHandshakeRequest.class);
             case "GameSubscribeRequest" -> objectMapper.treeToValue(node, GameSubscribeRequest.class);
             case "GameStartRequest" -> objectMapper.treeToValue(node, GameStartRequest.class);
             case "PlayerActionRequest" -> objectMapper.treeToValue(node, PlayerActionRequest.class);
             case "MappedKeyUpdateRequest" -> objectMapper.treeToValue(node, MappedKeyUpdateRequest.class);
             case "TableStateUpdateRequest" -> objectMapper.treeToValue(node, TableStateUpdateRequest.class);
+
             default -> {
                 log.warn("Unknown or unsupported packetType on WS: {}", envelope.getPacketType());
-                wsSession.sendMessage(new TextMessage("{\"error\":\"Unknown or unsupported packetType: " + envelope.getPacketType() + "\"}"));
+                wsSession.sendMessage(new TextMessage("{\"error\":\"unsupported packetType: " + envelope.getPacketType() + "\"}"));
                 yield null;
             }
-        };
+        };*/
+
+        Class<? extends AbstractClientRequest> clazz = wsPacketRegistry.resolve(envelope.getPacketType());
+        AbstractClientRequest request = objectMapper.treeToValue(envelope.getPayload(), clazz);
 
         if (request == null) {
-            return; // already responded with error
+            return;
         }
 
-        boolean isHandshake = request instanceof ClientHandshakeRequest;
-
-        // 1) Validate session for all non-handshake requests
-        GameSession gs = null;
+        // Central auth/session resolution (JWT if present; fallback to sessionId/clientId)
+        SessionService.ResolvedSession resolved = null;
 
         if (!isHandshake) {
-            String sessionId = request.getSessionId();
-            if (sessionId == null || sessionId.isBlank()) {
-                wsSession.sendMessage(new TextMessage("{\"error\":\"Missing sessionId.\"}"));
+            try {
+                resolved = sessionService.resolveFromRequest(request);
+            } catch (Exception e) {
+                wsSession.sendMessage(new TextMessage("{\"error\":\"" + e.getMessage().replace("\"", "'") + "\"}"));
                 return;
             }
 
-            gs = gameSessionService.touchOrCreateMinimal(sessionId, request.getClientId());
-            wsRegistry.bind(sessionId, wsSession);
+            // keep ws bindings for server broadcasts
+            wsRegistry.bind(resolved.sessionId(), wsSession);
+        }
 
-            // Optional: bind game when these packets arrive (depends on your flow)
+        // Existing behavior: manage minimal game session (optional)
+        GameSession gs = null;
+        if (!isHandshake) {
+            gs = gameSessionService.touchOrCreateMinimal(resolved.sessionId(), resolved.clientId());
+
+            // optional bind game based on packets
             if (request instanceof GameSubscribeRequest sub && sub.getGameId() != null && !sub.getGameId().isBlank()) {
                 gs = gameSessionService.bindGame(gs.sessionId(), gs.clientId(), sub.getGameId());
             }
@@ -92,32 +145,36 @@ public class YipeeWebSocketHandler extends TextWebSocketHandler {
             }
         }
 
-        // 2) Build *resolved* context (use session bindings, not WS attributes)
-        //var resolved = gameSessionService.resolveForRequest(request); // returns playerId, gameId, sessionId, clientId
-        GameContext ctx = gameContextFactory.fromGameSession(gs, request);  // assembler-only
+        GameContext ctx = gameContextFactory.fromGameSession(gs, request);
 
-        // 3) Handle
-        // Let YipeePacketHandler do the transport-agnostic work
-        AbstractServerResponse response = packetHandler.handle(ctx, request);
+        AbstractServerResponse response;
+        try {
+            response = packetHandler.handle(ctx, request);
+        } catch (Exception e) {
+            log.error("WS packet handling failed: {}", e.getMessage(), e);
+            wsSession.sendMessage(new TextMessage("{\"error\":\"" + e.getMessage().replace("\"", "'") + "\"}"));
+            return;
+        }
 
-        // 4) If handshake created a sessionId, bind it now
+        // If handshake response carries session, bind it
         if (isHandshake && response instanceof ClientHandshakeResponse chr) {
             wsRegistry.bind(chr.getSessionId(), wsSession);
             gameSessionService.createMinimal(chr.getSessionId(), request.getClientId(), chr.getPlayerId());
         }
 
-        // You can either:
-        // 1) send the plain response, or
-        // 2) re-wrap it in a WsPacketEnvelope with a "responseType" if you prefer
         wsSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(response)));
     }
 
     @Override
     public void handleTransportError(WebSocketSession session, @NotNull Throwable exception) throws Exception {
         log.error("WebSocket error on {}: {}", session.getId(), exception.getMessage(), exception);
-        // Optionally: build a simple error JSON here or just close the session
-        // If you really want to reuse ErrorResponse, you can construct one manually,
-        // but packetHandler.processNetError() expects a Kryo Connection so we
-        // treat WS separately.
+        super.handleTransportError(session, exception);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, @NotNull org.springframework.web.socket.CloseStatus status) throws Exception {
+        log.info("WebSocket closed: {} status={}", session.getId(), status);
+        wsRegistry.unbind(session.getId());
+        super.afterConnectionClosed(session, status);
     }
 }

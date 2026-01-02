@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 
 @Slf4j
 @Service
@@ -33,6 +35,16 @@ public class SessionService {
     private final YipeeClientConnectionRepository yipeeClientConnectionRepository;
     private final YipeePlayerRepository yipeePlayerRepository;
     private final SecureSessionIdGenerator idGenerator;
+    private final GameSessionTokenService gameSessionTokenService;
+
+    public record ResolvedSession(
+            String playerId,
+            String clientId,
+            String sessionId,
+            String gameId,
+            String tableId,
+            Integer seatIndex
+    ) {}
 
     public PlayerConnectionEntity requireSession(String sessionId, String clientId) {
         if (sessionId == null || sessionId.isBlank()) {
@@ -129,5 +141,87 @@ public class SessionService {
         response.setSessionId(sessionId);
 
         return response;
+    }
+
+    public PlayerConnectionEntity upsertFromLaunchClaims(String sessionId, String clientId, String playerId) {
+        if (sessionId == null || sessionId.isBlank()) throw new ClientValidationException("SESSION_MISSING", "sid missing");
+        if (clientId == null || clientId.isBlank()) throw new ClientValidationException("CLIENT_ID_MISSING", "cid missing");
+        if (playerId == null || playerId.isBlank()) throw new ClientValidationException("PLAYER_ID_MISSING", "sub missing");
+
+        YipeePlayer player = yipeePlayerRepository.findById(playerId)
+                .orElseThrow(() -> new ClientValidationException("PLAYER_NOT_FOUND", "player missing"));
+
+        PlayerConnectionEntity conn = yipeeClientConnectionRepository
+                .findByPlayerIdAndClientId(playerId, clientId)
+                .orElseGet(PlayerConnectionEntity::new);
+
+        conn.setPlayer(player);
+        conn.setClientId(clientId);
+        conn.setSessionId(sessionId);
+
+        Instant now = Instant.now();
+        if (conn.getConnectedAt() == null) conn.setConnectedAt(now);
+        conn.setLastActivity(now);
+        conn.setDisconnectedAt(null);
+
+        return yipeeClientConnectionRepository.save(conn);
+    }
+
+    public ResolvedSession resolveFromRequest(asg.games.yipee.net.packets.AbstractClientRequest request) {
+
+        String clientId = request.getClientId();
+        if (clientId == null || clientId.isBlank()) {
+            throw new ClientValidationException(EXCEPTION_SESSION_MISSING, "clientId is required.");
+        }
+
+        // If authToken exists, validate it as a game_session JWT
+        String authToken = request.getAuthToken();
+        if (authToken != null && !authToken.isBlank()) {
+            Jws<Claims> jws = gameSessionTokenService.verifyGameSessionToken(authToken);
+            Claims c = jws.getBody();
+
+            String scope = c.get("scope", String.class);
+            if (!"game_session".equals(scope)) {
+                throw new ClientValidationException(EXCEPTION_SESSION_INVALID, "Invalid authToken scope.");
+            }
+
+            String tokenClientId = c.get("cid", String.class);
+            if (tokenClientId != null && !tokenClientId.equals(clientId)) {
+                throw new ClientValidationException(EXCEPTION_SESSION_MISMATCH, "authToken clientId mismatch.");
+            }
+
+            String playerId = c.getSubject();
+            String sessionId = c.get("sid", String.class);
+
+            // Optional: still enforce DB session existence (revocation/idle timeout)
+            // This uses your existing requireSession() implementation.
+            requireSession(sessionId, clientId);
+
+            return new ResolvedSession(
+                    playerId,
+                    clientId,
+                    sessionId,
+                    c.get("gid", String.class),
+                    c.get("tid", String.class),
+                    c.get("seatIndex", Integer.class)
+            );
+        }
+
+        // Fallback: old-school sessionId + clientId
+        String sessionId = request.getSessionId();
+        if (sessionId == null || sessionId.isBlank()) {
+            throw new ClientValidationException(EXCEPTION_SESSION_MISSING, "sessionId is required.");
+        }
+
+        PlayerConnectionEntity conn = requireSession(sessionId, clientId);
+
+        return new ResolvedSession(
+                conn.getPlayer() == null ? null : conn.getPlayer().getId(),
+                clientId,
+                sessionId,
+                null,
+                null,
+                null
+        );
     }
 }

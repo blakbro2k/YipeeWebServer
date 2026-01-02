@@ -22,4 +22,5 @@ public class ControllerContstants {
     public static final String API_TABLE_WATCHERS_PATH = "/table/getWatchers";
     public static final String API_GAME_LAUNCH_TOKEN_PATH = "/game/getlaunchToken";
     public static final String API_GAME_WHOAMI_PATH = "/game/whoami";
+    public static final String API_GAME_TABLE_PATH = "/game/table";
 }

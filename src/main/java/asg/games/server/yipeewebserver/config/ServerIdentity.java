@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class ServerIdentity {
     private int udpPort;
 
     @Value("${gameserver.tickrate}")
-    private float tickRate;
+    private int tickRate;
 
     private String instanceId;
 
@@ -38,5 +39,9 @@ public class ServerIdentity {
         // instanceId = System.getenv().getOrDefault("POD_NAME", UUID.randomUUID().toString().substring(0, 8));
         instanceId = UUID.randomUUID().toString().substring(0, 8);
         fullId = serverId + "::" + instanceId;
+    }
+
+    public long getServerTimeStamp() {
+        return Instant.now().getEpochSecond();
     }
 }
