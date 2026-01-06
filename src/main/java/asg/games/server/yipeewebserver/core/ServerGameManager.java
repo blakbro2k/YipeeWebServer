@@ -16,13 +16,13 @@
 package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.Version;
-import asg.games.server.yipeewebserver.net.api.TickedPlayerActionData;
 import asg.games.yipee.common.game.GameBoardState;
 import asg.games.yipee.common.game.PlayerAction;
 import asg.games.yipee.core.game.YipeeGameBoard;
 import asg.games.yipee.core.objects.YipeeGameBoardState;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.tools.TimeUtils;
+import asg.games.yipee.net.wire.TickedPlayerActionData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Getter;
 import lombok.Setter;

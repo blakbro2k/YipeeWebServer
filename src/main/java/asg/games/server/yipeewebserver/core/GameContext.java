@@ -1,8 +1,5 @@
 package asg.games.server.yipeewebserver.core;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public record GameContext(
         String serviceName,
         String serverId,

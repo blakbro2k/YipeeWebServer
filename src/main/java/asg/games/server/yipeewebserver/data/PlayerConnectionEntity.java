@@ -28,7 +28,7 @@ import java.util.Objects;
                 @Index(name = "IDX_PLAYER_CONNECTION_ACTIVITY", columnList = "last_activity")
         }
 )
-public class PlayerConnectionEntity extends AbstractDTO {
+public class PlayerConnectionEntity extends AbstractEntity {
     @Column(name = "client_id", nullable = false, length = 64)
     private String clientId;
 

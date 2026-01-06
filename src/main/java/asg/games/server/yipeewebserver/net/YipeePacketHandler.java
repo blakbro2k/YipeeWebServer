@@ -5,7 +5,7 @@ import asg.games.server.yipeewebserver.core.GameContext;
 import asg.games.server.yipeewebserver.core.GameContextFactory;
 import asg.games.server.yipeewebserver.core.ServerGameManager;
 import asg.games.server.yipeewebserver.services.GameSessionService;
-import asg.games.server.yipeewebserver.tools.NetUtil;
+import asg.games.server.yipeewebserver.tools.Util;
 import asg.games.yipee.net.errors.ErrorCode;
 import asg.games.yipee.net.errors.ErrorMapper;
 import asg.games.yipee.net.errors.YipeeException;
@@ -169,12 +169,12 @@ public class YipeePacketHandler {
         gameSessionService.bindGame(req.getSessionId(), req.getClientId(), gameId);
 
         GameStartResponse resp = new GameStartResponse();
-        NetUtil.copyEnvelope(req, resp);
+        Util.copyEnvelope(req, resp);
         resp.setAccepted(true);
         resp.setGameId(gameId);
         resp.setTableId(tableId);
 
-        NetUtil.stampServerMeta(resp, serverIdentity);
+        Util.stampServerMeta(resp, serverIdentity);
         return resp;
     }
 
@@ -186,31 +186,25 @@ public class YipeePacketHandler {
         // mappedKeyService.updateKeyMap(req.getPlayerId(), req.getKeyConfig());
 
         MappedKeyUpdateResponse resp = new MappedKeyUpdateResponse();
-        NetUtil.copyEnvelope(req, resp);
+        Util.copyEnvelope(req, resp);
         resp.setSuccess(true);
 
-        NetUtil.stampServerMeta(resp, serverIdentity);
+        Util.stampServerMeta(resp, serverIdentity);
         return resp;
     }
 
     private PlayerActionResponse handlePlayerAction(GameContext gameContext, PlayerActionRequest req) {
-        log.trace("Handling PlayerActionRequest: {}", req);
-
-        // TODO: enqueue into your game loop:
-        // gameServerManager.enqueuePlayerAction(
-        //     req.getGameId(),
-        //     req.getPlayerId(),
-        //     req.getClientTick(),
-        //     req.getAction()
-        // );
+        log.debug("Enter handlePlayerAction(gameContext={}, req={})", gameContext, req);
 
         PlayerActionResponse resp = new PlayerActionResponse();
-        NetUtil.copyEnvelope(req, resp);
+        Util.copyEnvelope(req, resp);
         resp.setAccepted(true);
+
         // For now, just echo the client tick; later you can set the authoritative tick.
         resp.setServerTick(req.getClientTick());
 
-        NetUtil.stampServerMeta(resp, serverIdentity);
+        Util.stampServerMeta(resp, serverIdentity);
+        log.debug("Exit handlePlayerAction()={}", resp);
         return resp;
     }
 
@@ -229,7 +223,7 @@ public class YipeePacketHandler {
         // TODO: Record user requesting update
         // TODO: generate SeatStateUpdate request from list of gamestates for each seat
         TableStateUpdateResponse tableUpdateRes = new TableStateUpdateResponse();
-        NetUtil.copyEnvelope(req, tableUpdateRes);
+        Util.copyEnvelope(req, tableUpdateRes);
         tableUpdateRes.setGameId(gameContext.gameId());
         tableUpdateRes.setSeatState1(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
         tableUpdateRes.setSeatState2(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
@@ -240,7 +234,7 @@ public class YipeePacketHandler {
         tableUpdateRes.setSeatState7(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
         tableUpdateRes.setSeatState8(buildSeatStateUpdateResponse(gameContext.gameId(), gameContext.serverTick(), gameContext, null));
 
-        NetUtil.stampServerMeta(tableUpdateRes, serverIdentity);
+        Util.stampServerMeta(tableUpdateRes, serverIdentity);
         return tableUpdateRes;
     }
 
@@ -256,12 +250,12 @@ public class YipeePacketHandler {
 
         // TODO: apply patch into your GameManager and then broadcast.
         SeatStateUpdateResponse broadcast = new SeatStateUpdateResponse();
-        NetUtil.copyEnvelope(req, broadcast);
+        Util.copyEnvelope(req, broadcast);
         broadcast.setGameId(req.getGameId());
         broadcast.setTableId(req.getTableId());
         broadcast.setStates(new ArrayList<>());
 
-        NetUtil.stampServerMeta(broadcast, serverIdentity);
+        Util.stampServerMeta(broadcast, serverIdentity);
         return broadcast;
     }
 
@@ -280,7 +274,7 @@ public class YipeePacketHandler {
         resp.setTableId(tableId);
         resp.setActions(null);
         resp.setServerTick(serverTick);
-        NetUtil.stampServerMeta(resp, serverIdentity);
+        Util.stampServerMeta(resp, serverIdentity);
         return resp;
     }
 
@@ -294,7 +288,7 @@ public class YipeePacketHandler {
         resp.setGameId(gameId);
         resp.setStates(new ArrayList<>());
         resp.setServerTick(gameContext.serverTick());
-        NetUtil.stampServerMeta(resp, serverIdentity);
+        Util.stampServerMeta(resp, serverIdentity);
         return resp;
     }
 
@@ -306,11 +300,11 @@ public class YipeePacketHandler {
                                         ErrorCode code,
                                         String message) {
         ErrorResponse err = new ErrorResponse();
-        NetUtil.copyEnvelope(req, err);
+        Util.copyEnvelope(req, err);
         err.setCode(code);
         err.setMessage(message);
         err.setDetails(req.getClass().getSimpleName());
-        NetUtil.stampServerMeta(err, serverIdentity);
+        Util.stampServerMeta(err, serverIdentity);
         return err;
     }
 

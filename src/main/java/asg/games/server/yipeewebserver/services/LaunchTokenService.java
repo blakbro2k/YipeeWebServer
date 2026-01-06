@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class LaunchTokenService {
 
@@ -82,6 +84,7 @@ public class LaunchTokenService {
     ) {}
 
     public LaunchTokenContext requireContext(String token) {
+        log.debug("Enter requireContext(token={})", token);
         Claims c = verifyLaunchToken(token).getBody();
 
         String scope = c.get("scope", String.class);
@@ -90,8 +93,11 @@ public class LaunchTokenService {
         Number seat = c.get("seatIndex", Number.class);
         Number icon = c.get("picon", Number.class);
         Number rate = c.get("prate", Number.class);
+        log.debug("seat={}", seat);
+        log.debug("icon={}", icon);
+        log.debug("rate={}", rate);
 
-        return new LaunchTokenContext(
+        LaunchTokenContext context = new LaunchTokenContext(
                 c.getSubject(),
                 c.get("cid", String.class),
                 c.get("sid", String.class),
@@ -102,6 +108,7 @@ public class LaunchTokenService {
                 icon == null ? null : icon.intValue(),
                 rate == null ? null : rate.intValue()
         );
+        log.debug("Exit requireContext()={}", context);
+        return context;
     }
-
 }

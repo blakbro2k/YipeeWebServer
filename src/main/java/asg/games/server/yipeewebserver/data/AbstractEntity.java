@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @MappedSuperclass
-public abstract class AbstractDTO implements DTOObject {
+public abstract class AbstractEntity implements EntityObject {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid",strategy = "uuid")
@@ -30,7 +30,7 @@ public abstract class AbstractDTO implements DTOObject {
 
     protected long modified;
 
-    AbstractDTO() {
+    AbstractEntity() {
         this.setCreated(TimeUtils.millis());
         this.setModified(TimeUtils.millis());
     }
@@ -39,7 +39,7 @@ public abstract class AbstractDTO implements DTOObject {
         if (this == o) {
             return true;
         } else if (o != null && this.getClass() == o.getClass()) {
-            AbstractDTO object = (AbstractDTO)o;
+            AbstractEntity object = (AbstractEntity)o;
             return Objects.equals(this.getId(), object.getId()) && Objects.equals(this.getName(), object.getName());
         } else {
             return false;

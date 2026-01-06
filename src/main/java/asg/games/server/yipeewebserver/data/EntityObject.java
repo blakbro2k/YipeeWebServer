@@ -1,11 +1,11 @@
 package asg.games.server.yipeewebserver.data;
 
 /**
- * The {@code DTOObject} interface defines a standard structure for Data Transfer Objects (DTOs)
+ * The {@code EntityObject} interface defines a standard structure for Data Transfer Objects (DTOs)
  * in the Yipee Webserver project. It enforces common properties
  * such as ID, name, creation timestamp, and modification timestamp.
  */
-public interface DTOObject {
+public interface EntityObject {
 
     /**
      * Sets the unique identifier for this object.

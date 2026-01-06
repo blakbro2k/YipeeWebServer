@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class GameSessionTokenService {
 
@@ -73,6 +75,7 @@ public class GameSessionTokenService {
     ) {}
 
     public GameSessionTokenContext requireContext(String token) {
+        log.debug("Enter requireContext(token={})", token);
         Claims c = verifyGameSessionToken(token).getBody();
 
         // scope guard (optional but recommended)
@@ -81,9 +84,10 @@ public class GameSessionTokenService {
             throw new IllegalArgumentException("Invalid token scope: " + scope);
         }
 
+        log.debug("c={})", c);
         Number n = c.get("seatIndex", Number.class);
 
-        return new GameSessionTokenContext(
+        GameSessionTokenContext context = new GameSessionTokenContext(
                 c.getSubject(),
                 c.get("cid", String.class),
                 c.get("sid", String.class),
@@ -91,6 +95,7 @@ public class GameSessionTokenService {
                 c.get("tid", String.class),
                 ((n == null) ? null : n.intValue())
         );
+        log.debug("Exit requireContext()={}", context);
+        return context;
     }
-
 }

@@ -5,37 +5,7 @@ import asg.games.server.yipeewebserver.annotations.SessionConnection;
 import asg.games.server.yipeewebserver.config.OpenApiConfig;
 import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
-import asg.games.server.yipeewebserver.net.ConnectionContext;
 import asg.games.server.yipeewebserver.net.YipeePacketHandler;
-import asg.games.server.yipeewebserver.net.api.CreateTableRequest;
-import asg.games.server.yipeewebserver.net.api.CreateTableResponse;
-import asg.games.server.yipeewebserver.net.api.JoinRoomRequest;
-import asg.games.server.yipeewebserver.net.api.JoinRoomResponse;
-import asg.games.server.yipeewebserver.net.api.JoinTableRequest;
-import asg.games.server.yipeewebserver.net.api.JoinTableResponse;
-import asg.games.server.yipeewebserver.net.api.LaunchTokenRequest;
-import asg.games.server.yipeewebserver.net.api.LaunchTokenResponse;
-import asg.games.server.yipeewebserver.net.api.LeaveRoomRequest;
-import asg.games.server.yipeewebserver.net.api.LeaveRoomResponse;
-import asg.games.server.yipeewebserver.net.api.LeaveTableRequest;
-import asg.games.server.yipeewebserver.net.api.LeaveTableResponse;
-import asg.games.server.yipeewebserver.net.api.PlayerProfileResponse;
-import asg.games.server.yipeewebserver.net.api.PlayerSummary;
-import asg.games.server.yipeewebserver.net.api.RegisterPlayerRequest;
-import asg.games.server.yipeewebserver.net.api.RoomPlayersResponse;
-import asg.games.server.yipeewebserver.net.api.RoomSummary;
-import asg.games.server.yipeewebserver.net.api.SeatDetailSummary;
-import asg.games.server.yipeewebserver.net.api.SeatSummary;
-import asg.games.server.yipeewebserver.net.api.ServerStatusResponse;
-import asg.games.server.yipeewebserver.net.api.SitDownRequest;
-import asg.games.server.yipeewebserver.net.api.SitDownResponse;
-import asg.games.server.yipeewebserver.net.api.StandUpRequest;
-import asg.games.server.yipeewebserver.net.api.StandUpResponse;
-import asg.games.server.yipeewebserver.net.api.TableDetailResponse;
-import asg.games.server.yipeewebserver.net.api.TableDetailsSummary;
-import asg.games.server.yipeewebserver.net.api.TableSummary;
-import asg.games.server.yipeewebserver.net.api.TableWatchersResponse;
-import asg.games.server.yipeewebserver.net.api.GameWhoAmIResponse;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeRoomRepository;
@@ -51,6 +21,32 @@ import asg.games.yipee.core.objects.YipeeSeat;
 import asg.games.yipee.core.objects.YipeeTable;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
+import asg.games.yipee.net.tools.NetUtil;
+import asg.games.yipee.net.wire.CreateTableRequest;
+import asg.games.yipee.net.wire.CreateTableResponse;
+import asg.games.yipee.net.wire.JoinRoomRequest;
+import asg.games.yipee.net.wire.JoinRoomResponse;
+import asg.games.yipee.net.wire.JoinTableRequest;
+import asg.games.yipee.net.wire.JoinTableResponse;
+import asg.games.yipee.net.wire.LeaveRoomRequest;
+import asg.games.yipee.net.wire.LeaveRoomResponse;
+import asg.games.yipee.net.wire.LeaveTableRequest;
+import asg.games.yipee.net.wire.LeaveTableResponse;
+import asg.games.yipee.net.wire.PlayerProfileResponse;
+import asg.games.yipee.net.wire.PlayerSummary;
+import asg.games.yipee.net.wire.RegisterPlayerRequest;
+import asg.games.yipee.net.wire.RoomPlayersResponse;
+import asg.games.yipee.net.wire.RoomSummary;
+import asg.games.yipee.net.wire.SeatSummary;
+import asg.games.yipee.net.wire.ServerStatusResponse;
+import asg.games.yipee.net.wire.SitDownRequest;
+import asg.games.yipee.net.wire.SitDownResponse;
+import asg.games.yipee.net.wire.StandUpRequest;
+import asg.games.yipee.net.wire.StandUpResponse;
+import asg.games.yipee.net.wire.TableDetailResponse;
+import asg.games.yipee.net.wire.TableDetailsSummary;
+import asg.games.yipee.net.wire.TableSummary;
+import asg.games.yipee.net.wire.TableWatchersResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -104,7 +100,7 @@ public class YipeeAPIController {
     // -------------------------------------------------------
     @GetMapping(ControllerContstants.API_STATUS_PATH)
     public ResponseEntity<ServerStatusResponse> getStatus() {
-        ServerStatusResponse status = new ServerStatusResponse(
+        ServerStatusResponse status = NetUtil.newServerStatusResponse(
                 getServerStatus(),
                 serviceName,
                 serverIdentity.getFullId(),
@@ -126,7 +122,7 @@ public class YipeeAPIController {
         YipeePlayer player = conn.getPlayer();
         if (player == null) return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new PlayerProfileResponse(
+        return ResponseEntity.ok(NetUtil.newPlayerProfileResponse(
                 player.getId(),
                 player.getName(),
                 player.getIcon(),
@@ -167,7 +163,7 @@ public class YipeeAPIController {
 
         log.debug("Saved the following registered player={}", savedPlayer);
 
-        PlayerProfileResponse response = new PlayerProfileResponse(
+        PlayerProfileResponse response = NetUtil.newPlayerProfileResponse(
                 savedPlayer.getId(),
                 savedPlayer.getName(),
                 savedPlayer.getIcon(),
@@ -223,10 +219,10 @@ public class YipeeAPIController {
     ) {
         YipeePlayer player = conn.getPlayer();
 
-        YipeeRoom room = yipeeGameService.joinRoom(player.getId(), request.roomId());
+        YipeeRoom room = yipeeGameService.joinRoom(player.getId(), request.getRoomId());
 
         java.util.List<TableSummary> tables = room.getTableIndexMap().values().stream()
-                .map(t -> new TableSummary(
+                .map(t -> NetUtil.newTableSummary(
                         t.getId(),
                         t.getTableNumber(),
                         t.getAccessType().toString(),
@@ -237,7 +233,7 @@ public class YipeeAPIController {
                 ))
                 .toList();
 
-        JoinRoomResponse response = new JoinRoomResponse(
+        JoinRoomResponse response = NetUtil.newJoinRoomResponse(
                 room.getId(),
                 room.getName(),
                 room.getLoungeName(),
@@ -257,10 +253,10 @@ public class YipeeAPIController {
         if(player != null) {
             playerId = player.getId();
         }
-        String roomId = request.roomId();
+        String roomId = request.getRoomId();
 
         yipeeGameService.leaveRoom(playerId, roomId);
-        LeaveRoomResponse response = new LeaveRoomResponse(
+        LeaveRoomResponse response = NetUtil.newLeaveRoomResponse(
                 playerId,
                 roomId,
                 true
@@ -274,7 +270,7 @@ public class YipeeAPIController {
         List<YipeeRoom> rooms = yipeeGameService.getAllRooms();
 
         List<RoomSummary> response = rooms.stream()
-                .map(room -> new RoomSummary(
+                .map(room -> NetUtil.newRoomSummary(
                         room.getId(),
                         room.getName(),
                         room.getLoungeName(),
@@ -300,7 +296,7 @@ public class YipeeAPIController {
                 .orElseThrow(() -> new IllegalArgumentException("Room not found: " + roomId));
 
         java.util.List<PlayerSummary> playerDtos = players.stream()
-                .map(p -> new PlayerSummary(
+                .map(p -> NetUtil.newPlayerSummary(
                         p.getId(),
                         p.getName(),
                         p.getIcon(),
@@ -308,7 +304,7 @@ public class YipeeAPIController {
                 ))
                 .toList();
 
-        RoomPlayersResponse response = new RoomPlayersResponse(
+        RoomPlayersResponse response = NetUtil.newRoomPlayersResponse(
                 room.getId(),
                 room.getName(),
                 room.getLoungeName(),
@@ -332,14 +328,14 @@ public class YipeeAPIController {
 
         YipeeTable table = yipeeGameService.joinTable(
                 player.getId(),
-                request.roomId(),
-                request.tableNumber(),
-                request.createIfMissing()
+                request.getRoomId(),
+                request.getTableNumber(),
+                request.isCreateIfMissing()
         );
 
-        YipeeRoom room = yipeeRoomRepository.findRoomById(request.roomId());
+        YipeeRoom room = yipeeRoomRepository.findRoomById(request.getRoomId());
 
-        JoinTableResponse response = new JoinTableResponse(
+        JoinTableResponse response = NetUtil.newJoinTableResponse(
                 room.getId(),
                 room.getName(),
                 table.getId(),
@@ -358,10 +354,10 @@ public class YipeeAPIController {
 
         YipeeTable table = yipeeGameService.createTable(
                 playerId,
-                request.roomId(),
-                request.rated(),
-                request.soundOn(),
-                request.accessType()
+                request.getRoomId(),
+                request.isRated(),
+                request.isSoundOn(),
+                request.getAccessType()
         );
 
         YipeeRoom room = table.getRoom();
@@ -370,7 +366,7 @@ public class YipeeAPIController {
                 .map(seat -> {
                     YipeePlayer seated = seat.getSeatedPlayer();
                     String seatedPlayerId = seated != null ? seated.getId() : null;
-                    return new SeatSummary(
+                    return NetUtil.newSeatSummary(
                             seat.getId(),
                             seat.getSeatNumber(),
                             seat.isSeatReady(),
@@ -383,7 +379,7 @@ public class YipeeAPIController {
         
         boolean created = true;
 
-        CreateTableResponse response = new CreateTableResponse(
+        CreateTableResponse response = NetUtil.newCreateTableResponse(
                 room.getId(),
                 room.getName(),
                 table.getId(),
@@ -403,16 +399,16 @@ public class YipeeAPIController {
         String playerId = player.getId();
 
         // For richer response, peek at current state before leaving:
-        YipeeTable table = yipeeTableRepository.findById(request.tableId())
-                .orElseThrow(() -> new IllegalArgumentException("Table not found: " + request.tableId()));
+        YipeeTable table = yipeeTableRepository.findById(request.getTableId())
+                .orElseThrow(() -> new IllegalArgumentException("Table not found: " + request.getTableId()));
 
         boolean wasWatcher = table.getWatchers().contains(player);
         boolean wasSeated = table.getSeats().stream().anyMatch(seat -> player.equals(seat.getSeatedPlayer()));
 
         // Now perform the actual leave
-        yipeeGameService.leaveTable(playerId, request.tableId());
+        yipeeGameService.leaveTable(playerId, request.getTableId());
 
-        LeaveTableResponse response = new LeaveTableResponse(
+        LeaveTableResponse response = NetUtil.newLeaveTableResponse(
                 table.getId(),
                 player.getId(),
                 true,
@@ -429,7 +425,7 @@ public class YipeeAPIController {
     ) {
         List<YipeeTable> tables = yipeeGameService.getTablesForRoom(roomId);
         List<TableSummary> response = tables.stream()
-                .map(t -> new TableSummary(
+                .map(t -> NetUtil.newTableSummary(
                         t.getId(),
                         t.getTableNumber(),
                         t.getAccessType().toString(),
@@ -459,12 +455,12 @@ public class YipeeAPIController {
         var seats = table.getSeats().stream()
                 .map(seat -> {
                     YipeePlayer p = seat.getSeatedPlayer();
-                    return new SeatDetailSummary(
+                    return NetUtil.newSeatDetailSummary(
                             seat.getId(),
                             seat.getSeatNumber(),
                             seat.isSeatReady(),
                             seat.isOccupied(),
-                            new PlayerSummary(
+                            NetUtil.newPlayerSummary(
                                     p != null ? p.getId() : null,
                                     p != null ? p.getName() : null,
                                     p != null ? p.getIcon() : -1,
@@ -476,7 +472,7 @@ public class YipeeAPIController {
         
         // Build watcher summaries
         var watchers = table.getWatchers().stream()
-                .map(p -> new PlayerSummary(
+                .map(p -> NetUtil.newPlayerSummary(
                         p.getId(),
                         p.getName(),
                         p.getIcon(),
@@ -484,11 +480,11 @@ public class YipeeAPIController {
                 ))
                 .toList();
 
-        TableDetailResponse response = new TableDetailResponse(
+        TableDetailResponse response = NetUtil.newTableDetailResponse(
                 room.getId(),
                 room.getName(),
-                new TableDetailsSummary(
-                        new TableSummary(
+                NetUtil.newTableDetailsSummary(
+                        NetUtil.newTableSummary(
                                 table.getId(),
                                 table.getTableNumber(),
                                 table.getAccessType().toString(),
@@ -515,7 +511,7 @@ public class YipeeAPIController {
                 .sorted(java.util.Comparator.comparingInt(YipeeTable::getTableNumber))
                 .map(table -> {
                     // 1) Build the TableSummary (same shape as /getTables)
-                    TableSummary tableSummary = new TableSummary(
+                    TableSummary tableSummary = NetUtil.newTableSummary(
                             table.getId(),
                             table.getTableNumber(),
                             table.getAccessType().toString(),
@@ -527,12 +523,12 @@ public class YipeeAPIController {
 
                     // 2) Build SeatSummary list
                     var seatsSummaries = table.getSeats().stream()
-                            .map(seat -> new SeatDetailSummary(
+                            .map(seat -> NetUtil.newSeatDetailSummary(
                                     seat.getId(),
                                     seat.getSeatNumber(),
                                     seat.isSeatReady(),
                                     seat.isOccupied(),
-                                    new PlayerSummary(
+                                    NetUtil.newPlayerSummary(
                                             getSeatedPlayerId(seat),
                                             getSeatedPlayerName(seat),
                                             getSeatedPlayerIcon(seat),
@@ -543,7 +539,7 @@ public class YipeeAPIController {
 
                     // 3) Build watcher names list
                     var watcherSummaries = table.getWatchers().stream()
-                            .map(watcher -> new PlayerSummary(
+                            .map(watcher -> NetUtil.newPlayerSummary(
                                     watcher.getId(),
                                     watcher.getName(),
                                     watcher.getIcon(),
@@ -551,7 +547,7 @@ public class YipeeAPIController {
                             ))
                             .toList();
 
-                    return new TableDetailsSummary(
+                    return NetUtil.newTableDetailsSummary(
                             tableSummary,
                             seatsSummaries,
                             watcherSummaries
@@ -610,14 +606,14 @@ public class YipeeAPIController {
         String playerId = player.getId();
 
         // TableService persists objects and handles idle table indexing
-        YipeeSeat seat = tableService.sitDown(request.tableId(),
+        YipeeSeat seat = tableService.sitDown(request.getTableId(),
                 playerId,
-                request.seatNumber());
+                request.getSeatNumber());
 
         YipeeTable table = seat.getParentTable();
         YipeeRoom room = table.getRoom();
 
-        SitDownResponse response = new SitDownResponse(
+        SitDownResponse response = NetUtil.newSitDownResponse(
                 room.getId(),
                 room.getName(),
                 table.getId(),
@@ -645,17 +641,17 @@ public class YipeeAPIController {
         log.debug("player={}", player);
         log.debug("playerId={}", playerId);
         YipeeSeat seat = tableService.standUp(
-                request.tableId(),
+                request.getTableId(),
                 playerId
         );
 
         // If seat == null, the player wasn't seated -> still treat as success, but fill with null-ish seat fields.
         if (seat == null) {
-            YipeeTable table = yipeeTableRepository.findById(request.tableId())
-                    .orElseThrow(() -> new IllegalArgumentException("Table not found: " + request.tableId()));
+            YipeeTable table = yipeeTableRepository.findById(request.getTableId())
+                    .orElseThrow(() -> new IllegalArgumentException("Table not found: " + request.getTableId()));
             YipeeRoom room = table.getRoom();
 
-            StandUpResponse response = new StandUpResponse(
+            StandUpResponse response = NetUtil.newStandUpResponse(
                     room.getId(),
                     room.getName(),
                     table.getId(),
@@ -674,7 +670,7 @@ public class YipeeAPIController {
         log.debug("table={}", table);
         log.debug("room={}", room);
 
-        StandUpResponse response = new StandUpResponse(
+        StandUpResponse response = NetUtil.newStandUpResponse(
                 room.getId(),
                 room.getName(),
                 table.getId(),
@@ -696,7 +692,7 @@ public class YipeeAPIController {
         java.util.Set<YipeePlayer> watchers = yipeeGameService.getTableWatchers(tableId);
 
         java.util.List<PlayerSummary> watcherDtos = watchers.stream()
-                .map(p -> new PlayerSummary(
+                .map(p -> NetUtil.newPlayerSummary(
                         p.getId(),
                         p.getName(),
                         p.getIcon(),
@@ -704,7 +700,7 @@ public class YipeeAPIController {
                 ))
                 .toList();
 
-        TableWatchersResponse response = new TableWatchersResponse(
+        TableWatchersResponse response = NetUtil.newTableWatchersResponse(
                 tableId,
                 watcherDtos.size(),
                 watcherDtos

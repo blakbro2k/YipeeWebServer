@@ -2,12 +2,14 @@ package asg.games.server.yipeewebserver.core;
 
 import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.session.GameSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 public class GameSessionStore {
 

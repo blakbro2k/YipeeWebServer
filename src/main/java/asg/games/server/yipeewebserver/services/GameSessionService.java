@@ -5,10 +5,12 @@ import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.session.GameSession;
 import asg.games.yipee.net.errors.YipeeSessionException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GameSessionService {

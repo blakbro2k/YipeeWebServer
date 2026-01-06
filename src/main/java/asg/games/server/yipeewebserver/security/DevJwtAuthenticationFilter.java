@@ -78,24 +78,31 @@ public class DevJwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private JwtIdentity parseJwt(String token) throws IOException {
+        log.debug("Enter parseJwt(token={})", token);
+
         String[] parts = token.split("\\.");
         if (parts.length < 2) return null;
 
         String payloadBase64 = padBase64Url(parts[1]);
         byte[] decoded = Base64.getUrlDecoder().decode(payloadBase64);
         String json = new String(decoded, StandardCharsets.UTF_8);
+        log.debug("json: {}", json);
 
         JsonNode node = objectMapper.readTree(json);
 
         String playerId = node.path("sub").asText(null);
-        String username = node.path("username").asText(null);
-        Integer rating  = node.hasNonNull("rating") ? node.get("rating").asInt() : 1500;
+        String username = node.path("pname").asText(null);
+        Integer rating  = node.hasNonNull("prate") ? node.get("prate").asInt() : 1500;
+        Integer icon  = node.hasNonNull("picon") ? node.get("picon").asInt() : -1;
 
-        // icon can be int or string; treat as string to be safe
-        String icon = node.path("icon").asText(null);
-
-        if (playerId == null) return null;
-        return new JwtIdentity(playerId, username, rating, icon);
+        JwtIdentity jwtIdentity = null;
+        if (playerId == null) {
+            jwtIdentity = null;
+        } else {
+            jwtIdentity = new JwtIdentity(playerId, username, rating, icon);
+        }
+        log.debug("Exit parseJwt()={}", jwtIdentity);
+        return jwtIdentity;
     }
 
     private static String padBase64Url(String s) {
@@ -104,5 +111,5 @@ public class DevJwtAuthenticationFilter extends OncePerRequestFilter {
         return s + "====".substring(mod);
     }
 
-    public record JwtIdentity(String playerId, String username, Integer rating, String icon) {}
+    public record JwtIdentity(String playerId, String username, Integer rating, Integer icon) {}
 }

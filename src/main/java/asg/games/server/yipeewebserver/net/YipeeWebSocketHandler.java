@@ -12,13 +12,9 @@ import asg.games.server.yipeewebserver.session.GameSession;
 import asg.games.server.yipeewebserver.session.WebSocketSessionRegistry;
 import asg.games.yipee.net.packets.AbstractClientRequest;
 import asg.games.yipee.net.packets.AbstractServerResponse;
-import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
 import asg.games.yipee.net.packets.GameStartRequest;
 import asg.games.yipee.net.packets.GameSubscribeRequest;
-import asg.games.yipee.net.packets.MappedKeyUpdateRequest;
-import asg.games.yipee.net.packets.PlayerActionRequest;
-import asg.games.yipee.net.packets.TableStateUpdateRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +82,7 @@ public class YipeeWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession wsSession, TextMessage message) throws Exception {
+        log.debug("Enter handleTextMessage(wsSession={}, message={})", wsSession, message);
         String payload = message.getPayload();
         log.debug("WS message from {}: {}", wsSession.getId(), payload);
 
@@ -144,6 +141,7 @@ public class YipeeWebSocketHandler extends TextWebSocketHandler {
                 gs = gameSessionService.bindGame(gs.sessionId(), gs.clientId(), start.getGameId());
             }
         }
+        log.debug("gs {}:", gs);
 
         GameContext ctx = gameContextFactory.fromGameSession(gs, request);
 
@@ -163,6 +161,7 @@ public class YipeeWebSocketHandler extends TextWebSocketHandler {
         }
 
         wsSession.sendMessage(new TextMessage(objectMapper.writeValueAsString(response)));
+        log.debug("Exit handleTextMessage()");
     }
 
     @Override

@@ -6,7 +6,7 @@ import asg.games.server.yipeewebserver.exceptions.ClientValidationException;
 import asg.games.server.yipeewebserver.persistence.YipeeClientConnectionRepository;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.services.impl.SecureSessionIdGenerator;
-import asg.games.server.yipeewebserver.tools.NetUtil;
+import asg.games.server.yipeewebserver.tools.Util;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.net.packets.ClientHandshakeRequest;
 import asg.games.yipee.net.packets.ClientHandshakeResponse;
@@ -133,8 +133,8 @@ public class SessionService {
 
         // 4) Build handshake response (add sessionId if not already there)
         ClientHandshakeResponse response = new ClientHandshakeResponse();
-        NetUtil.copyEnvelope(request, response);
-        NetUtil.stampServerMeta(response, serverIdentity);
+        Util.copyEnvelope(request, response);
+        Util.stampServerMeta(response, serverIdentity);
         response.setConnected(true);
         response.setServerTick(0); // or whatever initial tick makes sense
         response.setPlayerId(playerId);
