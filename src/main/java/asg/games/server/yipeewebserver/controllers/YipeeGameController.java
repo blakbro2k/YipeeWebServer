@@ -16,6 +16,8 @@ import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.objects.YipeeRoom;
 import asg.games.yipee.core.objects.YipeeSeat;
 import asg.games.yipee.core.objects.YipeeTable;
+import asg.games.yipee.libgdx.net.GdxNetYipeePlayerDTO;
+import asg.games.yipee.libgdx.net.GdxSeatStateUpdateResponse;
 import asg.games.yipee.net.dto.NetYipeePlayerDTO;
 import asg.games.yipee.net.packets.SeatStateUpdateResponse;
 import asg.games.yipee.net.packets.TableDetailsResponse;
@@ -23,6 +25,8 @@ import asg.games.yipee.net.tools.NetUtil;
 import asg.games.yipee.net.wire.GameWhoAmIResponse;
 import asg.games.yipee.net.wire.LaunchTokenRequest;
 import asg.games.yipee.net.wire.LaunchTokenResponse;
+import com.badlogic.gdx.utils.Array;
+import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -155,7 +159,7 @@ public class YipeeGameController {
 
         // Identity is derived from token
         String playerId  = c.getSubject();
-        String playerName  = c.get("pname", String.class);;
+        String playerName  = c.get("pname", String.class);
         int playerIcon  = c.get("picon", Integer.class);
         int playerRating  = c.get("prate", Integer.class);
         String clientId  = c.get("cid", String.class);
@@ -208,8 +212,8 @@ public class YipeeGameController {
 
         // 2) Validate/resolve token -> game context (playerId/tableId/etc)
         //    This depends on your existing launch token logic:
-        //GameSession gs = gameSessionService.requireGameSessionByToken(token);
-        //String tableId = gameSessionService.requireTableId(gs);
+        // GameSession gs = gameSessionService.requireGameSessionByToken(token);
+        // String tableId = gameSessionService.requireTableId(gs);
         String tableId = ctx.tableId();
 
         // 4) Load the table aggregate (your JPA/service layer)
@@ -220,7 +224,6 @@ public class YipeeGameController {
         }
         log.debug("table={}", table);
 
-
         // 5) Load table snapshot and return
         TableDetailsResponse response =  new TableDetailsResponse();
         response.setServerId(serverIdentity.getServerId());
@@ -229,6 +232,10 @@ public class YipeeGameController {
         response.setRoomName(table.getRoom().getName());
         response.setServerTick(serverTick);
         response.setTableId(tableId);
+        response.setTableNumber(table.getTableNumber());
+        response.setRated(table.isRated());
+        response.setSoundOn(table.isSoundOn());
+        response.setTableAccessType(table.getAccessType().toString());
         response.setSeats(mapSeats(table));         // List<SeatStateUpdateResponse>
         response.setWatchers(mapWatchers(table));   // List<NetYipeePlayer>
         response.setGameId(gameId);
@@ -271,7 +278,7 @@ public class YipeeGameController {
                 .toList();
     }
 
-    private List<NetYipeePlayerDTO> mapWatchers(YipeeTable table) {
+    private List<NetYipeePlayerDTO>  mapWatchers(YipeeTable table) {
         return table.getWatchers().stream()
                 .map(this::toNetPlayer)
                 .toList();
