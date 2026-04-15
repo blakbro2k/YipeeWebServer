@@ -375,11 +375,10 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
         // Hibernate will flush on commit; returning the managed room is enough
         return table;
     }
-
+/*
     @Transactional
-    public YipeeTable joinTable(String playerId,
+    public YipeeTable joinAnyTable(String playerId,
                                 String roomId,
-                                Integer tableNumber,
                                 boolean createIfMissing) {
 
         YipeeRoom room = getRoomById(roomId);
@@ -404,9 +403,9 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
                         return createTable(
                                 playerId,
                                 roomId,
-                                /* rated   */ false,
-                                /* soundOn */ true,
-                                /* accessType */ "public"
+                                 false,
+                                 true,
+                                 "public"
                         );
                     });
         } else {
@@ -425,6 +424,24 @@ public class YipeeGameJPAServiceImpl extends AbstractStorage {
                                 "public");
                     });
         }
+
+        return table;
+    }*/
+
+    @Transactional
+    public YipeeTable joinTableById(String playerId,
+                                String tableId) {
+
+        YipeeTable table = yipeeTableRepository.findById(tableId).orElse(null);
+        if (table == null) {
+            throw new IllegalStateException(tableId + " Does not exist");
+        }
+
+        YipeePlayer player = yipeePlayerRepository.findById(playerId).orElse(null);
+        if(player == null) {
+            throw new IllegalStateException(player + " Does not exist");
+        }
+        table.addWatcher(player);
 
         return table;
     }

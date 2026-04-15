@@ -4,7 +4,7 @@ import asg.games.server.yipeewebserver.config.ServerIdentity;
 import asg.games.server.yipeewebserver.net.ConnectionContext;
 import asg.games.server.yipeewebserver.net.ConnectionContextFactory;
 import asg.games.server.yipeewebserver.session.GameSession;
-import asg.games.yipee.net.packets.AbstractClientRequest;
+import asg.games.yipee.common.net.wire.AbstractClientRequest;
 import com.esotericsoftware.kryonet.Connection;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

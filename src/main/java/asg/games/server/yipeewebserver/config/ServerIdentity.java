@@ -29,6 +29,9 @@ public class ServerIdentity {
     @Value("${gameserver.tickrate}")
     private int tickRate;
 
+    @Value("${gameserver.server.motd}")
+    private String motd;
+
     private String instanceId;
 
     private String fullId;
@@ -43,5 +46,13 @@ public class ServerIdentity {
 
     public long getServerTimeStamp() {
         return Instant.now().getEpochSecond();
+    }
+
+    public String getServerStatus() {
+        return "UP";
+    }
+
+    public String getMessageOfTheDay() {
+        return motd;
     }
 }

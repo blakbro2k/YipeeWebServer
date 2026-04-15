@@ -42,7 +42,7 @@
 		<webjars.jquery.version>3.7.1</webjars.jquery.version>
 		<webjars.webjars-locator.version>0.52</webjars.webjars-locator.version>
 		<spring.version>6.1.15</spring.version>
-		<yipee.version>0.9.1</yipee.version>
+		<yipee.version>0.9.7</yipee.version>
 		<libgdx-utils.version>0.13.4</libgdx-utils.version>
 		<gdx-kiwi.version>1.9.1.9.6</gdx-kiwi.version>
 		<xml.version>2.11.1</xml.version>

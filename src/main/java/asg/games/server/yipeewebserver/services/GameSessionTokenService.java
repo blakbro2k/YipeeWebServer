@@ -1,7 +1,5 @@
 package asg.games.server.yipeewebserver.services;
 
-import asg.games.server.yipeewebserver.session.GameSession;
-import asg.games.yipee.net.errors.YipeeSessionException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -9,7 +7,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -24,13 +25,16 @@ public class GameSessionTokenService {
 
     private final SecretKey key;
     private final Duration ttl;
+    private final String issuer;
 
     public GameSessionTokenService(
-            @Value("${yipee.jwt.secret}") String secret,
+            @Value("${security.jwt.secret}") String secret,
+            @Value("${security.jwt.issuer}") String issuer,
             @Value("${yipee.jwt.gameSessionTtlMinutes}") long ttlMinutes
     ) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.ttl = Duration.ofMinutes(ttlMinutes);
+        this.issuer = issuer;
     }
 
     public String mintGameSessionToken(String playerId,
@@ -48,6 +52,7 @@ public class GameSessionTokenService {
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(exp))
                 .setId(UUID.randomUUID().toString())
+                .setIssuer(issuer)
                 .claim("scope", "game_session")
                 .claim("cid", clientId)
                 .claim("sid", sessionId)
@@ -59,10 +64,14 @@ public class GameSessionTokenService {
     }
 
     public Jws<Claims> verifyGameSessionToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
+        } catch (JwtException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid or expired token", e);
+        }
     }
 
     public record GameSessionTokenContext(

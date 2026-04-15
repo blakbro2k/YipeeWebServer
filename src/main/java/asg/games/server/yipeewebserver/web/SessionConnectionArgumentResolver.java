@@ -4,7 +4,8 @@ import asg.games.server.yipeewebserver.annotations.SessionConnection;
 import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.exceptions.ClientValidationException;
 import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
-import asg.games.server.yipeewebserver.security.DevJwtAuthenticationFilter;
+import asg.games.server.yipeewebserver.security.JwtAuthenticationFilter;
+import asg.games.server.yipeewebserver.security.JwtIdentity;
 import asg.games.server.yipeewebserver.services.SessionService;
 import asg.games.yipee.core.objects.YipeePlayer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -64,11 +65,11 @@ public class SessionConnectionArgumentResolver implements HandlerMethodArgumentR
             String playerId = null;
 
             Object details = auth.getDetails();
-            if (details instanceof DevJwtAuthenticationFilter.JwtIdentity ji) {
+            if (details instanceof JwtIdentity ji) {
                 playerId = ji.playerId();
             } else if (auth.getPrincipal() instanceof String s && !s.isBlank()) {
                 playerId = s; // matches your dev filter logs
-            } else if (auth.getPrincipal() instanceof DevJwtAuthenticationFilter.JwtIdentity ji2) {
+            } else if (auth.getPrincipal() instanceof JwtIdentity ji2) {
                 playerId = ji2.playerId();
             }
 

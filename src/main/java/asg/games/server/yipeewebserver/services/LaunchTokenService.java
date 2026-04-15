@@ -20,17 +20,52 @@ import java.util.UUID;
 @Service
 public class LaunchTokenService {
 
-    private final SecretKey key;
+    private final SecretKey apikey;
+    private final SecretKey launchkey;
     private final Duration ttl;
+    private final long apiTtlSeconds;
+    private final String issuer;
 
     public LaunchTokenService(
-            @Value("${yipee.jwt.secret}") String secret,
-            @Value("${yipee.launch.ttlSeconds:120}") long ttlSeconds
+            @Value("${security.jwt.secret}") String secret,
+            @Value("${security.jwt.launch.secret}") String launchSecret,
+            @Value("${security.jwt.issuer}") String issuer,
+            @Value("${security.jwt.ttlSeconds}") long apiTtlSeconds,
+            @Value("${security.jwt.launch.ttlSeconds}") long ttlSeconds
     ) {
         // IMPORTANT: for HS256, secret must be long enough (>= 32 bytes is a safe baseline).
         // If it's too short, JJWT will throw WeakKeyException.
-        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.apikey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.launchkey = Keys.hmacShaKeyFor(launchSecret.getBytes(StandardCharsets.UTF_8));
         this.ttl = Duration.ofSeconds(ttlSeconds);
+        this.issuer = issuer;
+        this.apiTtlSeconds = apiTtlSeconds;
+    }
+
+    public String mintApiToken(String playerId,
+                               String playerName,
+                               int playerIcon,
+                               int playerRating,
+                               String clientId,
+                               String sessionId) {
+
+        Instant now = Instant.now();
+        Instant exp = now.plus(Duration.ofSeconds(apiTtlSeconds));
+
+        return Jwts.builder()
+                .setSubject(playerId)
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(exp))
+                .setId(UUID.randomUUID().toString())
+                .setIssuer(issuer)
+                .claim("scope", "api")
+                .claim("pname", playerName)
+                .claim("picon", playerIcon)
+                .claim("prate", playerRating)
+                .claim("cid", clientId)
+                .claim("sid", sessionId)
+                .signWith(apikey, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String mintLaunchToken(String playerId,
@@ -46,11 +81,12 @@ public class LaunchTokenService {
         Instant now = Instant.now();
         Instant exp = now.plus(ttl);
 
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(playerId)                 // sub
                 .setIssuedAt(Date.from(now))          // iat
                 .setExpiration(Date.from(exp))        // exp
                 .setId(UUID.randomUUID().toString())  // jti
+                .setIssuer(issuer)
                 .claim("scope", "launch")
                 .claim("pname", playerName)
                 .claim("picon", playerIcon)
@@ -60,15 +96,36 @@ public class LaunchTokenService {
                 .claim("gid", gameId)
                 .claim("tid", tableId)
                 .claim("seatIndex", playerSeatIndex)
-                .signWith(key, SignatureAlgorithm.HS256)
+                .signWith(launchkey, SignatureAlgorithm.HS256)
                 .compact();
+        log.debug("Minted launch token prefix={}", token.substring(0, Math.min(30, token.length())));
+        return token;
     }
 
     public Jws<Claims> verifyLaunchToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .requireIssuer(issuer)
+                .setSigningKey(launchkey)
                 .build()
                 .parseClaimsJws(token);
+    }
+
+    public Jws<Claims> verifyAPIToken(String token) {
+        return Jwts.parserBuilder()
+                .requireIssuer(issuer)
+                .setSigningKey(apikey)
+                .build()
+                .parseClaimsJws(token);
+    }
+
+    private static String jwtHeader(String token) {
+        try {
+            String headerB64 = token.split("\\.")[0];
+            byte[] raw = java.util.Base64.getUrlDecoder().decode(headerB64);
+            return new String(raw, java.nio.charset.StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return "<unreadable>";
+        }
     }
 
     public record LaunchTokenContext(
@@ -84,7 +141,7 @@ public class LaunchTokenService {
     ) {}
 
     public LaunchTokenContext requireContext(String token) {
-        log.debug("Enter requireContext(token={})", token);
+        log.debug("Enter requireContext(tokenPrefix={})", token == null ? null : token.substring(0, Math.min(16, token.length())));
         Claims c = verifyLaunchToken(token).getBody();
 
         String scope = c.get("scope", String.class);

@@ -3,7 +3,7 @@ package asg.games.server.yipeewebserver.services;
 import asg.games.server.yipeewebserver.core.GameSessionStore;
 import asg.games.server.yipeewebserver.data.PlayerConnectionEntity;
 import asg.games.server.yipeewebserver.session.GameSession;
-import asg.games.yipee.net.errors.YipeeSessionException;
+import asg.games.yipee.common.errors.YipeeSessionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,12 @@
 package asg.games.server.yipeewebserver.config;
 
-import asg.games.server.yipeewebserver.security.DevJwtAuthenticationFilter;
+import asg.games.server.yipeewebserver.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,17 +18,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final DevJwtAuthenticationFilter devJwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Same as your DevSecurityConfig
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable) // h2-console iframes
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        // dev / tooling
                         .requestMatchers(
                                 "/h2-console/**",
                                 "/swagger-ui/**",
@@ -36,14 +36,17 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/v3/api-docs.yaml"
                         ).permitAll()
-                        // For now, everything is open in dev
+
+                        // public endpoints (if you have any)
+                        .requestMatchers("/api/public/**").permitAll()
+
+                        // API requires API-scope token
+                        .requestMatchers("/api/**").hasAuthority(JwtAuthenticationFilter.API_SCOPE_ROLE)
+
+                        // everything else open for now (keeps WS endpoints from being blocked)
                         .anyRequest().permitAll()
                 )
-                // NEW: run DevJwtAuthenticationFilter on every request
-                .addFilterBefore(
-                        devJwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

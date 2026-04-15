@@ -37,19 +37,20 @@ public class WsLaunchTokenHandshakeInterceptor implements HandshakeInterceptor {
             WebSocketHandler wsHandler,
             Map<String, Object> attributes
     ) {
-        String token = UriComponentsBuilder.fromUri(request.getURI())
+        log.debug("beforeHandshake()");
+        String launchToken = UriComponentsBuilder.fromUri(request.getURI())
                 .build()
                 .getQueryParams()
-                .getFirst("token");
+                .getFirst("launchToken");
 
-        if (token == null || token.isBlank()) {
+        if (launchToken == null || launchToken.isBlank()) {
             log.warn("WS handshake rejected: missing token");
             return false;
         }
 
         Jws<Claims> jws;
         try {
-            jws = launchTokenService.verifyLaunchToken(token);
+            jws = launchTokenService.verifyLaunchToken(launchToken);
         } catch (Exception e) {
             log.warn("WS handshake rejected: invalid token: {}", e.getMessage());
             return false;
@@ -67,7 +68,8 @@ public class WsLaunchTokenHandshakeInterceptor implements HandshakeInterceptor {
         String sessionId = c.get("sid", String.class);
         String gameId   = c.get("gid", String.class);
         String tableId  = c.get("tid", String.class);
-        Integer seatIndex = c.get("seatIndex", Integer.class);
+        Number seatNum = c.get(ATTR_SEAT_INDEX, Number.class);
+        Integer seatIndex = seatNum == null ? null : seatNum.intValue();
 
         // Mint/Upsert a DB-valid session for life of the game (or until idle timeout rules)
         sessionService.upsertFromLaunchClaims(sessionId, clientId, playerId);
@@ -78,6 +80,7 @@ public class WsLaunchTokenHandshakeInterceptor implements HandshakeInterceptor {
         attributes.put(ATTR_GAME_ID, gameId);
         attributes.put(ATTR_TABLE_ID, tableId);
         attributes.put(ATTR_SEAT_INDEX, seatIndex);
+        log.debug("beforeHandshake()={}", true);
 
         return true;
     }
@@ -86,5 +89,10 @@ public class WsLaunchTokenHandshakeInterceptor implements HandshakeInterceptor {
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                WebSocketHandler wsHandler, Exception exception) {
         // no-op
+        log.debug("afterHandshake()=request={}", request);
+        log.debug("afterHandshake()=response={}", response);
+        log.debug("afterHandshake()=wsHandler={}", wsHandler);
     }
 }
+
+

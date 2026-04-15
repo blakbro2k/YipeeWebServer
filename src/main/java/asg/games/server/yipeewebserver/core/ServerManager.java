@@ -6,7 +6,7 @@ import asg.games.yipee.common.enums.YipeeObject;
 import asg.games.yipee.core.objects.YipeePlayer;
 import asg.games.yipee.core.persistence.Storage;
 import asg.games.yipee.core.tools.Util;
-import asg.games.yipee.net.packets.TableStateUpdateResponse;
+import asg.games.yipee.common.net.wire.TableStateUpdateResponse;
 import asg.games.yipee.net.tools.PacketRegistrar;
 import com.badlogic.gdx.utils.Disposable;
 import com.esotericsoftware.kryonet.Connection;

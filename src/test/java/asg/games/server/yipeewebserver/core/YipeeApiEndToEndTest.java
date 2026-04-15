@@ -103,6 +103,11 @@ public class YipeeApiEndToEndTest {
     @InjectMocks
     private YipeeAPIController controller;
 
+    private static String roomId1 = "ROOM-1";
+    private static String playerId1 = "PLAYER-1";
+    private static String tableId1 = "TABLE-1";
+    private static String seatId1 = "SEAT-1";
+
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(controller, "motd", "Welcome to Yipee!");
@@ -152,7 +157,7 @@ public class YipeeApiEndToEndTest {
         setAuthUser("EXT-1");
 
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
         when(player.getName()).thenReturn("Alice");
         when(player.getIcon()).thenReturn(1);
         when(player.getRating()).thenReturn(1500);
@@ -172,7 +177,7 @@ public class YipeeApiEndToEndTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         PlayerProfileResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
         assertThat(body.getName()).isEqualTo("Alice");
         assertThat(body.getIcon()).isEqualTo("icon1");
         assertThat(body.getRating()).isEqualTo(1500);
@@ -302,20 +307,20 @@ public class YipeeApiEndToEndTest {
     @Test
     void joinRoom_joinsAndReturnsTables() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        JoinRoomRequest request = NetUtil.newJoinRoomRequest("ROOM-1");
+        JoinRoomRequest request = NetUtil.newJoinRoomRequest(roomId1);
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
         when(room.getLoungeName()).thenReturn("Main Lounge");
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getAccessType()).thenReturn(ACCESS_TYPE.PUBLIC);
         when(table.isRated()).thenReturn(true);
@@ -326,18 +331,18 @@ public class YipeeApiEndToEndTest {
         tableMap.put(1, table);
 
         when(room.getTableIndexMap()).thenReturn(tableMap);
-        when(yipeeGameService.joinRoom("PLAYER-1", "ROOM-1")).thenReturn(room);
+        when(yipeeGameService.joinRoom(playerId1, roomId1)).thenReturn(room);
 
         ResponseEntity<JoinRoomResponse> response =
-                controller.joinRoom(request, conn);
+                controller.joinRoom(request, conn, room.getId());
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         JoinRoomResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getRoomId()).isEqualTo("ROOM-1");
+        assertThat(body.getRoomId()).isEqualTo(roomId1);
         assertThat(body.getTables()).hasSize(1);
         TableSummary ts = body.getTables().get(0);
-        assertThat(ts.getTableId()).isEqualTo("TABLE-1");
+        assertThat(ts.getTableId()).isEqualTo(tableId1);
         assertThat(ts.getTableNumber()).isEqualTo(1);
     }
 
@@ -348,24 +353,23 @@ public class YipeeApiEndToEndTest {
     @Test
     void leaveRoom_callsServiceAndReturnsResponse() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        LeaveRoomRequest request = NetUtil.newLeaveRoomRequest("ROOM-1");
+        LeaveRoomRequest request = NetUtil.newLeaveRoomRequest(roomId1);
 
-        ResponseEntity<LeaveRoomResponse> response =
-                controller.leaveRoom(request, conn);
+        ResponseEntity<LeaveRoomResponse> response = controller.leaveRoom(request, conn, roomId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         LeaveRoomResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getRoomId()).isEqualTo("ROOM-1");
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getRoomId()).isEqualTo(roomId1);
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
         //assertThat(body.()).isTrue();
 
-        verify(yipeeGameService).leaveRoom("PLAYER-1", "ROOM-1");
+        verify(yipeeGameService).leaveRoom(playerId1, roomId1);
     }
 
     // ------------------------------------------------------------------------
@@ -375,7 +379,7 @@ public class YipeeApiEndToEndTest {
     @Test
     void getRooms_returnsSummaries() {
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
         when(room.getLoungeName()).thenReturn("Main Lounge");
         when(room.getPlayers()).thenReturn(Set.of(mock(YipeePlayer.class), mock(YipeePlayer.class)));
@@ -394,7 +398,7 @@ public class YipeeApiEndToEndTest {
         assertThat(body).isNotNull();
         assertThat(body).hasSize(1);
         RoomSummary rs = body.get(0);
-        assertThat(rs.getRoomId()).isEqualTo("ROOM-1");
+        assertThat(rs.getRoomId()).isEqualTo(roomId1);
         assertThat(rs.getPlayerCount()).isEqualTo(2);
         assertThat(rs.getTableCount()).isEqualTo(1);
     }
@@ -405,35 +409,36 @@ public class YipeeApiEndToEndTest {
 
     @Test
     void joinTable_joinsAndReturnsResponse() {
+        int tableNumber1 = 1;
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        JoinTableRequest request = NetUtil.newJoinTableRequest("ROOM-1", 1, true);
+        JoinTableRequest request = NetUtil.newJoinTableRequest(roomId1, tableNumber1, true);
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
-        when(yipeeRoomRepository.findRoomById("ROOM-1")).thenReturn(room);
+        when(yipeeRoomRepository.findRoomById(roomId1)).thenReturn(room);
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
-        when(table.getTableNumber()).thenReturn(1);
+        when(table.getId()).thenReturn(tableId1);
+        when(table.getTableNumber()).thenReturn(tableNumber1);
 
-        when(yipeeGameService.joinTable("PLAYER-1", "ROOM-1", 1, true))
+        when(yipeeGameService.joinTableById(playerId1, tableId1, true))
                 .thenReturn(table);
 
-        ResponseEntity<JoinTableResponse> response = controller.joinTable(request, conn);
+        ResponseEntity<JoinTableResponse> response = controller.joinTable(request, conn, tableNumber1 + "");
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         JoinTableResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getRoomId()).isEqualTo("ROOM-1");
-        assertThat(body.getTableId()).isEqualTo("TABLE-1");
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getRoomId()).isEqualTo(roomId1);
+        assertThat(body.getTableId()).isEqualTo(tableId1);
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
     }
 
     // ------------------------------------------------------------------------
@@ -443,25 +448,25 @@ public class YipeeApiEndToEndTest {
     @Test
     void createTable_createsAndNotifiesTableServiceWhenNew() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        CreateTableRequest request = NetUtil.newCreateTableRequest("ROOM-1", true, true, ACCESS_TYPE.PRIVATE.toString());
+        CreateTableRequest request = NetUtil.newCreateTableRequest(roomId1, true, true, ACCESS_TYPE.PRIVATE.toString());
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
         YipeeSeat seat = mock(YipeeSeat.class);
-        when(seat.getId()).thenReturn("SEAT-1");
+        when(seat.getId()).thenReturn(seatId1);
         when(seat.getSeatNumber()).thenReturn(0);
         when(seat.isSeatReady()).thenReturn(false);
         when(seat.isOccupied()).thenReturn(true);
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getRoom()).thenReturn(room);
         when(table.getSeats()).thenReturn(Set.of(seat));
@@ -470,19 +475,19 @@ public class YipeeApiEndToEndTest {
         when(table.getWatchers()).thenReturn(Set.of());
 
         when(yipeeGameService.createTable(
-                "PLAYER-1", "ROOM-1", true, true,
+                playerId1, roomId1, true, true,
                 ACCESS_TYPE.PRIVATE.toString()
         )).thenReturn(table);
 
         // first time we call existsById -> false => created
-        when(yipeeTableRepository.existsById("TABLE-1")).thenReturn(false);
+        when(yipeeTableRepository.existsById(tableId1)).thenReturn(false);
 
-        ResponseEntity<CreateTableResponse> response = controller.createTable(request, conn);
+        ResponseEntity<CreateTableResponse> response = controller.createTable(request, conn, roomId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         CreateTableResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTableId()).isEqualTo("TABLE-1");
+        assertThat(body.getTableId()).isEqualTo(tableId1);
         assertThat(body.isCreated()).isTrue();
 
         //verify(tableService).onTableCreated(table);
@@ -495,41 +500,69 @@ public class YipeeApiEndToEndTest {
     @Test
     void leaveTable_returnsWatcherAndSeatedFlags() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        LeaveTableRequest request = NetUtil.newLeaveTableRequest("TABLE-1");
+        LeaveTableRequest request = NetUtil.newLeaveTableRequest(tableId1);
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
         YipeeSeat seat = mock(YipeeSeat.class);
         when(seat.getSeatedPlayer()).thenReturn(player);
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getWatchers()).thenReturn(Set.of(player));
         when(table.getSeats()).thenReturn(Set.of(seat));
         when(table.getRoom()).thenReturn(room);
 
-        when(yipeeTableRepository.findById("TABLE-1"))
+        when(yipeeTableRepository.findById(tableId1))
                 .thenReturn(Optional.of(table));
 
-        ResponseEntity<LeaveTableResponse> response = controller.leaveTable(request, conn);
+        ResponseEntity<LeaveTableResponse> response = controller.leaveTable(request, conn, tableId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         LeaveTableResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTableId()).isEqualTo("TABLE-1");
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getTableId()).isEqualTo(tableId1);
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
         assertThat(body.isWasSeated()).isTrue();
         assertThat(body.isWasSeated()).isTrue();
         //assertThat(body.success()).isTrue();
 
-        verify(yipeeGameService).leaveTable("PLAYER-1", "TABLE-1");
+        verify(yipeeGameService).leaveTable(playerId1, tableId1);
+    }
+
+    // ------------------------------------------------------------------------
+    // /api/table/getAllTables
+    // ------------------------------------------------------------------------
+
+    @Test
+    void getTables_returnsSummaries() {
+        YipeeRoom room = mock(YipeeRoom.class);
+        when(room.getId()).thenReturn(roomId1);
+
+        YipeeTable table = mock(YipeeTable.class);
+        when(table.getId()).thenReturn(tableId1);
+        when(table.getTableNumber()).thenReturn(1);
+        when(table.getAccessType()).thenReturn(ACCESS_TYPE.PROTECTED);
+        when(table.isRated()).thenReturn(true);
+        when(table.isSoundOn()).thenReturn(false);
+        when(table.getWatchers()).thenReturn(Set.of());
+
+        when(yipeeGameService.getTablesForRoom(roomId1)).thenReturn(List.of(table));
+
+        ResponseEntity<List<TableDetailsSummary>> response = controller.getAllDetailedTables(roomId1);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        List<TableDetailsSummary> body = response.getBody();
+        assertThat(body).isNotNull();
+        assertThat(body).hasSize(1);
+        assertThat(body.get(0).getTable().getTableId()).isEqualTo(tableId1);
     }
 
     // ------------------------------------------------------------------------
@@ -537,47 +570,19 @@ public class YipeeApiEndToEndTest {
     // ------------------------------------------------------------------------
 
     @Test
-    void getTables_returnsSummaries() {
-        YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
-
-        YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
-        when(table.getTableNumber()).thenReturn(1);
-        when(table.getAccessType()).thenReturn(ACCESS_TYPE.PROTECTED);
-        when(table.isRated()).thenReturn(true);
-        when(table.isSoundOn()).thenReturn(false);
-        when(table.getWatchers()).thenReturn(Set.of());
-
-        when(yipeeGameService.getTablesForRoom("ROOM-1")).thenReturn(List.of(table));
-
-        ResponseEntity<List<TableSummary>> response = controller.getTables("ROOM-1");
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        List<TableSummary> body = response.getBody();
-        assertThat(body).isNotNull();
-        assertThat(body).hasSize(1);
-        assertThat(body.get(0).getTableId()).isEqualTo("TABLE-1");
-    }
-
-    // ------------------------------------------------------------------------
-    // /api/table/getTableDetailed
-    // ------------------------------------------------------------------------
-
-    @Test
     void getTableDetailed_returnsFullDetails() {
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
         YipeePlayer seatedPlayer = mock(YipeePlayer.class);
-        when(seatedPlayer.getId()).thenReturn("PLAYER-1");
+        when(seatedPlayer.getId()).thenReturn(playerId1);
         when(seatedPlayer.getName()).thenReturn("Alice");
         when(seatedPlayer.getIcon()).thenReturn(3);
         when(seatedPlayer.getRating()).thenReturn(1500);
 
         YipeeSeat seat = mock(YipeeSeat.class);
-        when(seat.getId()).thenReturn("SEAT-1");
+        when(seat.getId()).thenReturn(seatId1);
         when(seat.getSeatNumber()).thenReturn(0);
         when(seat.isSeatReady()).thenReturn(true);
         when(seat.isOccupied()).thenReturn(true);
@@ -590,7 +595,7 @@ public class YipeeApiEndToEndTest {
         when(watcher.getRating()).thenReturn(1400);
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.isRated()).thenReturn(true);
         when(table.isSoundOn()).thenReturn(true);
@@ -598,14 +603,14 @@ public class YipeeApiEndToEndTest {
         when(table.getSeats()).thenReturn(Set.of(seat));
         when(table.getWatchers()).thenReturn(Set.of(watcher));
 
-        when(yipeeTableRepository.findById("TABLE-1")).thenReturn(Optional.of(table));
+        when(yipeeTableRepository.findById(tableId1)).thenReturn(Optional.of(table));
 
-        ResponseEntity<TableDetailResponse> response = controller.getTableDetailed("TABLE-1");
+        ResponseEntity<TableDetailResponse> response = controller.getTables(tableId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         TableDetailResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTableDetailsSummary().getTable().getTableId()).isEqualTo("TABLE-1");
+        assertThat(body.getTableDetailsSummary().getTable().getTableId()).isEqualTo(tableId1);
         assertThat(body.getTableDetailsSummary().getSeats()).hasSize(1);
         assertThat(body.getTableDetailsSummary().getWatchers()).hasSize(1);
     }
@@ -617,17 +622,17 @@ public class YipeeApiEndToEndTest {
     @Test
     void getTablesDetailed_returnsRoomTablesDetails() {
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
 
         YipeeSeat seat = mock(YipeeSeat.class);
-        when(seat.getId()).thenReturn("SEAT-1");
+        when(seat.getId()).thenReturn(seatId1);
         when(seat.getSeatNumber()).thenReturn(0);
         when(seat.isSeatReady()).thenReturn(false);
         when(seat.isOccupied()).thenReturn(true);
         when(seat.getSeatedPlayer()).thenReturn(null);
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getAccessType()).thenReturn(ACCESS_TYPE.PROTECTED);
         when(table.isRated()).thenReturn(true);
@@ -639,15 +644,15 @@ public class YipeeApiEndToEndTest {
         tableMap.put(1, table);
 
         when(room.getTableIndexMap()).thenReturn(tableMap);
-        when(yipeeGameService.getRoomById("ROOM-1")).thenReturn(room);
+        when(yipeeGameService.getRoomById(roomId1)).thenReturn(room);
 
-        ResponseEntity<List<TableDetailsSummary>> response = controller.getTablesDetailed("ROOM-1");
+        ResponseEntity<List<TableDetailsSummary>> response = controller.getAllDetailedTables(roomId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         List<TableDetailsSummary> body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body).hasSize(1);
-        assertThat(body.get(0).getTable().getTableId()).isEqualTo("TABLE-1");
+        assertThat(body.get(0).getTable().getTableId()).isEqualTo(tableId1);
     }
 
     // ------------------------------------------------------------------------
@@ -657,41 +662,41 @@ public class YipeeApiEndToEndTest {
     @Test
     void sitDown_seatsPlayerAndReturnsResponse() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        SitDownRequest request = NetUtil.newSitDownRequest("TABLE-1", 0);
+        SitDownRequest request = NetUtil.newSitDownRequest(tableId1, 0);
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getRoom()).thenReturn(room);
 
         YipeeSeat seat = mock(YipeeSeat.class);
-        when(seat.getId()).thenReturn("SEAT-1");
+        when(seat.getId()).thenReturn(seatId1);
         when(seat.getSeatNumber()).thenReturn(0);
         when(seat.isSeatReady()).thenReturn(false);
         when(seat.isOccupied()).thenReturn(true);
         when(seat.getParentTable()).thenReturn(table);
 
-        when(tableService.sitDown("TABLE-1", "PLAYER-1", 0))
+        when(tableService.sitDown(tableId1, playerId1, 0))
                 .thenReturn(seat);
 
         ResponseEntity<SitDownResponse> response =
-                controller.sitDown(request, conn);
+                controller.sitDown(request, conn, tableId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         SitDownResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTableId()).isEqualTo("TABLE-1");
-        assertThat(body.getSeatId()).isEqualTo("SEAT-1");
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getTableId()).isEqualTo(tableId1);
+        assertThat(body.getSeatId()).isEqualTo(seatId1);
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
     }
 
     // ------------------------------------------------------------------------
@@ -701,71 +706,71 @@ public class YipeeApiEndToEndTest {
     @Test
     void standUp_whenSeated_returnsSeatInfo() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        StandUpRequest request = NetUtil.newStandUpRequest("TABLE-1");
+        StandUpRequest request = NetUtil.newStandUpRequest(tableId1);
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getRoom()).thenReturn(room);
 
         YipeeSeat seat = mock(YipeeSeat.class);
-        when(seat.getId()).thenReturn("SEAT-1");
+        when(seat.getId()).thenReturn(seatId1);
         when(seat.getSeatNumber()).thenReturn(0);
         when(seat.getParentTable()).thenReturn(table);
 
-        when(tableService.standUp("PLAYER-1", "TABLE-1")).thenReturn(seat);
+        when(tableService.standUp(playerId1, tableId1)).thenReturn(seat);
 
-        ResponseEntity<StandUpResponse> response = controller.standUp(request, conn);
+        ResponseEntity<StandUpResponse> response = controller.standUp(request, conn, tableId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         StandUpResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTableId()).isEqualTo("TABLE-1");
-        assertThat(body.getSeatId()).isEqualTo("SEAT-1");
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getTableId()).isEqualTo(tableId1);
+        assertThat(body.getSeatId()).isEqualTo(seatId1);
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
     }
 
     @Test
     void standUp_whenNotSeated_usesFallbackLookup() {
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
 
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(player);
 
-        StandUpRequest request = NetUtil.newStandUpRequest("TABLE-1");
+        StandUpRequest request = NetUtil.newStandUpRequest(tableId1);
 
-        when(tableService.standUp("PLAYER-1", "TABLE-1"))
+        when(tableService.standUp(playerId1, tableId1))
                 .thenReturn(null);
 
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getRoom()).thenReturn(room);
 
-        when(yipeeTableRepository.findById("TABLE-1")).thenReturn(Optional.of(table));
+        when(yipeeTableRepository.findById(tableId1)).thenReturn(Optional.of(table));
 
-        ResponseEntity<StandUpResponse> response = controller.standUp(request, conn);
+        ResponseEntity<StandUpResponse> response = controller.standUp(request, conn, tableId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         StandUpResponse body = response.getBody();
         assertThat(body).isNotNull();
         assertThat(body.getSeatId()).isNull();
         assertThat(body.getSeatNumber()).isEqualTo(-1);
-        assertThat(body.getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getPlayerId()).isEqualTo(playerId1);
     }
 
     // ------------------------------------------------------------------------
@@ -775,7 +780,7 @@ public class YipeeApiEndToEndTest {
     @Test
     void getWatchers_returnsWatcherList() {
         YipeePlayer watcher = mock(YipeePlayer.class);
-        when(watcher.getId()).thenReturn("PLAYER-1");
+        when(watcher.getId()).thenReturn(playerId1);
         when(watcher.getName()).thenReturn("Alice");
         when(watcher.getIcon()).thenReturn(10);
         when(watcher.getRating()).thenReturn(1500);
@@ -783,16 +788,16 @@ public class YipeeApiEndToEndTest {
         PlayerConnectionEntity conn = mock(PlayerConnectionEntity.class);
         when(conn.getPlayer()).thenReturn(watcher);
 
-        when(yipeeGameService.getTableWatchers("TABLE-1")).thenReturn(Set.of(watcher));
+        when(yipeeGameService.getTableWatchers(tableId1)).thenReturn(Set.of(watcher));
 
-        ResponseEntity<TableWatchersResponse> response = controller.getWatchers("TABLE-1", conn);
+        ResponseEntity<TableWatchersResponse> response = controller.getWatchers(tableId1, conn);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         TableWatchersResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getTableId()).isEqualTo("TABLE-1");
+        assertThat(body.getTableId()).isEqualTo(tableId1);
         assertThat(body.getWatcherCount()).isEqualTo(1);
-        assertThat(body.getWatchers().get(0).getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getWatchers().get(0).getPlayerId()).isEqualTo(playerId1);
     }
 
     // ------------------------------------------------------------------------
@@ -802,28 +807,28 @@ public class YipeeApiEndToEndTest {
     @Test
     void getRoomPlayers_nonEmptySet_usesPlayerRooms() {
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
         when(room.getLoungeName()).thenReturn("Main Lounge");
 
         YipeePlayer player = mock(YipeePlayer.class);
-        when(player.getId()).thenReturn("PLAYER-1");
+        when(player.getId()).thenReturn(playerId1);
         when(player.getName()).thenReturn("Alice");
         when(player.getIcon()).thenReturn(5);
         when(player.getRating()).thenReturn(1500);
         when(player.getRooms()).thenReturn(Set.of(room));
 
         Set<YipeePlayer> players = Set.of(player);
-        when(yipeeGameService.getRoomPlayers("ROOM-1")).thenReturn(players);
+        when(yipeeGameService.getRoomPlayers(roomId1)).thenReturn(players);
 
-        ResponseEntity<RoomPlayersResponse> response = controller.getRoomPlayers("ROOM-1");
+        ResponseEntity<RoomPlayersResponse> response = controller.getRoomPlayers(roomId1);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         RoomPlayersResponse body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body.getRoomId()).isEqualTo("ROOM-1");
+        assertThat(body.getRoomId()).isEqualTo(roomId1);
         assertThat(body.getPlayers()).hasSize(1);
-        assertThat(body.getPlayers().get(0).getPlayerId()).isEqualTo("PLAYER-1");
+        assertThat(body.getPlayers().get(0).getPlayerId()).isEqualTo(playerId1);
     }
 
     // ------------------------------------------------------------------------
@@ -917,12 +922,12 @@ public class YipeeApiEndToEndTest {
 
         // --- Both players join the same room ---
         YipeeRoom room = mock(YipeeRoom.class);
-        when(room.getId()).thenReturn("ROOM-1");
+        when(room.getId()).thenReturn(roomId1);
         when(room.getName()).thenReturn("Main Room");
         when(room.getLoungeName()).thenReturn("Main Lounge");
 
         YipeeTable table = mock(YipeeTable.class);
-        when(table.getId()).thenReturn("TABLE-1");
+        when(table.getId()).thenReturn(tableId1);
         when(table.getTableNumber()).thenReturn(1);
         when(table.getAccessType()).thenReturn(ACCESS_TYPE.PUBLIC);
         when(table.isRated()).thenReturn(true);
@@ -934,8 +939,8 @@ public class YipeeApiEndToEndTest {
         when(room.getTableIndexMap()).thenReturn(tableMap);
 
         // joinRoom for both players
-        when(yipeeGameService.joinRoom("P1", "ROOM-1")).thenReturn(room);
-        when(yipeeGameService.joinRoom("P2", "ROOM-1")).thenReturn(room);
+        when(yipeeGameService.joinRoom("P1", roomId1)).thenReturn(room);
+        when(yipeeGameService.joinRoom("P2", roomId1)).thenReturn(room);
 
         PlayerConnectionEntity conn1 = mock(PlayerConnectionEntity.class);
         when(conn1.getPlayer()).thenReturn(p1);
@@ -943,12 +948,10 @@ public class YipeeApiEndToEndTest {
         PlayerConnectionEntity conn2 = mock(PlayerConnectionEntity.class);
         when(conn2.getPlayer()).thenReturn(p2);
 
-        JoinRoomRequest jr = NetUtil.newJoinRoomRequest("ROOM-1");
+        JoinRoomRequest jr = NetUtil.newJoinRoomRequest(roomId1);
 
-        ResponseEntity<JoinRoomResponse> joinRoomResp1 =
-                controller.joinRoom(jr, conn1);
-        ResponseEntity<JoinRoomResponse> joinRoomResp2 =
-                controller.joinRoom(jr, conn2);
+        ResponseEntity<JoinRoomResponse> joinRoomResp1 = controller.joinRoom(jr, conn1, room.getId());
+        ResponseEntity<JoinRoomResponse> joinRoomResp2 = controller.joinRoom(jr, conn2, room.getId());
 
         assertThat(joinRoomResp1.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(joinRoomResp2.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -966,25 +969,25 @@ public class YipeeApiEndToEndTest {
         when(table.getWatchers()).thenReturn(Set.of());
 
         CreateTableRequest ctReq = NetUtil.newCreateTableRequest(
-                "ROOM-1",
+                roomId1,
                 true,
                 true,
                 ACCESS_TYPE.PROTECTED.toString()
         );
 
         when(yipeeGameService.createTable(
-                "P1", "ROOM-1", true, true,
+                "P1", roomId1, true, true,
                 ACCESS_TYPE.PROTECTED.toString()
         )).thenReturn(table);
 
-        when(yipeeTableRepository.existsById("TABLE-1")).thenReturn(false);
+        when(yipeeTableRepository.existsById(tableId1)).thenReturn(false);
 
         ResponseEntity<CreateTableResponse> createTableResp =
-                controller.createTable(ctReq, conn1);
+                controller.createTable(ctReq, conn1, roomId1);
 
         assertThat(createTableResp.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(createTableResp.getBody()).isNotNull();
-        assertThat(createTableResp.getBody().getTableId()).isEqualTo("TABLE-1");
+        assertThat(createTableResp.getBody().getTableId()).isEqualTo(tableId1);
 
         // --- Both players sit down at the table ---
         when(table.getRoom()).thenReturn(room);
@@ -1003,14 +1006,14 @@ public class YipeeApiEndToEndTest {
         when(seatP2.isOccupied()).thenReturn(true);
         when(seatP2.getParentTable()).thenReturn(table);
 
-        SitDownRequest sreq1 = NetUtil.newSitDownRequest("TABLE-1", 0);
-        SitDownRequest sreq2 = NetUtil.newSitDownRequest("TABLE-1", 1);
+        SitDownRequest sreq1 = NetUtil.newSitDownRequest(tableId1, 0);
+        SitDownRequest sreq2 = NetUtil.newSitDownRequest(tableId1, 1);
 
-        when(tableService.sitDown("TABLE-1", "P1", 0)).thenReturn(seatP1);
-        when(tableService.sitDown("TABLE-1", "P2", 1)).thenReturn(seatP2);
+        when(tableService.sitDown(tableId1, "P1", 0)).thenReturn(seatP1);
+        when(tableService.sitDown(tableId1, "P2", 1)).thenReturn(seatP2);
 
-        ResponseEntity<SitDownResponse> sit1 = controller.sitDown(sreq1, conn1);
-        ResponseEntity<SitDownResponse> sit2 = controller.sitDown(sreq2, conn2);
+        ResponseEntity<SitDownResponse> sit1 = controller.sitDown(sreq1, conn1, tableId1);
+        ResponseEntity<SitDownResponse> sit2 = controller.sitDown(sreq2, conn2, tableId1);
 
         assertThat(sit1.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(sit2.getStatusCode()).isEqualTo(HttpStatus.OK);

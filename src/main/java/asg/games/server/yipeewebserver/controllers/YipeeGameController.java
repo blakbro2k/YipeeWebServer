@@ -12,28 +12,21 @@ import asg.games.server.yipeewebserver.services.GameSessionTokenService;
 import asg.games.server.yipeewebserver.services.LaunchTokenService;
 import asg.games.server.yipeewebserver.services.TableService;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
+import asg.games.yipee.common.net.dto.NetYipeePlayerDTO;
+import asg.games.yipee.common.net.packets.GameWhoAmIResponse;
+import asg.games.yipee.common.net.packets.LaunchTokenRequest;
+import asg.games.yipee.common.net.packets.LaunchTokenResponse;
+import asg.games.yipee.common.net.wire.SeatStateUpdateResponse;
+import asg.games.yipee.common.net.wire.TableDetailsResponse;
 import asg.games.yipee.core.objects.YipeePlayer;
-import asg.games.yipee.core.objects.YipeeRoom;
 import asg.games.yipee.core.objects.YipeeSeat;
 import asg.games.yipee.core.objects.YipeeTable;
-import asg.games.yipee.libgdx.net.GdxNetYipeePlayerDTO;
-import asg.games.yipee.libgdx.net.GdxSeatStateUpdateResponse;
-import asg.games.yipee.net.dto.NetYipeePlayerDTO;
-import asg.games.yipee.net.packets.SeatStateUpdateResponse;
-import asg.games.yipee.net.packets.TableDetailsResponse;
 import asg.games.yipee.net.tools.NetUtil;
-import asg.games.yipee.net.wire.GameWhoAmIResponse;
-import asg.games.yipee.net.wire.LaunchTokenRequest;
-import asg.games.yipee.net.wire.LaunchTokenResponse;
-import com.badlogic.gdx.utils.Array;
-import com.github.czyzby.kiwi.util.gdx.collection.GdxArrays;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -47,7 +40,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping(ControllerContstants.API_BASE_PATH)
+@RequestMapping(ControllerConstants.API_BASE_PATH)
 @RequiredArgsConstructor
 @SecurityRequirement(name = OpenApiConfig.BEARER_AUTH)
 public class YipeeGameController {
@@ -61,7 +54,7 @@ public class YipeeGameController {
     private final GameSessionService gameSessionService;
     private final GameSessionTokenService gameSessionTokenService;
 
-
+    /*
     @GetMapping("/game/{id}")
     public String launchGame(@PathVariable(value = "id") String id, Model model) {
         YipeeRoom room = yipeeGameService.getObjectById(YipeeRoom.class, id);
@@ -70,12 +63,13 @@ public class YipeeGameController {
         }
         return "room";
     }
+    */
 
     // -------------------------------------------------------
     // Game API:
     // -------------------------------------------------------
 
-    @PostMapping(ControllerContstants.API_GAME_LAUNCH_TOKEN_PATH)
+    @PostMapping(ControllerConstants.API_GAME_LAUNCH_TOKEN_PATH)
     public LaunchTokenResponse createLaunchToken(
             @RequestBody LaunchTokenRequest req,
             @SessionConnection PlayerConnectionEntity conn
@@ -141,17 +135,21 @@ public class YipeeGameController {
         return response;
     }
 
-    @GetMapping(ControllerContstants.API_GAME_WHOAMI_PATH)
+    @GetMapping(ControllerConstants.API_GAME_WHOAMI_PATH)
     public GameWhoAmIResponse gameWhoAmI(@RequestHeader("Authorization") String authHeader) {
         log.debug("Enter gameWhoAmI(authHeader={})", authHeader);
+        log.warn("whoami authHeader prefix={}", authHeader == null ? null : authHeader.substring(0, Math.min(32, authHeader.length())));
 
         String token = authHeader.replaceFirst("(?i)^Bearer\\s+", "").trim();
         if (token.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing Bearer token");
         }
 
+        log.warn("whoami token head={}...", token.substring(0, Math.min(20, token.length())));
+
         var jws = launchTokenService.verifyLaunchToken(token);
         var c = jws.getBody();
+        log.warn("whoami sub={}, scope={}", c.getSubject(), c.get("scope", String.class));
 
         if (!"launch".equals(c.get("scope", String.class))) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong token scope");
@@ -159,6 +157,7 @@ public class YipeeGameController {
 
         // Identity is derived from token
         String playerId  = c.getSubject();
+        log.debug("playerId={}", playerId);
         String playerName  = c.get("pname", String.class);
         int playerIcon  = c.get("picon", Integer.class);
         int playerRating  = c.get("prate", Integer.class);
@@ -168,6 +167,10 @@ public class YipeeGameController {
         String tableId   = c.get("tid", String.class);
         int seatIndex      = c.get("seatIndex", Integer.class);
         Instant expires  = c.getExpiration().toInstant();
+
+        String gameToken = gameSessionTokenService.mintGameSessionToken(
+                playerId, clientId, sessionId, gameId, tableId, seatIndex
+        );
 
         // OPTIONAL but strongly recommended:
         // verify sessionId is still valid and belongs to playerId/clientId
@@ -191,30 +194,53 @@ public class YipeeGameController {
                 serverIdentity.getServerId(),
                 -1,
                 expires.getEpochSecond(),
-                serverIdentity.getTickRate()
+                serverIdentity.getTickRate(),
+                gameToken
         );
+        log.warn("SERVER whoami response.playerId={}, response.serverId={}", response.getPlayerId(), response.getServerId());
         log.debug("Exit gameWhoAmI()={}", response);
         return response;
     }
 
-    @GetMapping(ControllerContstants.API_GAME_TABLE_PATH)
+    @GetMapping(ControllerConstants.API_GAME_TABLE_PATH)
     public TableDetailsResponse gameGetTable(@RequestHeader("Authorization") String authHeader) {
         log.debug("Enter gameGetTable(authHeader={})", authHeader);
 
         // 1) Extract bearer token
         String token = extractBearer(authHeader);
-        int serverTick = -1;
-        String gameId = null;
-        String sessionId = null;
 
-        LaunchTokenService.LaunchTokenContext ctx = launchTokenService.requireContext(token);
-        log.debug("ctx={}", ctx);
+        var jws = gameSessionTokenService.verifyGameSessionToken(token);
+        var c = jws.getBody();
+
+        if (!"game_session".equals(c.get("scope", String.class))) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong token scope");
+        }
+
+        String tableId = c.get("tid", String.class);
+        if (tableId == null || tableId.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing table claim");
+        }
+
+        String gameId  = c.get("gid", String.class);
+        String sessionId = c.get("sid", String.class);
+        int seatIndex = c.get("seatIndex", Integer.class);
+
+        int serverTick = -1;
+//
+        String playerId = c.getSubject();
+        if (!tableService.isPlayerAtTable(tableId, playerId)) {
+            // or allow watchers later
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not at table");
+        }
+
+        //LaunchTokenService.LaunchTokenContext ctx = launchTokenService.requireContext(token);
+        //log.debug("ctx={}", ctx);
 
         // 2) Validate/resolve token -> game context (playerId/tableId/etc)
         //    This depends on your existing launch token logic:
         // GameSession gs = gameSessionService.requireGameSessionByToken(token);
         // String tableId = gameSessionService.requireTableId(gs);
-        String tableId = ctx.tableId();
+        //String tableId = ctx.tableId();
 
         // 4) Load the table aggregate (your JPA/service layer)
         YipeeTable table = yipeeTableRepository.findById(tableId).orElse(null);

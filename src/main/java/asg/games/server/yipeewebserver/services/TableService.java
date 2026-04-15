@@ -5,7 +5,9 @@ import asg.games.server.yipeewebserver.persistence.YipeeSeatRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableOccupancyRepository;
 import asg.games.server.yipeewebserver.persistence.YipeeTableRepository;
 import asg.games.server.yipeewebserver.services.impl.YipeeGameJPAServiceImpl;
+import asg.games.yipee.core.objects.YipeeRoom;
 import asg.games.yipee.core.objects.YipeeSeat;
+import asg.games.yipee.core.objects.YipeeTable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,4 +65,35 @@ public class TableService {
         log.debug("Exit standUp()={}", seat);
         return seat;
     }
+
+    public record TableContext(
+            String tableId,
+            String roomId,
+            String roomName,
+            String loungeName
+    ) {}
+
+    @Transactional
+    public TableContext getTableContext(String tableId) {
+        log.debug("Enter getTableContext(tableId={})", tableId);
+
+        String roomId = null;
+        String roomName = "_not_found_";
+        String loungeName = "_not_found_";
+
+        YipeeTable table = yipeeTableRepository.findById(tableId).orElse(null);
+        if (table != null) {
+            YipeeRoom room = table.getRoom();
+            if (room != null) {
+                roomId = room.getId();
+                roomName = room.getName(); // or getRoomName()
+                loungeName = room.getLoungeName();
+            }
+        }
+
+        TableContext ctx = new TableContext(tableId, roomId, roomName, loungeName);
+        log.debug("Exit getTableContext()={}", ctx);
+        return ctx;
+    }
+
 }

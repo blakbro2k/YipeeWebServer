@@ -69,6 +69,16 @@ public final class WsPacketFactory {
         return m;
     }
 
+    /**
+     * Server-minted JWT used for authenticated game API and game transport calls after launch.
+     *
+     * <p>This token is derived from the validated launch token and represents the
+     * authenticated game session context (e.g., scope {@code game_session}).
+     *
+     * <p><b>Client behavior:</b> store this value and use it as the {@code Authorization: Bearer ...}
+     * token for subsequent {@code /api/game/*} calls and (optionally) WebSocket authentication.</p>
+     */
+    private String gameToken;
     private static void setIfPresent(Class<?> clazz, Object instance,
                                      String methodName, Class<?> paramType, Object value) {
         try {

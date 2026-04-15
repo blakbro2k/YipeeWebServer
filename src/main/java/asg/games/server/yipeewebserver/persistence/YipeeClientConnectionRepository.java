@@ -36,5 +36,13 @@ public interface YipeeClientConnectionRepository extends YipeeRepository<PlayerC
 
     void deleteAllByPlayerId(String playerId);
 
-    Optional<PlayerConnectionEntity> findByPlayerIdAndClientId(String playerId, String clientId);
+    Optional<PlayerConnectionEntity> findTopByPlayerIdAndClientIdOrderByLastActivityDesc(
+            String playerId,
+            String clientId
+    );
+
+    List<PlayerConnectionEntity> findAllByPlayerIdAndClientIdOrderByLastActivityDesc(
+            String playerId,
+            String clientId
+    );
 }

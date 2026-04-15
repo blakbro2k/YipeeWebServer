@@ -8,8 +8,8 @@ import asg.games.server.yipeewebserver.persistence.YipeePlayerRepository;
 import asg.games.server.yipeewebserver.services.impl.SecureSessionIdGenerator;
 import asg.games.server.yipeewebserver.tools.Util;
 import asg.games.yipee.core.objects.YipeePlayer;
-import asg.games.yipee.net.packets.ClientHandshakeRequest;
-import asg.games.yipee.net.packets.ClientHandshakeResponse;
+import asg.games.yipee.common.net.wire.ClientHandshakeRequest;
+import asg.games.yipee.common.net.wire.ClientHandshakeResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -111,7 +111,7 @@ public class SessionService {
 
         // 3) Upsert PlayerConnectionEntity
         PlayerConnectionEntity conn = yipeeClientConnectionRepository
-                .findByPlayerIdAndClientId(playerId, clientId)
+                .findTopByPlayerIdAndClientIdOrderByLastActivityDesc(playerId, clientId)
                 .orElseGet(PlayerConnectionEntity::new);
 
         conn.setName(player.getName());
@@ -152,7 +152,7 @@ public class SessionService {
                 .orElseThrow(() -> new ClientValidationException("PLAYER_NOT_FOUND", "player missing"));
 
         PlayerConnectionEntity conn = yipeeClientConnectionRepository
-                .findByPlayerIdAndClientId(playerId, clientId)
+                .findTopByPlayerIdAndClientIdOrderByLastActivityDesc(playerId, clientId)
                 .orElseGet(PlayerConnectionEntity::new);
 
         conn.setPlayer(player);
@@ -167,7 +167,7 @@ public class SessionService {
         return yipeeClientConnectionRepository.save(conn);
     }
 
-    public ResolvedSession resolveFromRequest(asg.games.yipee.net.packets.AbstractClientRequest request) {
+    public ResolvedSession resolveFromRequest(asg.games.yipee.common.net.wire.AbstractClientRequest request) {
 
         String clientId = request.getClientId();
         if (clientId == null || clientId.isBlank()) {

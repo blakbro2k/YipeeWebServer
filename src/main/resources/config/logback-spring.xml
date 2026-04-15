@@ -83,8 +83,20 @@
         <appender-ref ref="RollingFile" />
         <appender-ref ref="Console" />
     </logger>
+
+
+    <logger name="org.springframework.web" level="debug" additivity="false">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
 </configuration>
+
 <!--
+logging.level.org.springframework.web.socket=DEBUG
+logging.level.org.springframework.web.socket.server=DEBUG
+logging.level.org.springframework.web.socket.handler=DEBUG
+logging.level.org.springframework.web.socket.sockjs=DEBUG
+
         # Keep your own stuff at INFO
         logging.level.asg.games=INFO
 

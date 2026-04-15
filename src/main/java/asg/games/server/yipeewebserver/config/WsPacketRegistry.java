@@ -1,12 +1,11 @@
 package asg.games.server.yipeewebserver.config;
 
-import asg.games.yipee.net.packets.AbstractClientRequest;
+import asg.games.yipee.common.net.wire.AbstractClientRequest;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

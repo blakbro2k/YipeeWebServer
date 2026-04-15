@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,9 @@ import java.util.Objects;
 @Entity
 @Table(
         name = "YT_PLAYER_CONNECTION",
+        uniqueConstraints = {
+                @UniqueConstraint(name="UK_YTPC_PLAYER_CLIENT", columnNames={"player_id", "client_id"})
+        },
         indexes = {
                 @Index(name = "IDX_PLAYER_CONNECTION_PLAYER", columnList = "player_id"),
                 @Index(name = "IDX_PLAYER_CONNECTION_SESSION", columnList = "session_id"),

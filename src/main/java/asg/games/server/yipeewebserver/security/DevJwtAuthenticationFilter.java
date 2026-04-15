@@ -30,7 +30,6 @@ import java.util.Collections;
  * No signature verification. DO NOT use in production.
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class DevJwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -97,7 +96,6 @@ public class DevJwtAuthenticationFilter extends OncePerRequestFilter {
 
         JwtIdentity jwtIdentity = null;
         if (playerId == null) {
-            jwtIdentity = null;
         } else {
             jwtIdentity = new JwtIdentity(playerId, username, rating, icon);
         }
@@ -111,5 +109,4 @@ public class DevJwtAuthenticationFilter extends OncePerRequestFilter {
         return s + "====".substring(mod);
     }
 
-    public record JwtIdentity(String playerId, String username, Integer rating, Integer icon) {}
 }
